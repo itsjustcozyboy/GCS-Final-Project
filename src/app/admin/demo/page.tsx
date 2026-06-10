@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 };
 
 const FD_LIST = [
-  { id: 'pc1-quiz', label: 'PC1-1 상속 리스크 자가진단', path: '/fd/pc1-quiz' },
-  { id: 'pc1-preorder', label: 'PC1-2 전문가 리포트 사전예약', path: '/fd/pc1-preorder' },
-  { id: 'pc2-checklist', label: 'PC2-1 맞춤 체크리스트 생성', path: '/fd/pc2-checklist' },
-  { id: 'pc2-subscribe', label: 'PC2-2 행정 알림 구독', path: '/fd/pc2-subscribe' },
-  { id: 'pc2-kakao', label: 'PC2-3 카카오 컨시어지', path: '/fd/pc2-kakao' },
-  { id: 'pc3-settle', label: 'PC3-1 부의금 정산기', path: '/fd/pc3-settle' },
-  { id: 'pc3-board', label: 'PC3-2 가족 역할 보드', path: '/fd/pc3-board' },
-  { id: 'pc3-content', label: 'PC3-3 정보 콘텐츠', path: '/fd/pc3-content/burial-fund-split' },
+  { id: 'pc1-quiz', label: 'PC1-1 상속 리스크 자가진단', path: '/fd/pc1-quiz?demo=1' },
+  { id: 'pc1-preorder', label: 'PC1-2 전문가 리포트 사전예약', path: '/fd/pc1-preorder?demo=1' },
+  { id: 'pc2-checklist', label: 'PC2-1 맞춤 체크리스트 생성', path: '/fd/pc2-checklist?demo=1' },
+  { id: 'pc2-subscribe', label: 'PC2-2 행정 알림 구독', path: '/fd/pc2-subscribe?demo=1' },
+  { id: 'pc2-kakao', label: 'PC2-3 카카오 컨시어지', path: '/fd/pc2-kakao?demo=1' },
+  { id: 'pc3-settle', label: 'PC3-1 부의금 정산기', path: '/fd/pc3-settle?demo=1' },
+  { id: 'pc3-board', label: 'PC3-2 가족 역할 보드', path: '/fd/pc3-board?demo=1' },
+  { id: 'pc3-content', label: 'PC3-3 정보 콘텐츠', path: '/fd/pc3-content/burial-fund-split?demo=1' },
 ];
 
 export default function DemoMenuPage() {
