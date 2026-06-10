@@ -55,8 +55,10 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
       track('lead_submit', { channel: channel ?? fdId, fd_id: fdId });
       setDone(true);
       onSuccess?.();
-    } catch {
-      setError('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error('[LeadForm] Save error:', err);
+      setError(`저장 중 오류가 발생했습니다: ${errorMsg}`);
     } finally {
       setLoading(false);
     }

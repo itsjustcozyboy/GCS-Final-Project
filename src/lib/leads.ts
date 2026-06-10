@@ -24,5 +24,10 @@ export async function saveLead(data: LeadData): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error('lead save failed');
+  
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    const errorMsg = (errorBody as Record<string, unknown>).error || `HTTP ${res.status}`;
+    throw new Error(`Lead save failed: ${errorMsg}`);
+  }
 }

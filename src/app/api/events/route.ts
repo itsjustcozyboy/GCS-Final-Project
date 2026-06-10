@@ -5,15 +5,17 @@ import { saveEventToSupabase } from '@/lib/server/supabase';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const record = { ...body, ts: new Date().toISOString() };
+    // body는 이미 { event_name, fd_id, session_id, props_json }으로 구조화됨
+    // ts는 props_json에 포함되어 있으므로 추가로 할당하지 않음
+    const record = body;
 
     if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
       const result = await saveEventToSupabase(record);
       if (result.error) {
-        console.error('[events] Supabase error:', result.error);
-        return NextResponse.json({ error: result.error.message }, { status: 500 });
+        console.error('[events] ❌ Supabase error:', result.error);
+        return NextResponse.json({ error: `Supabase: ${result.error.message}` }, { status: 500 });
       }
-      console.log('[events] ✅ Saved to Supabase');
+      console.log('[events] ✅ Saved to Supabase:', { event_name: body.event_name, fd_id: body.fd_id });
     } else {
       await appendToJsonl('data/events.jsonl', record);
       console.log('[events] ✅ Saved to local file');
@@ -21,7 +23,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error('[events] Error:', err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('[events] ❌ Error:', errorMsg);
+    return NextResponse.json({ error: `Server error: ${errorMsg}` }, { status: 500 });
   }
 }
