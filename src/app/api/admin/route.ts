@@ -11,7 +11,10 @@ export async function GET(req: NextRequest) {
   const password = searchParams.get('password');
 
   // env 값에 실수로 섞인 따옴표/공백/줄바꿈을 방어적으로 정리
-  const configured = (process.env.ADMIN_PASSWORD ?? '').trim().replace(/^['"]|['"]$/g, '');
+  const configured = (process.env.ADMIN_PASSWORD ?? '')
+    .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .trim();  // 따옴표 제거 후 남은 공백도 정리
 
   // env가 비어 있으면: 프로덕션은 거부(원인 로그), 개발은 기본값 허용
   const expected = configured || (process.env.NODE_ENV !== 'production' ? DEV_FALLBACK_PASSWORD : '');
