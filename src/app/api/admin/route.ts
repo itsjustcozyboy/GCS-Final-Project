@@ -18,20 +18,29 @@ export async function GET(req: NextRequest) {
 
   if (!configured) {
     if (process.env.NODE_ENV === 'production') {
-      console.error('[admin] ADMIN_PASSWORD env not set — Vercel Settings → Environment Variables에 등록 필요. 모든 로그인 거부.');
+      console.error(
+        '[admin] ❌ 로그인 실패: ADMIN_PASSWORD env 미설정.\n' +
+        '  원인: Vercel Settings → Environment Variables에 ADMIN_PASSWORD 미등록.\n' +
+        '  모든 로그인 거부 (예상 비밀번호: <설정되지 않음>)'
+      );
     } else {
-      console.warn('[admin] ADMIN_PASSWORD env not set — 개발 기본값(admin1234) 사용 중.');
+      console.warn('[admin] ⚙️  개발 모드: ADMIN_PASSWORD env 미설정 → 기본값(admin1234) 사용 중.');
     }
   }
 
   if (!expected || password !== expected) {
     if (!expected) {
-      console.error('[admin] 로그인 거부: 서버에 비밀번호가 구성되지 않음(ADMIN_PASSWORD 미설정).');
+      console.error('[admin] ❌ 로그인 거부: 서버 비밀번호 미구성. (ADMIN_PASSWORD env 미설정)');
     } else {
-      console.warn('[admin] 로그인 거부: 비밀번호 불일치.');
+      const hint = process.env.NODE_ENV === 'production' 
+        ? '[로컬 dev에서는 admin1234로 시도]' 
+        : '[로컬 dev 기본값: admin1234]';
+      console.warn(`[admin] ❌ 로그인 거부: 비밀번호 불일치. ${hint}`);
     }
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
+
+  console.log('[admin] ✅ 로그인 성공.');
 
   const filters: AdminFilters = {
     from: searchParams.get('from') || undefined,

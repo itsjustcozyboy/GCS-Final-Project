@@ -5,7 +5,6 @@ import { saveLead, LeadData } from '@/lib/leads';
 import { getFdId, getSessionId } from '@/lib/session';
 import { getUtm } from '@/lib/utm';
 import { track } from '@/lib/analytics';
-import ConsentNotice from './ConsentNotice';
 
 interface Props {
   fdId: string;
@@ -132,7 +131,6 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
       >
         {loading ? '저장 중...' : (submitLabel ?? '사전 신청하기')}
       </button>
-      <ConsentNotice />
     </form>
   );
 }

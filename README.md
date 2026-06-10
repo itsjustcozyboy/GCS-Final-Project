@@ -8,9 +8,9 @@
 # 1. 의존성 설치
 npm install
 
-# 2. 환경 변수 설정
+# 2. 환경 변수 설정 (선택)
 cp .env.example .env.local
-# .env.local에서 ADMIN_PASSWORD 설정 (기본값: admin1234)
+# 로컬 개발 시 ADMIN_PASSWORD는 설정하지 않아도 됨 (기본값: admin1234)
 
 # 3. 개발 서버 실행
 npm run dev
@@ -18,6 +18,33 @@ npm run dev
 ```
 
 **Supabase/PostHog 없이도 즉시 실행됩니다.** 이벤트는 콘솔에 출력되고, 데이터는 `data/events.jsonl`, `data/leads.jsonl`에 저장됩니다.
+
+### 로컬 내부 개발 경로
+
+| 경로 | 설명 |
+|------|------|
+| `http://localhost:3000/` | 공개 진입점 → PC1 자가진단 리다이렉트 |
+| `http://localhost:3000/admin/demo` | 📋 **모든 라우트 데모 메뉴** (개발자용) |
+| `http://localhost:3000/admin` | 🔐 관리자 대시보드 (`admin1234`) |
+
+### 관리자 대시보드 (`/admin`)
+
+**로컬 개발:**
+- URL: http://localhost:3000/admin
+- 비밀번호: `admin1234` (기본값, .env.local에 설정 불필요)
+- 서버 콘솔: 로그인 시도마다 상태 로그 출력
+
+**프로덕션 (Vercel):**
+- ⚠️ **반드시** Vercel 대시보드 → Settings → Environment Variables에서 `ADMIN_PASSWORD` 설정 필요
+- 미설정 시 모든 로그인이 `401 Unauthorized`로 거부됨 (서버 콘솔에 에러 로그 출력)
+- 비밀번호 변경 후 반드시 **Redeploy** 필요
+
+| 환경 | ADMIN_PASSWORD | 로그인 결과 |
+|------|---|---|
+| 로컬 dev | 미설정 | ✅ 기본값(`admin1234`) 사용 |
+| 로컬 dev | `ADMIN_PASSWORD=custom` | ✅ 설정값 사용 |
+| 프로덕션 | 미설정 | ❌ 항상 실패 (401) |
+| 프로덕션 | `ADMIN_PASSWORD=custom` | ✅ 설정값 사용 |
 
 ## 9개 라우트
 

@@ -45,6 +45,7 @@ interface Props {
 /**
  * PC1-2 사전예약 오퍼. 독립 라우트(/fd/pc1-preorder)와 PC1-1 결과 화면 양쪽에서 재사용.
  * 이벤트명·variant 로직은 기존 스키마 그대로 유지(fd_id: 'pc1-preorder').
+ * embedded=true일 때는 단일 명확한 CTA로 표시.
  */
 export default function PreorderOffer({ embedded = false }: Props) {
   const [variant, setVariant] = useState<PriceVariant>('B');
@@ -68,13 +69,61 @@ export default function PreorderOffer({ embedded = false }: Props) {
 
   const opt = PRICE_OPTIONS[variant];
 
+  // embedded 모드: 단일 집중된 CTA
+  if (embedded) {
+    return (
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">전문가 정밀 리포트</h3>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            당신의 진단 결과를 바탕으로 변호사·세무사 네트워크가 검토한 맞춤형 리포트와 30일 액션플랜을 제공합니다.
+          </p>
+        </div>
+
+        <div className="border border-[color:var(--color-brand)]/30 bg-[color:var(--color-brand-tint)] rounded-2xl p-5">
+          <div className="grid grid-cols-2 gap-2 mb-5">
+            {['📋 맞춤 상속 리포트', '⏱️ 30일 액션플랜', '✓ 우선순위 정리', '🤝 법정 체크리스트'].map((item, i) => (
+              <div key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mb-5">
+            <div className="text-3xl font-bold text-[color:var(--color-brand-dark)] mb-1">{opt.price}</div>
+            <div className="text-sm text-gray-600">{opt.label}</div>
+            <p className="text-xs text-gray-400 mt-2">베타 기간 중 — 현재 과금되지 않습니다</p>
+          </div>
+
+          <button
+            onClick={() => {
+              setSelectedVariant(variant);
+              track('preorder_intent', { variant, fd_id: 'pc1-preorder' });
+              setShowLead(true);
+            }}
+            className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-semibold text-[15px] hover:bg-[color:var(--color-brand-dark)] active:scale-[0.99] transition-all"
+          >
+            무료로 사전예약하기 →
+          </button>
+        </div>
+
+        {showLead && (
+          <div className="border-t border-gray-100 pt-4 space-y-3">
+            <h4 className="font-semibold text-gray-800 text-sm">연락처를 남겨주세요</h4>
+            <p className="text-xs text-gray-500">베타 오픈 시 가장 먼저 안내드리겠습니다.</p>
+            <LeadForm fdId="pc1-preorder" priceVariant={selectedVariant ?? variant} interview />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 일반 모드: 전체 가격 옵션 표시
   return (
     <div className="space-y-6">
       <div>
         <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">전문가 정밀 리포트</span>
-        <h2 className="text-xl font-bold text-gray-800 mt-2 mb-2">
-          {embedded ? '진단 결과를 전문가 리포트로 받아보세요' : '상속 전문가가 직접 검토합니다'}
-        </h2>
+        <h2 className="text-xl font-bold text-gray-800 mt-2 mb-2">상속 전문가가 직접 검토합니다</h2>
         <p className="text-gray-500 text-sm leading-relaxed">
           자가진단 결과를 바탕으로 변호사·세무사 네트워크가 검토한 맞춤 리포트와 30일 액션플랜을 제공합니다.
         </p>

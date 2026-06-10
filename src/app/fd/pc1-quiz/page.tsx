@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import QuizStep from '@/components/QuizStep';
 import ResultBand, { Band } from '@/components/ResultBand';
-import LeadForm from '@/components/LeadForm';
 import Disclaimer from '@/components/Disclaimer';
 import PreorderOffer from '@/components/PreorderOffer';
 import { track } from '@/lib/analytics';
@@ -202,6 +201,15 @@ export default function Pc1QuizPage() {
           <span className="w-px h-3 bg-[color:var(--color-line)]" />
           <span className="flex items-center gap-1">무료</span>
         </div>
+
+        <div className="mt-6 text-center">
+          <a
+            href="/admin"
+            className="text-xs text-[color:var(--color-muted)] underline hover:no-underline"
+          >
+            관리자 대시보드
+          </a>
+        </div>
       </main>
     );
   }
@@ -230,7 +238,7 @@ export default function Pc1QuizPage() {
         <ResultBand band={band} title={result.title} description={result.description} />
 
         <div>
-          <p className="text-sm text-gray-500 mb-3">위험 항목을 클릭하면 자세한 설명을 볼 수 있습니다.</p>
+          <p className="text-sm text-gray-500 mb-3">당신의 상황 — 위험 항목 요약</p>
           <div className="space-y-2">
             {RISK_ITEMS.map((item) => (
               <button
@@ -245,30 +253,25 @@ export default function Pc1QuizPage() {
           </div>
         </div>
 
-        <Disclaimer />
-
-        {/* 1순위(무료): 진단 결과를 받아보는 가장 부담 없는 다음 걸음 */}
-        <div className="border border-[color:var(--color-brand)]/25 bg-[color:var(--color-brand-tint)] rounded-2xl p-5">
-          <span className="inline-block text-[11px] font-semibold text-[color:var(--color-brand-dark)] bg-white/70 rounded-full px-2 py-0.5 mb-2">
-            무료 · 베타
-          </span>
-          <h3 className="font-semibold text-gray-800 mb-1">진단 결과 리포트를 무료로 받아보세요</h3>
-          <p className="text-sm text-gray-500 mb-4">
-            지금 답하신 내용을 바탕으로 전문가가 검토한 요약 리포트를 이메일로 보내드립니다. 비용은 들지 않습니다.
-          </p>
-          <LeadForm
-            fdId="pc1-quiz"
-            channel={ch}
-            extraData={{ band, answers }}
-            submitLabel="무료 리포트 신청하기"
-            interview
-          />
+        {/* 단일 명확한 CTA: 전문가 리포트 사전예약 */}
+        <div className="border-t border-gray-100 pt-6">
+          <PreorderOffer embedded />
         </div>
 
-        {/* 2순위(선택·유료 미리보기): PC1-2 사전예약. 무료 경로와 명확히 구분 */}
-        <div className="border-t border-gray-100 pt-6">
-          <p className="text-xs text-gray-400 mb-4">더 깊은 도움이 필요하시면, 준비 중인 유료 패키지를 미리 살펴보실 수 있습니다.</p>
-          <PreorderOffer embedded />
+        {/* 신뢰 요소: 법적 고지 + 개인정보처리방침 */}
+        <div className="border-t border-gray-100 pt-6 space-y-4">
+          <Disclaimer />
+          
+          <div className="bg-gray-50 rounded-xl px-4 py-3 text-xs text-gray-600 space-y-1">
+            <p>
+              <strong>※ 법률·세무 자문 아님:</strong> 본 진단 결과는 교육용 정보이며, 개인의 상황에 맞춘 법률·세무 조언이 아닙니다. 
+              중요한 결정 전에 전문가 상담을 권합니다.
+            </p>
+            <p className="mt-2">
+              <a href="/privacy" className="underline hover:no-underline">개인정보 처리방침</a> · 
+              <span className="text-gray-500 ml-1">운영: 유가족 서비스팀 · 문의: leokor1214@gachon.ac.kr</span>
+            </p>
+          </div>
         </div>
       </main>
     );

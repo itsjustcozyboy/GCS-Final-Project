@@ -93,7 +93,12 @@ export default function AdminPage() {
   if (!data) {
     return (
       <main className="max-w-sm mx-auto px-4 py-20">
-        <h1 className="text-xl font-bold mb-6">관리자 대시보드</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl font-bold">관리자 대시보드</h1>
+          <Link href="/admin/demo" className="text-xs text-gray-400 hover:text-gray-600">
+            ← 메뉴
+          </Link>
+        </div>
         <form onSubmit={handleLogin} className="space-y-3">
           <input
             type="password"
