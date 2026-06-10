@@ -9,7 +9,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gcs-final-project.vercel.app"),
   title: "사후관리 서비스",
   description: "유가족을 위한 상속·행정·가족 협력 지원",
   // 기본은 비색인(통합 메뉴·PC2/PC3·관리자는 데모/내부용).
