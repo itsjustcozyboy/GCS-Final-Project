@@ -38,7 +38,9 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
     try {
       const utm = getUtm();
       const data: LeadData = {
-        fd_id: getFdId(),
+        // fd_id는 퍼널 식별자(pc1-quiz 등)여야 한다. 디바이스 UUID(getFdId)는
+        // 대시보드 그룹핑 키가 아니므로 extra_json.device_id로만 보존한다.
+        fd_id: fdId,
         session_id: getSessionId(),
         email,
         name,
@@ -47,7 +49,7 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
         price_variant: priceVariant,
         interview_ok: interview ? interviewOk : undefined,
         contact: interview && interviewOk ? contact : undefined,
-        extra_json: extraData,
+        extra_json: { ...extraData, device_id: getFdId() },
         ...utm,
       };
       await saveLead(data);

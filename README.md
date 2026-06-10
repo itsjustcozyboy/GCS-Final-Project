@@ -80,7 +80,28 @@ npm i -g vercel
 vercel
 ```
 
-환경 변수는 Vercel 대시보드 → Settings → Environment Variables에서 설정합니다.
+환경 변수는 Vercel 대시보드 → **Settings → Environment Variables**에서 설정합니다.
+`.env.local`은 Git/배포에 포함되지 않으므로, **여기에 등록하지 않은 변수는 프로덕션에서 `undefined`** 가 됩니다.
+
+### 필수: 관리자 로그인 (`/admin`)
+
+| 이름 | 값 | Environment |
+|------|----|-------------|
+| `ADMIN_PASSWORD` | 원하는 관리자 비밀번호 | Production (필요 시 Preview도) |
+
+- **미설정 시 배포본에서 로그인이 무조건 실패합니다** (서버가 `undefined`와 비교 → 항상 401). 서버 로그에 `[admin] ADMIN_PASSWORD env not set` 이 남습니다.
+- 값에 **따옴표·앞뒤 공백을 넣지 마세요.** (예: `"admin1234"` ❌ → `admin1234` ✅). 코드가 방어적으로 정리하긴 하지만 깔끔히 넣는 게 안전합니다.
+- 변경 후에는 **재배포(Redeploy)** 해야 새 값이 반영됩니다.
+- 로컬에서는 env 없이도 기본값 `admin1234`로 로그인됩니다(개발 모드 한정). 프로덕션에는 기본값이 적용되지 않습니다.
+
+> Vercel CLI로 등록: `vercel env add ADMIN_PASSWORD production`
+
+### 권장: 도메인·공개범위
+
+| 이름 | 값 | 설명 |
+|------|----|------|
+| `NEXT_PUBLIC_SITE_URL` | `https://<배포도메인>` | OG 이미지·robots·sitemap의 절대경로 기준. 미설정 시 `gcs-final-project.vercel.app`로 폴백(localhost로 나가지 않음). |
+| `ACTIVE_PCS` | `pc1` | 공개할 티어(콤마 구분). 기본 `pc1`만 공개, pc2-*·pc3-*는 프로덕션에서 `/`로 리다이렉트. `pc1,pc2`로 바꾸면 PC2 재공개. |
 
 ## 데이터 확인
 

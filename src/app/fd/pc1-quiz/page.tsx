@@ -1,8 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import QuizStep from '@/components/QuizStep';
 import ResultBand, { Band } from '@/components/ResultBand';
 import LeadForm from '@/components/LeadForm';
@@ -10,7 +8,7 @@ import Disclaimer from '@/components/Disclaimer';
 import PreorderOffer from '@/components/PreorderOffer';
 import { track } from '@/lib/analytics';
 import { initUtm } from '@/lib/utm';
-import { CHANNEL_COPY, resolveChannel } from '@/lib/pc1-content';
+import { CHANNEL_COPY, Pc1Channel, resolveChannel } from '@/lib/pc1-content';
 
 const QUESTIONS = [
   {
@@ -97,23 +95,36 @@ const RISK_ITEMS = [
   { id: 'admin', label: '행정 미처리', description: '구독·건강보험·공과금 등 계속 청구될 수 있습니다.' },
 ];
 
-function Pc1QuizInner() {
-  const searchParams = useSearchParams();
-  const ch = resolveChannel(searchParams.get('ch'));
+export default function Pc1QuizPage() {
+  // ch 채널 카피는 마케팅 변형일 뿐이라 SSR은 default로 렌더하고,
+  // 마운트 후 URL의 ?ch= 값으로 보정한다. (useSearchParams를 쓰면 페이지 전체가
+  // 프리렌더에서 제외되어 첫 화면이 빈 HTML로 나가므로 의도적으로 피한다.)
+  const [ch, setCh] = useState<Pc1Channel>('default');
   const copy = CHANNEL_COPY[ch];
 
   const [stage, setStage] = useState<Stage>('landing');
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [band, setBand] = useState<Band>('green');
+  const topRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => { initUtm(); }, []);
+  useEffect(() => {
+    initUtm();
+    const params = new URLSearchParams(window.location.search);
+    setCh(resolveChannel(params.get('ch')));
+  }, []);
 
   useEffect(() => {
     if (stage === 'landing') {
       track('page_view', { fd_id: 'pc1-quiz', channel_variant: ch });
     }
   }, [stage, ch]);
+
+  // 단계/문항 전환 시 화면 상단으로 이동 + 제목에 포커스(스크롤·포커스 튐 방지).
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    topRef.current?.focus();
+  }, [stage, currentQ]);
 
   function handleStart() {
     track('cta_click', { cta_id: 'start_quiz', fd_id: 'pc1-quiz', channel_variant: ch });
@@ -137,33 +148,60 @@ function Pc1QuizInner() {
     }
   }
 
+  function handleBack() {
+    if (currentQ === 0) {
+      setStage('landing');
+    } else {
+      setCurrentQ(currentQ - 1);
+    }
+  }
+
   function handleRiskItemClick(id: string) {
     track('result_item_click', { item: id, fd_id: 'pc1-quiz' });
   }
 
   if (stage === 'landing') {
     return (
-      <main className="max-w-lg mx-auto px-4 py-12">
-        <div className="mb-8">
-          <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">상속 리스크 자가진단</span>
-          <h1 className="text-2xl font-bold text-gray-800 mt-2 mb-3 leading-snug">{copy.headline}</h1>
-          <p className="text-gray-500 text-sm leading-relaxed">{copy.sub}</p>
-        </div>
-        <div className="bg-gray-50 rounded-2xl p-5 mb-6 space-y-3">
-          {['빚·부채 상속 여부', '3개월 기한 준수', '재산 파악 현황', '미처리 행정 항목'].map((item, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-xs flex items-center justify-center font-medium">{i + 1}</div>
-              <span className="text-sm text-gray-600">{item}</span>
+      <main className="max-w-lg mx-auto px-4 py-10 sm:py-14">
+        {/* 히어로 — 차분한 브랜드 톤. 상실을 겪은 이용자를 배려한 부드러운 카피 */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[color:var(--color-brand-tint)] to-white border border-[color:var(--color-line)] px-6 pt-8 pb-7 mb-6">
+          <span className="chip mb-4">상속 리스크 자가진단</span>
+          <h1 ref={topRef} tabIndex={-1} className="text-[1.7rem] font-bold text-[color:var(--color-ink)] leading-snug tracking-tight outline-none">
+            {copy.headline}
+          </h1>
+          <p className="text-[color:var(--color-muted)] text-sm leading-relaxed mt-3">{copy.sub}</p>
+        </section>
+
+        {/* 진단 항목 미리보기 */}
+        <p className="text-xs font-medium text-[color:var(--color-muted)] mb-3 px-1">이런 항목을 함께 살펴봐요</p>
+        <div className="grid grid-cols-2 gap-2.5 mb-7">
+          {[
+            { icon: '💳', label: '빚·부채 상속 여부' },
+            { icon: '⏳', label: '3개월 기한 준수' },
+            { icon: '🏠', label: '재산 파악 현황' },
+            { icon: '📄', label: '미처리 행정 항목' },
+          ].map((item) => (
+            <div key={item.label} className="card flex items-center gap-2.5 px-3.5 py-3">
+              <span className="text-lg leading-none" aria-hidden>{item.icon}</span>
+              <span className="text-[13px] text-[color:var(--color-ink)] leading-tight">{item.label}</span>
             </div>
           ))}
         </div>
+
         <button
           onClick={handleStart}
-          className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-medium"
+          className="w-full bg-[color:var(--color-brand)] text-white rounded-2xl py-4 font-semibold text-[15px] shadow-sm transition-colors hover:bg-[color:var(--color-brand-dark)] active:scale-[0.99]"
         >
           내 위험도 확인하기 →
         </button>
-        <p className="text-xs text-gray-400 text-center mt-3">2분 소요 · 개인정보 수집 없음</p>
+
+        <div className="flex items-center justify-center gap-3 text-xs text-[color:var(--color-muted)] mt-4">
+          <span className="flex items-center gap-1">⏱ 약 2분</span>
+          <span className="w-px h-3 bg-[color:var(--color-line)]" />
+          <span className="flex items-center gap-1">🔒 개인정보 수집 없음</span>
+          <span className="w-px h-3 bg-[color:var(--color-line)]" />
+          <span className="flex items-center gap-1">무료</span>
+        </div>
       </main>
     );
   }
@@ -172,11 +210,13 @@ function Pc1QuizInner() {
     return (
       <main className="max-w-lg mx-auto px-4 py-12">
         <QuizStep
+          ref={topRef}
           question={QUESTIONS[currentQ].question}
           options={QUESTIONS[currentQ].options}
           current={currentQ + 1}
           total={QUESTIONS.length}
           onAnswer={handleAnswer}
+          onBack={handleBack}
         />
       </main>
     );
@@ -186,7 +226,7 @@ function Pc1QuizInner() {
     const result = BAND_RESULT[band];
     return (
       <main className="max-w-lg mx-auto px-4 py-12 space-y-6">
-        <h2 className="text-lg font-bold text-gray-800">진단 결과</h2>
+        <h2 ref={topRef} tabIndex={-1} className="text-lg font-bold text-gray-800 outline-none">진단 결과</h2>
         <ResultBand band={band} title={result.title} description={result.description} />
 
         <div>
@@ -207,10 +247,14 @@ function Pc1QuizInner() {
 
         <Disclaimer />
 
-        <div className="border-t border-gray-100 pt-6">
-          <h3 className="font-semibold text-gray-800 mb-1">전문가 정밀 리포트 신청 (무료 베타)</h3>
+        {/* 1순위(무료): 진단 결과를 받아보는 가장 부담 없는 다음 걸음 */}
+        <div className="border border-[color:var(--color-brand)]/25 bg-[color:var(--color-brand-tint)] rounded-2xl p-5">
+          <span className="inline-block text-[11px] font-semibold text-[color:var(--color-brand-dark)] bg-white/70 rounded-full px-2 py-0.5 mb-2">
+            무료 · 베타
+          </span>
+          <h3 className="font-semibold text-gray-800 mb-1">진단 결과 리포트를 무료로 받아보세요</h3>
           <p className="text-sm text-gray-500 mb-4">
-            진단 결과를 바탕으로 전문가가 상세 검토한 리포트를 무료로 보내드립니다.
+            지금 답하신 내용을 바탕으로 전문가가 검토한 요약 리포트를 이메일로 보내드립니다. 비용은 들지 않습니다.
           </p>
           <LeadForm
             fdId="pc1-quiz"
@@ -221,8 +265,9 @@ function Pc1QuizInner() {
           />
         </div>
 
-        {/* PC1-2 사전예약: 진단 결과 뒤에 자연스럽게 이어지는 다음 단계 */}
+        {/* 2순위(선택·유료 미리보기): PC1-2 사전예약. 무료 경로와 명확히 구분 */}
         <div className="border-t border-gray-100 pt-6">
+          <p className="text-xs text-gray-400 mb-4">더 깊은 도움이 필요하시면, 준비 중인 유료 패키지를 미리 살펴보실 수 있습니다.</p>
           <PreorderOffer embedded />
         </div>
       </main>
@@ -232,16 +277,8 @@ function Pc1QuizInner() {
   return (
     <main className="max-w-lg mx-auto px-4 py-12 text-center">
       <div className="text-4xl mb-4">🙏</div>
-      <h2 className="text-xl font-bold text-gray-800 mb-2">신청이 완료되었습니다</h2>
+      <h2 ref={topRef} tabIndex={-1} className="text-xl font-bold text-gray-800 mb-2 outline-none">신청이 완료되었습니다</h2>
       <p className="text-gray-500 text-sm">베타 오픈 시 가장 먼저 안내드리겠습니다.</p>
     </main>
-  );
-}
-
-export default function Pc1QuizPage() {
-  return (
-    <Suspense>
-      <Pc1QuizInner />
-    </Suspense>
   );
 }
