@@ -66,7 +66,7 @@ export default function Pc2SubscribePage() {
             <li>✓ 30일 행정 가이드</li>
             <li>✓ 맞춤 체크리스트</li>
           </ul>
-          <button onClick={() => handleSelect('onetime')} className="w-full bg-gray-800 text-white rounded-xl py-2.5 text-sm font-medium">
+          <button onClick={() => handleSelect('onetime')} className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-2.5 text-sm font-medium">
             시작하기
           </button>
         </div>

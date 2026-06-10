@@ -125,7 +125,7 @@ export default function ContentPage() {
         <Link
           href={CTA_LINK[slug] ?? '/'}
           onClick={handleCtaClick}
-          className="block w-full bg-gray-800 text-white rounded-xl py-4 font-medium text-center"
+          className="block w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-medium text-center"
         >
           {content.ctaLabel} →
         </Link>

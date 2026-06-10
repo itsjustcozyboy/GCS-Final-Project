@@ -11,6 +11,10 @@ export interface LeadData {
   channel_variant?: string;
   price_variant?: string;
   consent: boolean;
+  /** 후속 인터뷰(5분 통화) 가능 여부 */
+  interview_ok?: boolean;
+  /** 인터뷰용 연락처(전화/카카오 ID 등). 선택. */
+  contact?: string;
   extra_json?: Record<string, unknown>;
 }
 

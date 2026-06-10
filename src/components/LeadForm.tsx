@@ -15,12 +15,16 @@ interface Props {
   onSuccess?: () => void;
   submitLabel?: string;
   placeholder?: string;
+  /** 후속 인터뷰(5분 통화) 가능 여부 + 연락처 입력 노출 */
+  interview?: boolean;
 }
 
-export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuccess, submitLabel, placeholder }: Props) {
+export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuccess, submitLabel, placeholder, interview }: Props) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [consent, setConsent] = useState(false);
+  const [interviewOk, setInterviewOk] = useState(false);
+  const [contact, setContact] = useState('');
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
@@ -41,6 +45,8 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
         channel: channel ?? fdId,
         consent: true,
         price_variant: priceVariant,
+        interview_ok: interview ? interviewOk : undefined,
+        contact: interview && interviewOk ? contact : undefined,
         extra_json: extraData,
         ...utm,
       };
@@ -92,11 +98,35 @@ export default function LeadForm({ fdId, channel, priceVariant, extraData, onSuc
           개인정보 수집·이용에 동의합니다. (필수)
         </span>
       </label>
+      {interview && (
+        <div className="bg-gray-50 rounded-xl p-3 space-y-2">
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={interviewOk}
+              onChange={(e) => setInterviewOk(e.target.checked)}
+              className="mt-0.5 w-4 h-4 accent-[color:var(--color-brand)]"
+            />
+            <span className="text-xs text-gray-600">
+              5분 통화로 의견을 들려주실 수 있나요? (선택) — 서비스 개선에 큰 도움이 됩니다.
+            </span>
+          </label>
+          {interviewOk && (
+            <input
+              type="text"
+              placeholder="연락처 (전화번호 또는 카카오 ID)"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400"
+            />
+          )}
+        </div>
+      )}
       {error && <p className="text-red-500 text-xs">{error}</p>}
       <button
         type="submit"
         disabled={loading || !consent}
-        className="w-full bg-gray-800 text-white rounded-xl py-3 font-medium text-sm disabled:opacity-50"
+        className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-3 font-medium text-sm disabled:opacity-50"
       >
         {loading ? '저장 중...' : (submitLabel ?? '사전 신청하기')}
       </button>

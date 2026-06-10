@@ -80,7 +80,7 @@ export default function Pc3SettlePage() {
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gray-400"
             />
           </div>
-          <button type="submit" className="w-full bg-gray-800 text-white rounded-xl py-4 font-medium">
+          <button type="submit" className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-medium">
             계산하기
           </button>
         </form>
@@ -116,7 +116,7 @@ export default function Pc3SettlePage() {
           <div className="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-sm">
             <button
               onClick={() => { track('cta_click', { cta_id: 'unlock_settle', fd_id: 'pc3-settle' }); setStage('lead'); }}
-              className="bg-gray-800 text-white rounded-xl px-6 py-3 text-sm font-medium"
+              className="bg-[color:var(--color-brand)] text-white rounded-xl px-6 py-3 text-sm font-medium"
             >
               전체 정산표 + 답례 명단 받기
             </button>

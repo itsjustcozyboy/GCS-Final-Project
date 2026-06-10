@@ -78,7 +78,7 @@ export default function Pc2ChecklistPage() {
             </div>
           ))}
         </div>
-        <button onClick={handleStart} className="w-full bg-gray-800 text-white rounded-xl py-4 font-medium">
+        <button onClick={handleStart} className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-medium">
           맞춤 체크리스트 만들기
         </button>
         <p className="text-xs text-gray-400 text-center mt-3">약 3분 소요</p>

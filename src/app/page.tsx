@@ -13,24 +13,31 @@ const FD_LIST = [
 
 export default function Home() {
   return (
-    <main className="max-w-lg mx-auto px-4 py-12">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">유가족 사후관리 서비스</h1>
-      <p className="text-gray-500 text-sm mb-8">Fake Door MVP — 9개 테스트 라우트</p>
-      <ul className="space-y-2">
+    <main className="max-w-3xl mx-auto px-4 py-16">
+      <span className="chip mb-4">Fake Door MVP</span>
+      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[color:var(--color-ink)] mb-3 mt-2">
+        유가족 사후관리 서비스
+      </h1>
+      <p className="text-[color:var(--color-muted)] text-base mb-10 leading-relaxed">
+        상속·행정·가족 협력 서비스의 수요를 측정하는 9개 테스트 라우트
+      </p>
+      <ul className="grid sm:grid-cols-2 gap-3">
         {FD_LIST.map((fd) => (
           <li key={fd.id}>
             <Link
               href={fd.path}
-              className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 hover:bg-gray-50 transition-colors"
+              className="card flex items-center justify-between px-5 py-4 transition-colors hover:border-[color:var(--color-brand)] group"
             >
-              <span className="text-sm text-gray-700">{fd.label}</span>
-              <span className="text-gray-400 text-xs">{fd.id}</span>
+              <span className="text-sm font-medium text-[color:var(--color-ink)] group-hover:text-[color:var(--color-brand)]">
+                {fd.label}
+              </span>
+              <span className="text-[color:var(--color-muted)] text-xs font-mono">{fd.id}</span>
             </Link>
           </li>
         ))}
       </ul>
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <Link href="/admin" className="text-sm text-gray-400 hover:text-gray-600">
+      <div className="mt-10 pt-6 border-t border-[color:var(--color-line)]">
+        <Link href="/admin" className="text-sm text-[color:var(--color-muted)] hover:text-[color:var(--color-brand)]">
           관리자 대시보드 →
         </Link>
       </div>

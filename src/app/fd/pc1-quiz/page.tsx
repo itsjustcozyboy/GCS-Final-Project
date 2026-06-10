@@ -7,27 +7,10 @@ import QuizStep from '@/components/QuizStep';
 import ResultBand, { Band } from '@/components/ResultBand';
 import LeadForm from '@/components/LeadForm';
 import Disclaimer from '@/components/Disclaimer';
+import PreorderOffer from '@/components/PreorderOffer';
 import { track } from '@/lib/analytics';
 import { initUtm } from '@/lib/utm';
-
-const CHANNEL_COPY: Record<string, { headline: string; sub: string }> = {
-  search: {
-    headline: '지금 상속 결정 기한이 남았나요?',
-    sub: '3개월 안에 반드시 결정해야 하는 것들을 놓치고 계실 수 있습니다.',
-  },
-  community: {
-    headline: '막막한 상속 절차, 내 상황 먼저 파악하세요',
-    sub: '2분 자가진단으로 지금 내가 처한 위험 수준을 확인하세요.',
-  },
-  partner: {
-    headline: '전문가가 먼저 확인해드립니다',
-    sub: '아래 질문에 답하시면 위험 항목을 짚어드립니다.',
-  },
-  default: {
-    headline: '상속 리스크, 지금 바로 확인하세요',
-    sub: '간단한 5문항으로 상속 절차의 위험 수준을 파악해보세요.',
-  },
-};
+import { CHANNEL_COPY, resolveChannel } from '@/lib/pc1-content';
 
 const QUESTIONS = [
   {
@@ -116,8 +99,8 @@ const RISK_ITEMS = [
 
 function Pc1QuizInner() {
   const searchParams = useSearchParams();
-  const ch = searchParams.get('ch') ?? 'default';
-  const copy = CHANNEL_COPY[ch] ?? CHANNEL_COPY.default;
+  const ch = resolveChannel(searchParams.get('ch'));
+  const copy = CHANNEL_COPY[ch];
 
   const [stage, setStage] = useState<Stage>('landing');
   const [currentQ, setCurrentQ] = useState(0);
@@ -176,7 +159,7 @@ function Pc1QuizInner() {
         </div>
         <button
           onClick={handleStart}
-          className="w-full bg-gray-800 text-white rounded-xl py-4 font-medium"
+          className="w-full bg-[color:var(--color-brand)] text-white rounded-xl py-4 font-medium"
         >
           내 위험도 확인하기 →
         </button>
@@ -233,9 +216,14 @@ function Pc1QuizInner() {
             fdId="pc1-quiz"
             channel={ch}
             extraData={{ band, answers }}
-            onSuccess={() => setStage('lead')}
             submitLabel="무료 리포트 신청하기"
+            interview
           />
+        </div>
+
+        {/* PC1-2 사전예약: 진단 결과 뒤에 자연스럽게 이어지는 다음 단계 */}
+        <div className="border-t border-gray-100 pt-6">
+          <PreorderOffer embedded />
         </div>
       </main>
     );
