@@ -8,7 +8,11 @@ export function proxy(req: NextRequest) {
   // 차단은 프로덕션에서만. 개발 환경에서는 내부 데모(/admin/demo)로 전체 라우트를 검토할 수 있게 둔다.
   if (process.env.NODE_ENV !== 'production') return NextResponse.next();
 
-  const { pathname } = req.nextUrl;
+  const { pathname, searchParams } = req.nextUrl;
+
+  // ?demo=1 이 있으면 내부 데모 접근 — 티어 제한 없이 통과
+  if (searchParams.get('demo') === '1') return NextResponse.next();
+
   // /fd/<segment>/... 에서 첫 세그먼트 추출
   const match = pathname.match(/^\/fd\/([^/]+)/);
   if (match) {
