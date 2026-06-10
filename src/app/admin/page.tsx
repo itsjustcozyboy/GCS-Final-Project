@@ -38,6 +38,7 @@ export default function AdminPage() {
   const [data, setData] = useState<Payload | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   // filters
   const [from, setFrom] = useState('');
@@ -49,6 +50,25 @@ export default function AdminPage() {
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedFd, setSelectedFd] = useState<string>('pc1-quiz');
   const [interviewOnly, setInterviewOnly] = useState(false);
+
+  async function resetData() {
+    if (!confirm('모든 이벤트·리드 데이터를 삭제합니다. 되돌릴 수 없습니다. 계속하시겠습니까?')) return;
+    setResetting(true);
+    try {
+      const res = await fetch(`/api/admin/reset?password=${encodeURIComponent(password)}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        alert(`초기화 실패: ${body.error ?? res.status}`);
+        return;
+      }
+      setData(null);
+      alert('데이터가 초기화되었습니다.');
+    } catch {
+      alert('오류가 발생했습니다.');
+    } finally {
+      setResetting(false);
+    }
+  }
 
   async function fetchData(pw: string) {
     setLoading(true);
@@ -170,9 +190,18 @@ export default function AdminPage() {
           UTM 링크 빌더 →
         </Link>
       </div>
-      <p className="text-sm text-gray-500 mb-4">
-        총 이벤트: {data.total_events} · 총 리드: {data.total_leads}
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm text-gray-500">
+          총 이벤트: {data.total_events} · 총 리드: {data.total_leads}
+        </p>
+        <button
+          onClick={resetData}
+          disabled={resetting}
+          className="text-xs text-red-500 border border-red-300 rounded-lg px-3 py-1.5 hover:bg-red-50 disabled:opacity-40"
+        >
+          {resetting ? '초기화 중...' : '테스트 데이터 초기화'}
+        </button>
+      </div>
 
       {/* PC1 모니터링 카드 */}
       <Pc1Card data={data} />
