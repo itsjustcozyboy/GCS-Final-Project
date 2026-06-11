@@ -82,6 +82,7 @@ export interface AdminPayload {
 }
 
 export interface LeadRow {
+  id: string;
   email: string;
   name: string;
   fd_id: string;
@@ -91,6 +92,15 @@ export interface LeadRow {
   interview_ok: boolean;
   contact: string;
   created_at: string;
+}
+
+export interface SessionRow {
+  session_id: string;
+  fd_id: string;
+  utm_source: string;
+  first_seen: string;
+  event_count: number;
+  event_names: string[];
 }
 
 function props(e: Raw): Raw {
