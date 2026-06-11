@@ -54,6 +54,57 @@ export default function AdminPage() {
   const [selectedFd, setSelectedFd] = useState<string>('pc1-quiz');
   const [interviewOnly, setInterviewOnly] = useState(false);
 
+  async function deleteLead(id: string) {
+    setDeletingLeads((prev) => new Set(prev).add(id));
+    try {
+      const res = await fetch(`/api/admin/delete?password=${encodeURIComponent(password)}&type=lead&id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        alert(`삭제 실패: ${body.error ?? res.status}`);
+        return;
+      }
+      setData((prev) => prev ? { ...prev, leads: prev.leads.filter((l) => l.id !== id), total_leads: prev.total_leads - 1 } : prev);
+      setSelectedLeads((prev) => { const n = new Set(prev); n.delete(id); return n; });
+    } catch {
+      alert('오류가 발생했습니다.');
+    } finally {
+      setDeletingLeads((prev) => { const n = new Set(prev); n.delete(id); return n; });
+    }
+  }
+
+  async function deleteSelectedLeads() {
+    const ids = Array.from(selectedLeads);
+    if (!ids.length) return;
+    if (!confirm(`선택한 리드 ${ids.length}건을 삭제합니다. 계속하시겠습니까?`)) return;
+    for (const id of ids) await deleteLead(id);
+  }
+
+  async function deleteSession(session_id: string) {
+    if (!confirm(`세션 ${session_id.slice(0, 8)}...의 이벤트를 삭제합니다. 계속하시겠습니까?`)) return;
+    setDeletingSession((prev) => new Set(prev).add(session_id));
+    try {
+      const res = await fetch(`/api/admin/delete?password=${encodeURIComponent(password)}&type=session&session_id=${encodeURIComponent(session_id)}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        alert(`삭제 실패: ${body.error ?? res.status}`);
+        return;
+      }
+      setData((prev) => {
+        if (!prev) return prev;
+        const deleted = prev.sessions.find((s) => s.session_id === session_id);
+        return {
+          ...prev,
+          sessions: prev.sessions.filter((s) => s.session_id !== session_id),
+          total_events: prev.total_events - (deleted?.event_count ?? 0),
+        };
+      });
+    } catch {
+      alert('오류가 발생했습니다.');
+    } finally {
+      setDeletingSession((prev) => { const n = new Set(prev); n.delete(session_id); return n; });
+    }
+  }
+
   async function resetData() {
     if (!confirm('모든 이벤트·리드 데이터를 삭제합니다. 되돌릴 수 없습니다. 계속하시겠습니까?')) return;
     setResetting(true);
