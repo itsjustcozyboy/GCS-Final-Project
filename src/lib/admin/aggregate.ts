@@ -368,6 +368,7 @@ export function aggregate(rawEvents: Raw[], rawLeads: Raw[], filters: AdminFilte
       kakao_channel_click: countEvent(events, 'kakao_channel_click'),
     },
     leads,
+    sessions,
   };
 }
 
