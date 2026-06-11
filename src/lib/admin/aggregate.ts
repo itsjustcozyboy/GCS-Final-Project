@@ -309,6 +309,7 @@ export function aggregate(rawEvents: Raw[], rawLeads: Raw[], filters: AdminFilte
   };
 
   const leads: LeadRow[] = rawLeads.map((l) => ({
+    id: String(l.id ?? ''),
     email: String(l.email ?? ''),
     name: String(l.name ?? ''),
     fd_id: String(l.fd_id ?? ''),
@@ -319,6 +320,33 @@ export function aggregate(rawEvents: Raw[], rawLeads: Raw[], filters: AdminFilte
     contact: String(l.contact ?? ''),
     created_at: String(l.created_at ?? ''),
   }));
+
+  const sessionMap: Record<string, { fd_id: string; utm_source: string; first_seen: string; names: Set<string>; count: number }> = {};
+  for (const e of events) {
+    const p = props(e);
+    const sid = String(p.session_id ?? e.session_id ?? '');
+    if (!sid) continue;
+    const fd = eventFd(e);
+    const utm = String(p.utm_source ?? 'direct');
+    const ts = String(p.ts ?? e.created_at ?? '');
+    if (!sessionMap[sid]) {
+      sessionMap[sid] = { fd_id: fd, utm_source: utm, first_seen: ts, names: new Set(), count: 0 };
+    }
+    sessionMap[sid].count++;
+    sessionMap[sid].names.add(eventName(e));
+    if (ts && (!sessionMap[sid].first_seen || ts < sessionMap[sid].first_seen)) sessionMap[sid].first_seen = ts;
+  }
+  const sessions: SessionRow[] = Object.entries(sessionMap)
+    .map(([sid, v]) => ({
+      session_id: sid,
+      fd_id: v.fd_id,
+      utm_source: v.utm_source,
+      first_seen: v.first_seen,
+      event_count: v.count,
+      event_names: Array.from(v.names),
+    }))
+    .sort((a, b) => b.first_seen.localeCompare(a.first_seen))
+    .slice(0, 200);
 
   return {
     total_events: events.length,
