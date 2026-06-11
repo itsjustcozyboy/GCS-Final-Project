@@ -1,6 +1,7 @@
 {
-  "buildCommand": "pnpm turbo build --filter=@maeum/web...",
+  "buildCommand": "cd apps/web && pnpm next build",
   "installCommand": "pnpm install",
   "outputDirectory": "apps/web/.next",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "regions": ["iad1"]
 }
