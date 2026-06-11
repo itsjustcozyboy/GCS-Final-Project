@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  child
+  parent
+  both
+}
+
+enum Tone {
+  light
+  deep
+}
+
+enum SensitiveStatus {
+  active
+  paused_health
+  deceased
+  memorial
+}
+
+enum AnswerFormat {
+  text
+  photo
+  video
+  audio
+}
+
+enum BookStatus {
+  draft
+  generated
+  delivered
+}
+
+enum BookEditionType {
+  interim
+  final
+}
+
+enum QuestionSource {
+  ai
+  curated
+  followup
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  phone     String?  @unique
+  name      String
+  role      Role
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sentConnections     Connection[] @relation("fromUser")
+  receivedConnections Connection[] @relation("toUser")
+  sessions            Session[]
+  reactions           Reaction[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Connection {
+  id              String          @id @default(cuid())
+  fromUserId      String
+  fromUser        User            @relation("fromUser", fields: [fromUserId], references: [id])
+  toUserId        String
+  toUser          User            @relation("toUser", fields: [toUserId], references: [id])
+  intimacy        Int             @default(3)
+  cohabiting      Boolean         @default(false)
+  hasConflict     Boolean         @default(false)
+  responseChannel String          @default("app")
+  tone            Tone            @default(light)
+  sensitiveStatus SensitiveStatus @default(active)
+  currentDepth    Int             @default(1)
+  skipCount       Int             @default(0)
+  answerCount     Int             @default(0)
+  inviteCode      String?         @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  questions    Question[]
+  bookEditions BookEdition[]
+
+  @@index([fromUserId])
+  @@index([toUserId])
+}
+
+model Question {
+  id           String         @id @default(cuid())
+  connectionId String
+  connection   Connection     @relation(fields: [connectionId], references: [id])
+  body         String
+  depth        Int
+  chapterTag   String?
+  personTag    String?
+  eraTag       String?
+  source       QuestionSource @default(curated)
+  sentAt       DateTime?
+  createdAt    DateTime       @default(now())
+
+  answer Answer?
+
+  @@index([connectionId])
+  @@index([sentAt])
+}
+
+model Answer {
+  id          String       @id @default(cuid())
+  questionId  String       @unique
+  question    Question     @relation(fields: [questionId], references: [id])
+  format      AnswerFormat @default(text)
+  body        String?
+  mediaUrl    String?
+  transcript  String?
+  skipped     Boolean      @default(false)
+  receivedVia String       @default("app")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  reactions Reaction[]
+}
+
+model Reaction {
+  id         String   @id @default(cuid())
+  answerId   String
+  answer     Answer   @relation(fields: [answerId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  emoji      String?
+  comment    String?
+  isFollowup Boolean  @default(false)
+  notified   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([answerId])
+  @@index([userId])
+}
+
+model BookEdition {
+  id           String          @id @default(cuid())
+  connectionId String
+  connection   Connection      @relation(fields: [connectionId], references: [id])
+  rangeFrom    DateTime
+  rangeTo      DateTime?
+  status       BookStatus      @default(draft)
+  editionType  BookEditionType @default(interim)
+  chapterData  Json?
+  pdfUrl       String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([connectionId])
+}
+
+model CuratedQuestion {
+  id         String @id @default(cuid())
+  body       String
+  depth      Int
+  chapterTag String
+  personTag  String?
+  eraTag     String?
+  language   String @default("ko")
+
+  @@index([depth])
+  @@index([chapterTag])
+}
