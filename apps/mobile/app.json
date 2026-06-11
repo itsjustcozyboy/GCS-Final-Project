@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "마음 잇기",
+    "slug": "maeum-itgi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "maeum",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.maeum.itgi"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4A7C59"
+      },
+      "package": "com.maeum.itgi"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-av",
+      "expo-image-picker"
+    ]
+  }
+}
