@@ -1,4 +1,4 @@
-import type { QuestionContext } from '../client.js';
+import type { QuestionContext } from '../client';
 
 export function buildQuestionSystemPrompt(): string {
   return `당신은 부모와 자식이 평생 나누지 못한 대화를 잇는 따뜻한 인터뷰어다.

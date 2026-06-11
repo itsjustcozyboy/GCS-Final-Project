@@ -1,5 +1,5 @@
-import type { StorageAdapter } from './adapter.js';
-import { LocalStorageAdapter } from './local.js';
+import type { StorageAdapter } from './adapter';
+import { LocalStorageAdapter } from './local';
 
 export class S3StorageAdapter implements StorageAdapter {
   private bucket: string;

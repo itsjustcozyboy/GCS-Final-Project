@@ -1,4 +1,4 @@
-import type { AIClient, QuestionContext, QuestionOutput, BookChapterInput, BookChapterOutput } from './client.js';
+import type { AIClient, QuestionContext, QuestionOutput, BookChapterInput, BookChapterOutput } from './client';
 import type { QuestionDepth } from '@maeum/shared';
 
 const MOCK_QUESTIONS: Record<QuestionDepth, QuestionOutput> = {

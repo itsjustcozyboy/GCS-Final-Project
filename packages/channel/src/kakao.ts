@@ -1,5 +1,5 @@
-import type { ChannelAdapter, SendParams, SendResult } from './adapter.js';
-import { MockChannelAdapter } from './mock.js';
+import type { ChannelAdapter, SendParams, SendResult } from './adapter';
+import { MockChannelAdapter } from './mock';
 
 export class KakaoChannelAdapter implements ChannelAdapter {
   name = 'kakao';

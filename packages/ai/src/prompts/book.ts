@@ -1,4 +1,4 @@
-import type { BookChapterInput } from '../client.js';
+import type { BookChapterInput } from '../client';
 
 export function buildBookSystemPrompt(): string {
   return `당신은 흩어진 답변들을 한 사람의 인생 이야기로 엮는 편집자다.

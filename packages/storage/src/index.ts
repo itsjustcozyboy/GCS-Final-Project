@@ -1,10 +1,10 @@
-export * from './adapter.js';
-export * from './local.js';
-export * from './s3.js';
+export * from './adapter';
+export * from './local';
+export * from './s3';
 
-import { LocalStorageAdapter } from './local.js';
-import { S3StorageAdapter } from './s3.js';
-import type { StorageAdapter } from './adapter.js';
+import { LocalStorageAdapter } from './local';
+import { S3StorageAdapter } from './s3';
+import type { StorageAdapter } from './adapter';
 
 export function createStorageAdapter(): StorageAdapter {
   const provider = process.env.STORAGE_PROVIDER ?? 'local';

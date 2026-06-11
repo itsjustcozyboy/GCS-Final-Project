@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcNextDepth } from '../services/question-engine.js';
+import { calcNextDepth } from '../services/question-engine';
 
 describe('calcNextDepth', () => {
   it('응답률 낮으면 깊이 낮춤', () => {

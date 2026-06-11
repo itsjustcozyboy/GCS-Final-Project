@@ -1,20 +1,20 @@
-export * from './trpc.js';
-export * from './routers/auth.js';
-export * from './routers/connection.js';
-export * from './routers/question.js';
-export * from './routers/answer.js';
-export * from './routers/reaction.js';
-export * from './routers/book.js';
-export * from './services/question-engine.js';
-export * from './services/book-engine.js';
+export * from './trpc';
+export * from './routers/auth';
+export * from './routers/connection';
+export * from './routers/question';
+export * from './routers/answer';
+export * from './routers/reaction';
+export * from './routers/book';
+export * from './services/question-engine';
+export * from './services/book-engine';
 
-import { router } from './trpc.js';
-import { authRouter } from './routers/auth.js';
-import { connectionRouter } from './routers/connection.js';
-import { questionRouter } from './routers/question.js';
-import { answerRouter } from './routers/answer.js';
-import { reactionRouter } from './routers/reaction.js';
-import { bookRouter } from './routers/book.js';
+import { router } from './trpc';
+import { authRouter } from './routers/auth';
+import { connectionRouter } from './routers/connection';
+import { questionRouter } from './routers/question';
+import { answerRouter } from './routers/answer';
+import { reactionRouter } from './routers/reaction';
+import { bookRouter } from './routers/book';
 
 export const appRouter = router({
   auth: authRouter,

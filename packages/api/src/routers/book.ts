@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { generateBook } from '../services/book-engine.js';
+import { generateBook } from '../services/book-engine';
 
 export const bookRouter = router({
   generate: protectedProcedure

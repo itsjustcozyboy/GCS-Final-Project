@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { sendDailyQuestion } from '../services/question-engine.js';
+import { sendDailyQuestion } from '../services/question-engine';
 
 export const questionRouter = router({
   // 오늘의 질문 가져오기 (부모용)

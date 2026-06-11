@@ -1,12 +1,12 @@
-export * from './client.js';
-export * from './mock.js';
-export * from './anthropic.js';
-export * from './prompts/question.js';
-export * from './prompts/book.js';
+export * from './client';
+export * from './mock';
+export * from './anthropic';
+export * from './prompts/question';
+export * from './prompts/book';
 
-import { AnthropicAIClient } from './anthropic.js';
-import { MockAIClient } from './mock.js';
-import type { AIClient } from './client.js';
+import { AnthropicAIClient } from './anthropic';
+import { MockAIClient } from './mock';
+import type { AIClient } from './client';
 
 export function createAIClient(): AIClient {
   const apiKey = process.env.ANTHROPIC_API_KEY ?? '';

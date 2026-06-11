@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { StorageAdapter } from './adapter.js';
+import type { StorageAdapter } from './adapter';
 
 export class LocalStorageAdapter implements StorageAdapter {
   private baseDir: string;

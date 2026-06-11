@@ -1,12 +1,12 @@
-export * from './adapter.js';
-export * from './mock.js';
-export * from './kakao.js';
-export * from './sms.js';
+export * from './adapter';
+export * from './mock';
+export * from './kakao';
+export * from './sms';
 
-import { MockChannelAdapter } from './mock.js';
-import { KakaoChannelAdapter } from './kakao.js';
-import { SmsChannelAdapter } from './sms.js';
-import type { ChannelAdapter } from './adapter.js';
+import { MockChannelAdapter } from './mock';
+import { KakaoChannelAdapter } from './kakao';
+import { SmsChannelAdapter } from './sms';
+import type { ChannelAdapter } from './adapter';
 
 export function createChannelAdapter(channel: 'app' | 'kakao' | 'sms'): ChannelAdapter {
   if (channel === 'kakao') {

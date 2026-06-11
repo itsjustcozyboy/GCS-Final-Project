@@ -1,4 +1,4 @@
-import { prisma } from './index.js';
+import { prisma } from './index';
 
 const CURATED_QUESTIONS = [
   // Depth 1 — 사실·감각 (워밍업)

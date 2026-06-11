@@ -1,8 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { AIClient, QuestionContext, QuestionOutput, BookChapterInput, BookChapterOutput } from './client.js';
-import { buildQuestionSystemPrompt, buildQuestionUserPrompt } from './prompts/question.js';
-import { buildBookSystemPrompt, buildBookUserPrompt } from './prompts/book.js';
-import { MockAIClient } from './mock.js';
+import type { AIClient, QuestionContext, QuestionOutput, BookChapterInput, BookChapterOutput } from './client';
+import { buildQuestionSystemPrompt, buildQuestionUserPrompt } from './prompts/question';
+import { buildBookSystemPrompt, buildBookUserPrompt } from './prompts/book';
+import { MockAIClient } from './mock';
 
 export class AnthropicAIClient implements AIClient {
   private client: Anthropic;
