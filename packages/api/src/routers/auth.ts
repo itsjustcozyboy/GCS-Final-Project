@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '../trpc.js';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 
 export const authRouter = router({
@@ -24,7 +24,8 @@ export const authRouter = router({
 
       // 비밀번호 해싱 (Node.js crypto, bcrypt 의존성 없이)
       const { createHash } = await import('crypto');
-      const passwordHash = createHash('sha256').update(password + process.env.PASSWORD_SALT ?? 'maeum-salt').digest('hex');
+      const salt = process.env.PASSWORD_SALT ?? 'maeum-salt';
+      const passwordHash = createHash('sha256').update(password + salt).digest('hex');
 
       const user = await ctx.db.user.create({
         data: { ...userData, name: userData.name },
