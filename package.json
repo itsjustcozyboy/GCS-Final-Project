@@ -11,11 +11,13 @@
     "db:studio": "pnpm --filter @maeum/db db:studio",
     "db:seed": "pnpm --filter @maeum/db db:seed"
   },
+  "dependencies": {
+    "next": "^15.1.6"
+  },
   "devDependencies": {
     "turbo": "^2.3.3",
     "typescript": "^5.7.3",
-    "@types/node": "^22.10.7",
-    "next": "^15.1.6"
+    "@types/node": "^22.10.7"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
