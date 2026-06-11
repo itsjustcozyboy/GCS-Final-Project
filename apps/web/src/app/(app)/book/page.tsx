@@ -27,7 +27,7 @@ function BookPreview({ edition }: { edition: BookEdition & { chapterData: Chapte
                 className="prose prose-sm max-w-none text-gray-700 leading-relaxed mt-3 whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ __html: (data.markdown ?? '').replace(/\n/g, '<br/>') }}
               />
-              {data.followupQuestions.length > 0 && (
+              {(data.followupQuestions?.length ?? 0) > 0 && (
                 <div className="mt-4 p-3 bg-amber-50 rounded-xl">
                   <p className="text-xs font-medium text-amber-700 mb-2">💡 이런 이야기도 들어보면 어떨까요?</p>
                   {data.followupQuestions.map((q, i) => (
