@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import type { AdminPayload, MasterRow, FunnelDetail, SegmentRow } from '@/lib/admin/aggregate';
+import type { AdminPayload, MasterRow, FunnelDetail, SegmentRow, SessionRow, LeadRow } from '@/lib/admin/aggregate';
 import { VERDICT_BADGE, PRICE_VARIANTS, PC1_SAMPLE, PC1_CRITERIA } from '@/lib/admin/config';
 
 interface Payload extends AdminPayload {
