@@ -115,7 +115,7 @@ export default function OnboardingPage() {
             {error && <p className="text-sm text-red-500">{error}</p>}
 
             <button
-              onClick={() => register.mutate({ ...form, role, tone })}
+              onClick={() => register.mutate({ ...form, role })}
               disabled={register.isPending}
               className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
