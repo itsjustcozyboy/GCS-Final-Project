@@ -8,7 +8,9 @@ type ChapterData = Record<string, ChapterEntry>;
 
 function BookPreview({ edition }: { edition: BookEdition & { chapterData: ChapterData | null } }) {
   const [activeChapter, setActiveChapter] = useState<string | null>(null);
-  const chapters = edition.chapterData ? Object.entries(edition.chapterData) : [];
+  const chapters: [string, ChapterEntry][] = edition.chapterData
+    ? (Object.entries(edition.chapterData) as [string, ChapterEntry][]).filter(([, v]) => v != null)
+    : [];
 
   return (
     <div className="space-y-4">
