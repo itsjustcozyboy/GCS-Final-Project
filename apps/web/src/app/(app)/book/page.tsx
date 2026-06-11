@@ -119,7 +119,7 @@ export default function BookPage() {
       )}
 
       <div className="space-y-3">
-        {books.data?.map((b) => (
+        {(books.data as BookEdition[] | undefined)?.map((b) => (
           <button
             key={b.id}
             onClick={() => setSelectedBook(b.id)}
