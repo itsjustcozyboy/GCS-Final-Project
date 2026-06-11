@@ -16,8 +16,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-          // @ts-expect-error precedence is React 19 hint
-          precedence="default"
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          precedence={"default" as any}
         />
       </head>
       <body>
