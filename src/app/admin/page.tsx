@@ -388,6 +388,47 @@ export default function AdminPage() {
             )}
           </section>
 
+          {/* 섹션 E — 접속 세션 */}
+          <section className="mb-10">
+            <h2 className="font-semibold mb-3">E. 접속 세션 ({data.sessions.length}개, 최신 200개)</h2>
+            {data.sessions.length === 0 ? (
+              <div className="border border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-400 text-sm">세션 데이터 없음</div>
+            ) : (
+              <div className="overflow-x-auto card">
+                <table className="w-full text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {['session_id', 'fd_id', 'utm_source', '최초 접속', '이벤트 수', '이벤트 종류', ''].map((h) => (
+                        <th key={h} className="px-3 py-2 text-left text-gray-600">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.sessions.map((s) => (
+                      <tr key={s.session_id} className="border-t border-gray-100">
+                        <td className="px-3 py-2 font-mono text-xs text-gray-500">{s.session_id.slice(0, 8)}…</td>
+                        <td className="px-3 py-2">{s.fd_id}</td>
+                        <td className="px-3 py-2">{s.utm_source}</td>
+                        <td className="px-3 py-2 text-gray-400">{s.first_seen ? new Date(s.first_seen).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) : '—'}</td>
+                        <td className="px-3 py-2 text-center">{s.event_count}</td>
+                        <td className="px-3 py-2 text-xs text-gray-400">{s.event_names.join(', ')}</td>
+                        <td className="px-3 py-2">
+                          <button
+                            onClick={() => deleteSession(s.session_id)}
+                            disabled={deletingSession.has(s.session_id)}
+                            className="text-xs text-red-400 hover:text-red-600 disabled:opacity-30"
+                          >
+                            {deletingSession.has(s.session_id) ? '삭제 중…' : '삭제'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+
           {/* 섹션 D — 지불의사 & 리드 */}
           <section className="mb-10">
             <h2 className="font-semibold mb-3">D. 지불의사 & 리드</h2>
