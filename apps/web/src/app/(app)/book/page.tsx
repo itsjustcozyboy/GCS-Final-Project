@@ -75,7 +75,8 @@ export default function BookPage() {
   }
 
   if (selectedBook && bookDetail.data) {
-    const edition = bookDetail.data as typeof bookDetail.data & { chapterData: ChapterData | null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const edition = bookDetail.data as any as BookEdition & { chapterData: ChapterData | null };
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
