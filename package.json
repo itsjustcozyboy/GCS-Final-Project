@@ -1,30 +1,23 @@
 {
-  "name": "temp-init",
-  "version": "0.1.0",
+  "name": "maeum-itgi",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.108.1",
-    "dotenv": "^17.4.2",
-    "next": "16.2.7",
-    "posthog-js": "^1.383.2",
-    "qrcode": "^1.5.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "uuid": "^14.0.0"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "db:push": "pnpm --filter @maeum/db db:push",
+    "db:migrate": "pnpm --filter @maeum/db db:migrate",
+    "db:studio": "pnpm --filter @maeum/db db:studio",
+    "db:seed": "pnpm --filter @maeum/db db:seed"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/qrcode": "^1.5.6",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/uuid": "^10.0.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3",
+    "@types/node": "^22.10.7"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20"
   }
 }
