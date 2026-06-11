@@ -1,6 +1,3 @@
 {
-  "buildCommand": "cd ../.. && pnpm turbo build --filter=@maeum/web...",
-  "installCommand": "cd ../.. && pnpm install",
-  "outputDirectory": ".next",
   "framework": "nextjs"
 }
