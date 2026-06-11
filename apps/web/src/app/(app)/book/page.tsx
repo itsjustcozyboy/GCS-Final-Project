@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import type { BookEdition } from '@maeum/db';
 
-type ChapterData = Record<string, { markdown: string; followupQuestions: string[] }>;
+type ChapterEntry = { markdown?: string | null; followupQuestions?: string[] | null };
+type ChapterData = Record<string, ChapterEntry>;
 
 function BookPreview({ edition }: { edition: BookEdition & { chapterData: ChapterData | null } }) {
   const [activeChapter, setActiveChapter] = useState<string | null>(null);
