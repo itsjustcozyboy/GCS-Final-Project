@@ -425,34 +425,79 @@ export default function AdminPage() {
                       {interviewOnly ? '인터뷰 가능 리드 없음' : '리드 데이터 없음'}
                     </div>
                   ) : (
-                    <div className="overflow-x-auto card">
-                      <table className="w-full text-sm whitespace-nowrap">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            {['email', 'name', 'fd_id', 'utm_source', 'utm_medium', 'utm_term', '인터뷰', 'contact', 'created_at'].map((h) => (
-                              <th key={h} className="px-3 py-2 text-left text-gray-600">
-                                {h}
+                    <>
+                      {selectedLeads.size > 0 && (
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs text-gray-600">{selectedLeads.size}건 선택됨</span>
+                          <button onClick={deleteSelectedLeads} className="text-xs text-red-500 border border-red-300 rounded-lg px-3 py-1 hover:bg-red-50">
+                            선택 삭제
+                          </button>
+                          <button onClick={() => setSelectedLeads(new Set())} className="text-xs text-gray-400 hover:text-gray-600">
+                            선택 해제
+                          </button>
+                        </div>
+                      )}
+                      <div className="overflow-x-auto card">
+                        <table className="w-full text-sm whitespace-nowrap">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-3 py-2 text-left">
+                                <input
+                                  type="checkbox"
+                                  checked={shown.length > 0 && shown.every((l) => selectedLeads.has(l.id))}
+                                  onChange={(e) => {
+                                    if (e.target.checked) setSelectedLeads(new Set(shown.map((l) => l.id)));
+                                    else setSelectedLeads(new Set());
+                                  }}
+                                  className="w-4 h-4 accent-[color:var(--color-brand)]"
+                                />
                               </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {shown.map((l, i) => (
-                            <tr key={i} className="border-t border-gray-100">
-                              <td className="px-3 py-2">{l.email}</td>
-                              <td className="px-3 py-2">{l.name}</td>
-                              <td className="px-3 py-2">{l.fd_id}</td>
-                              <td className="px-3 py-2">{l.utm_source}</td>
-                              <td className="px-3 py-2">{l.utm_medium}</td>
-                              <td className="px-3 py-2">{l.utm_term}</td>
-                              <td className="px-3 py-2 text-center">{l.interview_ok ? '🟢' : ''}</td>
-                              <td className="px-3 py-2">{l.contact}</td>
-                              <td className="px-3 py-2 text-gray-400">{l.created_at}</td>
+                              {['email', 'name', 'fd_id', 'utm_source', 'utm_medium', 'utm_term', '인터뷰', 'contact', 'created_at', ''].map((h) => (
+                                <th key={h} className="px-3 py-2 text-left text-gray-600">
+                                  {h}
+                                </th>
+                              ))}
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                          </thead>
+                          <tbody>
+                            {shown.map((l) => (
+                              <tr key={l.id || l.email} className={`border-t border-gray-100 ${selectedLeads.has(l.id) ? 'bg-red-50' : ''}`}>
+                                <td className="px-3 py-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedLeads.has(l.id)}
+                                    onChange={(e) => {
+                                      const n = new Set(selectedLeads);
+                                      e.target.checked ? n.add(l.id) : n.delete(l.id);
+                                      setSelectedLeads(n);
+                                    }}
+                                    className="w-4 h-4 accent-[color:var(--color-brand)]"
+                                  />
+                                </td>
+                                <td className="px-3 py-2">{l.email}</td>
+                                <td className="px-3 py-2">{l.name}</td>
+                                <td className="px-3 py-2">{l.fd_id}</td>
+                                <td className="px-3 py-2">{l.utm_source}</td>
+                                <td className="px-3 py-2">{l.utm_medium}</td>
+                                <td className="px-3 py-2">{l.utm_term}</td>
+                                <td className="px-3 py-2 text-center">{l.interview_ok ? '🟢' : ''}</td>
+                                <td className="px-3 py-2">{l.contact}</td>
+                                <td className="px-3 py-2 text-gray-400">{l.created_at}</td>
+                                <td className="px-3 py-2">
+                                  <button
+                                    onClick={() => { if (confirm(`${l.email} 리드를 삭제하시겠습니까?`)) deleteLead(l.id); }}
+                                    disabled={deletingLeads.has(l.id) || !l.id}
+                                    className="text-xs text-red-400 hover:text-red-600 disabled:opacity-30"
+                                  >
+                                    삭제
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </>
               );
