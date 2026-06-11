@@ -79,6 +79,7 @@ export interface AdminPayload {
   };
   intents: { preorder_intent: number; subscribe_intent: number; invite_click: number; kakao_channel_click: number };
   leads: LeadRow[];
+  sessions: SessionRow[];
 }
 
 export interface LeadRow {
