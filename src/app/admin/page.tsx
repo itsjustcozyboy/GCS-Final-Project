@@ -39,6 +39,9 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
+  const [deletingLeads, setDeletingLeads] = useState<Set<string>>(new Set());
+  const [deletingSession, setDeletingSession] = useState<Set<string>>(new Set());
 
   // filters
   const [from, setFrom] = useState('');
