@@ -30,7 +30,7 @@ function BookPreview({ edition }: { edition: BookEdition & { chapterData: Chapte
               {(data.followupQuestions?.length ?? 0) > 0 && (
                 <div className="mt-4 p-3 bg-amber-50 rounded-xl">
                   <p className="text-xs font-medium text-amber-700 mb-2">💡 이런 이야기도 들어보면 어떨까요?</p>
-                  {data.followupQuestions.map((q, i) => (
+                  {(data.followupQuestions ?? []).map((q, i) => (
                     <p key={i} className="text-sm text-amber-600 mt-1">• {q}</p>
                   ))}
                 </div>
