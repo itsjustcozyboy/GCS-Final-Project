@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm turbo build --filter=@maeum/web...",
-  "installCommand": "pnpm install --ignore-scripts && pnpm --filter @maeum/db db:generate",
+  "installCommand": "pnpm install",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs",
   "rootDirectory": "."
