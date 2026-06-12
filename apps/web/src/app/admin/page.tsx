@@ -632,6 +632,7 @@ export default function AdminPage() {
             {[
               { value: 'visitors', label: '👥 방문자별' },
               { value: 'logs', label: '📋 전체 기록' },
+              { value: 'inquiries', label: '💬 문의 관리' },
             ].map((t) => (
               <button
                 key={t.value}
