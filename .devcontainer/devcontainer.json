@@ -1,0 +1,34 @@
+{
+  "name": "GCS Final Project + Codex",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "Prisma.prisma",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postAttachCommand": "echo 'Codex is ready. Run: codex. Authenticate with ChatGPT, or set OPENAI_API_KEY as a GitHub Codespaces secret.'",
+  "forwardPorts": [3000, 8081],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js web app"
+    },
+    "8081": {
+      "label": "Expo Metro"
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}
