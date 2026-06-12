@@ -144,6 +144,10 @@ export function AnswerComposer({
                   if (g.format === 'text') {
                     if (g.starter && !text) setText(g.starter + ' ');
                     setMethod('direct');
+                  } else if (g.format === 'audio') {
+                    setMethod('voice');
+                  } else {
+                    setMethod('direct');
                   }
                 }}
                 className="w-full p-3.5 rounded-xl border-2 text-left transition-all hover:shadow-sm"
