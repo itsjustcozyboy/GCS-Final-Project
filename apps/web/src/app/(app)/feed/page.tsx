@@ -173,18 +173,10 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
   );
 }
 
+// 부모용 — 피드에서 바로 답변 (3가지 방식 + 공개 설정)
 function InlineAnswer({ questionId, connectionId }: { questionId: string; connectionId: string }) {
   const utils = trpc.useUtils();
   const [open, setOpen] = useState(false);
-  const [text, setText] = useState('');
-
-  const submit = trpc.answer.submit.useMutation({
-    onSuccess: () => {
-      setText('');
-      setOpen(false);
-      void utils.question.list.invalidate({ connectionId });
-    },
-  });
 
   if (!open) {
     return (
@@ -195,28 +187,41 @@ function InlineAnswer({ questionId, connectionId }: { questionId: string; connec
   }
 
   return (
-    <div className="space-y-2">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm resize-none focus:outline-none"
-        style={{ minHeight: '80px' }}
-        placeholder="이야기를 들려주세요..."
+    <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+      <AnswerComposer
+        questionId={questionId}
+        compact
+        onDone={() => {
+          setOpen(false);
+          void utils.question.list.invalidate({ connectionId });
+        }}
       />
-      <div className="flex gap-2">
-        <button onClick={() => setOpen(false)} className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-500">
-          취소
-        </button>
-        <button
-          onClick={() => submit.mutate({ questionId, format: 'text', body: text.trim(), receivedVia: 'app' })}
-          disabled={submit.isPending || !text.trim()}
-          className="px-4 py-2 rounded-xl text-white text-sm font-medium disabled:opacity-50"
-          style={{ backgroundColor: 'var(--color-primary)' }}
-        >
-          {submit.isPending ? '저장 중...' : '답변 보내기'}
-        </button>
-      </div>
+      <button onClick={() => setOpen(false)} className="mt-2 text-xs text-gray-400 hover:text-gray-600">
+        접기
+      </button>
     </div>
+  );
+}
+
+// 부모용 — 자기 답변의 공개/비공개 전환
+function VisibilityToggle({ answerId, isPrivate, connectionId }: { answerId: string; isPrivate: boolean; connectionId: string }) {
+  const utils = trpc.useUtils();
+  const toggle = trpc.answer.setVisibility.useMutation({
+    onSuccess: () => void utils.question.list.invalidate({ connectionId }),
+  });
+
+  return (
+    <button
+      onClick={() => toggle.mutate({ answerId, isPrivate: !isPrivate })}
+      disabled={toggle.isPending}
+      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-colors disabled:opacity-50"
+      style={isPrivate
+        ? { borderColor: '#D1D5DB', color: '#6B7280', backgroundColor: '#F9FAFB' }
+        : { borderColor: 'var(--color-primary)', color: 'var(--color-primary)', backgroundColor: '#EFF7F2' }}
+      title="눌러서 공개 설정 변경"
+    >
+      {toggle.isPending ? '변경 중...' : isPrivate ? '🔒 비공개 (눌러서 공개)' : '💌 공개됨 (눌러서 비공개)'}
+    </button>
   );
 }
 
