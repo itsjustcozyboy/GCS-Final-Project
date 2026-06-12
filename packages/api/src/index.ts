@@ -32,6 +32,7 @@ export const appRouter = router({
   answer: answerRouter,
   reaction: reactionRouter,
   message: messageRouter,
+  inquiry: inquiryRouter,
   book: bookRouter,
   tracking: trackingRouter,
 });
