@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd packages/db && pnpm exec prisma generate && cd ../.. && pnpm turbo build --filter=@maeum/web...",
+  "buildCommand": "cd packages/db && pnpm exec prisma generate && pnpm exec prisma db execute --url \"${DIRECT_URL:-$DATABASE_URL}\" --file prisma/prod-sync.sql && cd ../.. && pnpm turbo build --filter=@maeum/web...",
   "installCommand": "pnpm install",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs"
