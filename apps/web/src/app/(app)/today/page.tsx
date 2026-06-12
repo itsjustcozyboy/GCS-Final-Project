@@ -78,10 +78,13 @@ export default function TodayPage() {
   if (!question) {
     if (isParent) {
       return (
-        <div className="text-center py-16 space-y-4">
-          <div className="text-5xl">🌤️</div>
-          <p className="text-gray-700 font-medium">아직 오늘의 질문이 도착하지 않았어요</p>
-          <p className="text-sm text-gray-400">자녀가 질문을 보내면 여기에 표시돼요</p>
+        <div className="space-y-6">
+          <div className="text-center py-10 space-y-4">
+            <div className="text-5xl">🌤️</div>
+            <p className="text-xl text-gray-700 font-medium">아직 오늘의 질문이 도착하지 않았어요</p>
+            <p className="text-base text-gray-400">자녀가 질문을 보내면 여기에 표시돼요</p>
+          </div>
+          <ParentMessageEntry connectionId={firstConn.id} childName={childName} onSent={refresh} />
         </div>
       );
     }
