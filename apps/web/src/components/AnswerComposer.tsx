@@ -44,12 +44,18 @@ export function AnswerComposer({
   const submit = trpc.answer.submit.useMutation({ onSuccess: onDone });
   const skip = trpc.answer.skip.useMutation({ onSuccess: onDone });
 
+  // 현재 동선에서 실제 제출될 형식
+  const effectiveFormat: Format = method === 'voice' ? 'audio' : media ? media.kind : format === 'audio' ? 'audio' : format;
+  const canSubmit = effectiveFormat === 'text' ? !!text.trim() : !!media || !!text.trim();
+
   function handleSubmit() {
-    if (format === 'text' && !text.trim()) return;
+    if (!canSubmit) return;
     submit.mutate({
       questionId,
-      format,
+      format: media ? effectiveFormat : text.trim() ? (method === 'voice' ? 'text' : 'text') : effectiveFormat,
       body: text.trim() || undefined,
+      mediaUrl: media?.url,
+      transcript: media?.transcript,
       receivedVia: 'app',
       isPrivate,
       keywords: aiComposed ? keywords : [],
@@ -58,7 +64,8 @@ export function AnswerComposer({
   }
 
   const METHODS: Array<{ value: Method; label: string }> = [
-    { value: 'keywords', label: '🔑 키워드로 답하기' },
+    { value: 'voice', label: '🎤 말로 답하기' },
+    { value: 'keywords', label: '🔑 키워드로' },
     { value: 'guide', label: '💡 가이드' },
     { value: 'direct', label: '✍️ 직접 쓰기' },
   ];
