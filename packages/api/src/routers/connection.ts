@@ -23,6 +23,41 @@ export const connectionRouter = router({
       });
     }),
 
+  // 새 연결 시작 — 상대(부모님) 정보를 입력받아 사용자와 연결을 한 번에 생성
+  start: protectedProcedure
+    .input(z.object({
+      parentName: z.string().min(1).max(50),
+      tone: z.enum(['light', 'deep']).default('light'),
+      intimacy: z.number().int().min(1).max(5).default(3),
+      cohabiting: z.boolean().default(false),
+      responseChannel: z.enum(['app', 'kakao', 'sms']).default('app'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // 이미 연결이 있으면 그대로 반환 (중복 생성 방지)
+      const existing = await ctx.db.connection.findFirst({
+        where: { OR: [{ fromUserId: ctx.userId }, { toUserId: ctx.userId }] },
+      });
+      if (existing) return existing;
+
+      // 이야기를 들려줄 상대(부모님) 사용자 레코드 생성
+      const parent = await ctx.db.user.create({
+        data: { name: input.parentName, role: 'parent' },
+      });
+
+      const inviteCode = Math.random().toString(36).slice(2, 10).toUpperCase();
+      return ctx.db.connection.create({
+        data: {
+          fromUserId: parent.id,
+          toUserId: ctx.userId,
+          tone: input.tone,
+          intimacy: input.intimacy,
+          cohabiting: input.cohabiting,
+          responseChannel: input.responseChannel,
+          inviteCode,
+        },
+      });
+    }),
+
   acceptInvite: protectedProcedure
     .input(z.object({ inviteCode: z.string() }))
     .mutation(async ({ ctx, input }) => {
