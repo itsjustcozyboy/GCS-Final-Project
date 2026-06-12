@@ -85,6 +85,15 @@ export function AnswerComposer({
         ))}
       </div>
 
+      {/* (0) 음성 답변 — 1순위 동선 */}
+      {method === 'voice' && (
+        <VoiceRecorder
+          uploaded={media?.kind === 'audio' ? media : null}
+          onUploaded={setMedia}
+          onClear={() => setMedia(null)}
+        />
+      )}
+
       {/* (2) 키워드 → AI 답변 합성 (핵심) */}
       {method === 'keywords' && (
         <div className="space-y-3">
