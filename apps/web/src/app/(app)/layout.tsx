@@ -11,6 +11,7 @@ const NAV = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { data: adminData } = trpc.admin.isAdmin.useQuery();
 
   return (
     <div className="min-h-screen pb-20" style={{ background: 'var(--color-background)' }}>
