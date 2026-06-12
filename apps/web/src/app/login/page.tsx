@@ -80,11 +80,3 @@ export default function LoginPage() {
     </main>
   );
 }
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
-  );
-}
