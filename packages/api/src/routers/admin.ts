@@ -28,6 +28,7 @@ export const adminRouter = router({
             OR: [
               { email: { contains: input.search, mode: 'insensitive' as const } },
               { name: { contains: input.search, mode: 'insensitive' as const } },
+              { ipAddress: { contains: input.search, mode: 'insensitive' as const } },
             ],
           }
         : {};
