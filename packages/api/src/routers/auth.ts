@@ -70,6 +70,16 @@ export const authRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
       }
 
+      // ADMIN_EMAILS에 등록된 이메일이면 Admin 테이블에 자동 추가 (부트스트랩)
+      const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
+      if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+        await ctx.db.admin.upsert({
+          where: { userId: user.id },
+          create: { userId: user.id },
+          update: {},
+        });
+      }
+
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
       const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
 
