@@ -1,13 +1,15 @@
 'use client';
-import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import Link from 'next/link';
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get('next') || '/feed';
+  const next =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('next') || '/feed'
+      : '/feed';
   const [form, setForm] = useState({ emailOrPhone: '', password: '' });
   const [error, setError] = useState('');
 
