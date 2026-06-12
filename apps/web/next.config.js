@@ -4,9 +4,6 @@ const path = require('path');
 const config = {
   transpilePackages: ['@maeum/api', '@maeum/db', '@maeum/shared', '@maeum/ai', '@maeum/channel', '@maeum/storage'],
   outputFileTracingRoot: path.join(__dirname, '../../'),
-  outputFileTracingIncludes: {
-    '/api/trpc/[trpc]': ['../../packages/db/generated/client/**/*'],
-  },
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
   webpack(webpackConfig) {
