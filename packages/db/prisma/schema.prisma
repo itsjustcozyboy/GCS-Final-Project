@@ -60,6 +60,21 @@ enum AnswerOrigin {
   parent_initiated
 }
 
+// 서비스 문의 (마이페이지 FAQ 하단)
+enum InquiryCategory {
+  bug
+  feature
+  payment
+  privacy
+  etc
+}
+
+enum InquiryStatus {
+  new
+  in_progress
+  resolved
+}
+
 // 회원가입 시 항목별 동의 기록 (PIPA: 항목별 동의여부 + 일시 + 약관 버전)
 enum ConsentType {
   privacy_required // [필수] 서비스 이용을 위한 개인정보 수집·이용
