@@ -51,20 +51,24 @@ enum QuestionSource {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String?  @unique
-  phone        String?  @unique
-  name         String
-  role         Role
-  avatarUrl    String?
-  passwordHash String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id               String    @id @default(cuid())
+  email            String?   @unique
+  phone            String?   @unique
+  name             String
+  role             Role
+  avatarUrl        String?
+  passwordHash     String?
+  consentAnalytics Boolean   @default(false)
+  consentAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   sentConnections     Connection[] @relation("fromUser")
   receivedConnections Connection[] @relation("toUser")
   sessions            Session[]
   reactions           Reaction[]
+  accessLogs          AccessLog[]
+  admin               Admin?
 }
 
 model Session {
