@@ -113,7 +113,6 @@ export const authRouter = router({
       }
 
       // ADMIN_EMAILS에 등록된 이메일이면 Admin 테이블에 자동 추가 (부트스트랩)
-      const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
       if (user.email && adminEmails.includes(user.email.toLowerCase())) {
         await ctx.db.admin.upsert({
           where: { userId: user.id },
