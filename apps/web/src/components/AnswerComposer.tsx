@@ -10,13 +10,11 @@ const PRIMARY = 'var(--color-primary)';
 
 export function AnswerComposer({
   questionId,
-  questionBody,
   onDone,
   onSkip,
   compact = false,
 }: {
   questionId: string;
-  questionBody: string;
   onDone: () => void;
   onSkip?: () => void;
   compact?: boolean;
