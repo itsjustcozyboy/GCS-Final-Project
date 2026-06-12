@@ -3,7 +3,7 @@ import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 
 // 관리자 전용 procedure (로그인 검증 + admins 테이블 검증)
-const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const admin = await ctx.db.admin.findUnique({ where: { userId: ctx.userId } });
   if (!admin) throw new TRPCError({ code: 'FORBIDDEN', message: '관리자 권한이 필요합니다.' });
   return next({ ctx });
