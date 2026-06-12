@@ -113,10 +113,32 @@ export default function OnboardingPage() {
               </div>
             )}
 
+            {/* 개인정보 수집 동의 */}
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-2">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentAnalytics}
+                  onChange={(e) => setConsentAnalytics(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-[var(--color-primary)]"
+                />
+                <span className="text-sm text-gray-700">
+                  (선택) 서비스 개선을 위해 접속 IP·기기 정보 수집에 동의합니다.
+                  거부해도 서비스 이용에 불이익이 없습니다.
+                </span>
+              </label>
+              <p className="text-xs text-gray-400 pl-7">
+                수집 목적: 서비스 이용 분석 · 보유 기간: 탈퇴 또는 12개월 중 먼저 도래하는 시점{' '}
+                <a href="/privacy" target="_blank" className="underline" style={{ color: 'var(--color-primary)' }}>
+                  개인정보처리방침
+                </a>
+              </p>
+            </div>
+
             {error && <p className="text-sm text-red-500">{error}</p>}
 
             <button
-              onClick={() => register.mutate({ ...form, role })}
+              onClick={() => register.mutate({ ...form, role, consentAnalytics })}
               disabled={register.isPending}
               className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
