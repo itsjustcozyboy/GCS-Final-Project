@@ -188,3 +188,37 @@ model CuratedQuestion {
   @@index([depth])
   @@index([chapterTag])
 }
+
+model AccessLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email     String?
+  name      String?
+  ipAddress String?
+  userAgent String?
+  path      String?
+  referrer  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Admin {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AdminAudit {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  targetIds  String[]
+  createdAt  DateTime @default(now())
+
+  @@index([adminId])
+}
