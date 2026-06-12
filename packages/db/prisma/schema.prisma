@@ -50,6 +50,7 @@ enum QuestionSource {
   ai
   curated
   followup
+  custom
 }
 
 model User {
