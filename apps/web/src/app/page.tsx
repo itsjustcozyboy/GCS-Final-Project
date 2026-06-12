@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { AdminLink } from '@/components/AdminLink';
 
 export default function Home() {
   return (
