@@ -193,6 +193,7 @@ model Answer {
   questionId  String       @unique
   question    Question     @relation(fields: [questionId], references: [id])
   format      AnswerFormat @default(text)
+  origin      AnswerOrigin @default(question_response) // 부모 자발 메시지 구분
   body        String?
   mediaUrl    String?
   transcript  String?
