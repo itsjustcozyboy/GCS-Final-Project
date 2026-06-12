@@ -572,7 +572,7 @@ function InquiriesView({ search }: { search: string }) {
 // ─── 페이지 ──────────────────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
-  const [tab, setTab] = useState<'visitors' | 'logs'>('visitors');
+  const [tab, setTab] = useState<'visitors' | 'logs' | 'inquiries'>('visitors');
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
