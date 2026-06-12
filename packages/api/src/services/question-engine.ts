@@ -160,6 +160,33 @@ export async function deliverQuestion(db: DB, connectionId: string, payload: Que
 }
 
 export async function sendDailyQuestion(db: DB, connectionId: string) {
+  // 자녀의 되묻기(후속 질문) 큐가 있으면 최우선으로 발송
+  const pendingFollowup = await db.question.findFirst({
+    where: { connectionId, source: 'followup', sentAt: null },
+    orderBy: { createdAt: 'asc' },
+  });
+  if (pendingFollowup) {
+    const connection = await db.connection.findUniqueOrThrow({
+      where: { id: connectionId },
+      include: { fromUser: true },
+    });
+    if (isSendBlocked(connection.sensitiveStatus)) {
+      return { sent: false, reason: connection.sensitiveStatus };
+    }
+    const question = await db.question.update({
+      where: { id: pendingFollowup.id },
+      data: { sentAt: new Date() },
+    });
+    const channel = createChannelAdapter(connection.responseChannel as 'app' | 'kakao' | 'sms');
+    await channel.send({
+      to: connection.fromUser.phone ?? connection.fromUser.email ?? 'unknown',
+      templateId: 'daily_question',
+      channel: connection.responseChannel as 'app' | 'kakao' | 'sms',
+      variables: { name: connection.fromUser.name, question: question.body, questionId: question.id },
+    });
+    return { sent: true, questionId: question.id };
+  }
+
   const result = await selectQuestion(db, connectionId);
 
   if (result.blocked) {
