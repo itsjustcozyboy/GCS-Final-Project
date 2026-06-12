@@ -51,13 +51,15 @@ export default function FaqPage() {
         ))}
       </div>
 
-      <div className="mt-8 rounded-2xl bg-white border border-gray-100 p-5 text-center text-sm text-gray-500">
-        더 궁금한 점이 있으신가요?{' '}
-        <a href="mailto:leokor1214@gachon.ac.kr" className="underline font-medium" style={{ color: 'var(--color-primary)' }}>
-          leokor1214@gachon.ac.kr
-        </a>
-        로 문의해 주세요.
+      {/* 서비스 문의 — FAQ 하단 */}
+      <div className="mt-8">
+        <InquiryForm />
       </div>
+
+      <p className="mt-4 text-center text-xs text-gray-400">
+        이메일로 직접 문의하셔도 돼요:{' '}
+        <a href="mailto:leokor1214@gachon.ac.kr" className="underline">leokor1214@gachon.ac.kr</a>
+      </p>
     </main>
   );
 }
