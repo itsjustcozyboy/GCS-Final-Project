@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { trpc } from '@/lib/trpc';
 
 const NAV = [
   { href: '/feed', icon: '📬', label: '피드' },
