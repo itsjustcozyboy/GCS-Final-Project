@@ -29,18 +29,24 @@ function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | 
 
 function ReactionBar({ answerId, connectionId }: { answerId: string; connectionId: string }) {
   const [comment, setComment] = useState('');
-  const [showInput, setShowInput] = useState(false);
+  // 'comment' = 일반 댓글, 'followup' = 되묻기 (후속 질문으로 부모에게 전달)
+  const [inputMode, setInputMode] = useState<'comment' | 'followup' | null>(null);
   const utils = trpc.useUtils();
 
   const addReaction = trpc.reaction.add.useMutation({
     onSuccess: () => {
       setComment('');
-      setShowInput(false);
+      setInputMode(null);
       utils.question.list.invalidate({ connectionId });
     },
   });
 
   const EMOJIS = ['❤️', '😊', '😢', '👍', '🙏'];
+
+  function send() {
+    if (!comment.trim() || !inputMode) return;
+    addReaction.mutate({ answerId, comment: comment.trim(), isFollowup: inputMode === 'followup' });
+  }
 
   return (
     <div className="mt-3 space-y-2">
@@ -50,37 +56,47 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
             key={emoji}
             onClick={() => addReaction.mutate({ answerId, emoji })}
             className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
+            aria-label={`${emoji} 반응 남기기`}
           >
             {emoji}
           </button>
         ))}
         <button
-          onClick={() => setShowInput(!showInput)}
+          onClick={() => setInputMode(inputMode === 'comment' ? null : 'comment')}
           className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
         >
           💬 댓글
         </button>
+        <button
+          onClick={() => setInputMode(inputMode === 'followup' ? null : 'followup')}
+          className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
+          title="더 듣고 싶은 이야기를 후속 질문으로 보내요"
+        >
+          🔁 되묻기
+        </button>
       </div>
-      {showInput && (
-        <div className="flex gap-2">
-          <input
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="flex-1 px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none"
-            placeholder="댓글을 남겨요..."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && comment.trim()) {
-                addReaction.mutate({ answerId, comment: comment.trim() });
-              }
-            }}
-          />
-          <button
-            onClick={() => comment.trim() && addReaction.mutate({ answerId, comment: comment.trim() })}
-            className="px-4 py-2 rounded-xl text-white text-sm font-medium"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
-            보내기
-          </button>
+      {inputMode && (
+        <div className="space-y-1">
+          {inputMode === 'followup' && (
+            <p className="text-xs text-gray-400">되묻는 내용은 다음 질문으로 부모님께 전달돼요.</p>
+          )}
+          <div className="flex gap-2">
+            <input
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="flex-1 px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none"
+              placeholder={inputMode === 'followup' ? '더 듣고 싶은 이야기를 물어보세요...' : '댓글을 남겨요...'}
+              onKeyDown={(e) => e.key === 'Enter' && send()}
+            />
+            <button
+              onClick={send}
+              disabled={addReaction.isPending}
+              className="px-4 py-2 rounded-xl text-white text-sm font-medium disabled:opacity-50"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              보내기
+            </button>
+          </div>
         </div>
       )}
     </div>
