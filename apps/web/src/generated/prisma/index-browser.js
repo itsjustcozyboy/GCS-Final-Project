@@ -130,10 +130,20 @@ exports.Prisma.UserScalarFieldEnum = {
   avatarUrl: 'avatarUrl',
   passwordHash: 'passwordHash',
   consentAnalytics: 'consentAnalytics',
+  consentMarketing: 'consentMarketing',
   consentAt: 'consentAt',
   lastSeenAt: 'lastSeenAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConsentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  agreed: 'agreed',
+  version: 'version',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -194,6 +204,7 @@ exports.Prisma.AnswerScalarFieldEnum = {
   id: 'id',
   questionId: 'questionId',
   format: 'format',
+  origin: 'origin',
   body: 'body',
   mediaUrl: 'mediaUrl',
   transcript: 'transcript',
@@ -296,6 +307,14 @@ exports.Role = exports.$Enums.Role = {
   both: 'both'
 };
 
+exports.ConsentType = exports.$Enums.ConsentType = {
+  privacy_required: 'privacy_required',
+  terms_required: 'terms_required',
+  age_over_14: 'age_over_14',
+  analytics: 'analytics',
+  marketing: 'marketing'
+};
+
 exports.Tone = exports.$Enums.Tone = {
   light: 'light',
   deep: 'deep'
@@ -312,7 +331,8 @@ exports.QuestionSource = exports.$Enums.QuestionSource = {
   ai: 'ai',
   curated: 'curated',
   followup: 'followup',
-  custom: 'custom'
+  custom: 'custom',
+  parent_message: 'parent_message'
 };
 
 exports.AnswerFormat = exports.$Enums.AnswerFormat = {
@@ -320,6 +340,11 @@ exports.AnswerFormat = exports.$Enums.AnswerFormat = {
   photo: 'photo',
   video: 'video',
   audio: 'audio'
+};
+
+exports.AnswerOrigin = exports.$Enums.AnswerOrigin = {
+  question_response: 'question_response',
+  parent_initiated: 'parent_initiated'
 };
 
 exports.BookStatus = exports.$Enums.BookStatus = {
@@ -335,6 +360,7 @@ exports.BookEditionType = exports.$Enums.BookEditionType = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Consent: 'Consent',
   Session: 'Session',
   Connection: 'Connection',
   ConnectionInvite: 'ConnectionInvite',

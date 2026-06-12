@@ -54,3 +54,40 @@ ALTER TABLE "Answer" ADD COLUMN IF NOT EXISTS "isPrivate" BOOLEAN NOT NULL DEFAU
 ALTER TABLE "Answer" ADD COLUMN IF NOT EXISTS "keywords" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
 ALTER TABLE "Answer" ADD COLUMN IF NOT EXISTS "aiComposed" BOOLEAN NOT NULL DEFAULT false;
 ALTER TYPE "QuestionSource" ADD VALUE IF NOT EXISTS 'custom';
+
+-- 항목별 동의 기록 + 부모 자발 메시지 (2026-06-12, TASK 1·4)
+ALTER TYPE "QuestionSource" ADD VALUE IF NOT EXISTS 'parent_message';
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'AnswerOrigin') THEN
+    CREATE TYPE "AnswerOrigin" AS ENUM ('question_response', 'parent_initiated');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'ConsentType') THEN
+    CREATE TYPE "ConsentType" AS ENUM ('privacy_required', 'terms_required', 'age_over_14', 'analytics', 'marketing');
+  END IF;
+END $$;
+
+ALTER TABLE "Answer" ADD COLUMN IF NOT EXISTS "origin" "AnswerOrigin" NOT NULL DEFAULT 'question_response';
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "consentMarketing" BOOLEAN NOT NULL DEFAULT false;
+
+CREATE TABLE IF NOT EXISTS "Consent" (
+    "id"        TEXT NOT NULL,
+    "userId"    TEXT NOT NULL,
+    "type"      "ConsentType" NOT NULL,
+    "agreed"    BOOLEAN NOT NULL,
+    "version"   TEXT NOT NULL DEFAULT 'v1.0',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Consent_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX IF NOT EXISTS "Consent_userId_idx" ON "Consent"("userId");
+CREATE INDEX IF NOT EXISTS "Consent_type_idx" ON "Consent"("type");
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'Consent_userId_fkey') THEN
+    ALTER TABLE "Consent" ADD CONSTRAINT "Consent_userId_fkey"
+      FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  END IF;
+END $$;

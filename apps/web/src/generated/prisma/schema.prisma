@@ -51,6 +51,22 @@ enum QuestionSource {
   curated
   followup
   custom
+  parent_message
+}
+
+// 답변의 출처 — 자녀 질문에 대한 응답인지, 부모가 먼저 남긴 메시지인지
+enum AnswerOrigin {
+  question_response
+  parent_initiated
+}
+
+// 회원가입 시 항목별 동의 기록 (PIPA: 항목별 동의여부 + 일시 + 약관 버전)
+enum ConsentType {
+  privacy_required // [필수] 서비스 이용을 위한 개인정보 수집·이용
+  terms_required // [필수] 이용약관 동의
+  age_over_14 // [필수] 만 14세 이상 확인 (만 14세 미만 법정대리인 동의는 TODO)
+  analytics // [선택] 접속정보(IP 등) 수집
+  marketing // [선택] 마케팅·알림 수신
 }
 
 model User {
@@ -62,6 +78,7 @@ model User {
   avatarUrl        String?
   passwordHash     String?
   consentAnalytics Boolean   @default(false)
+  consentMarketing Boolean   @default(false)
   consentAt        DateTime?
   lastSeenAt       DateTime?
   createdAt        DateTime  @default(now())
@@ -75,6 +92,20 @@ model User {
   reactions           Reaction[]
   accessLogs          AccessLog[]
   admin               Admin?
+  consents            Consent[]
+}
+
+model Consent {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      ConsentType
+  agreed    Boolean
+  version   String      @default("v1.0") // 동의 시점의 약관/처리방침 버전
+  createdAt DateTime    @default(now())
+
+  @@index([userId])
+  @@index([type])
 }
 
 model Session {
@@ -162,6 +193,7 @@ model Answer {
   questionId  String       @unique
   question    Question     @relation(fields: [questionId], references: [id])
   format      AnswerFormat @default(text)
+  origin      AnswerOrigin @default(question_response) // 부모 자발 메시지 구분
   body        String?
   mediaUrl    String?
   transcript  String?

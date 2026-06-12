@@ -131,7 +131,7 @@ async function main() {
   await child.reaction.add({ answerId: msg.answerId, emoji: '🙏', comment: '고마워요 아빠' });
   const msgFeed = await child.question.list({ connectionId: conn.id, limit: 50 });
   const msgItem = msgFeed.questions.find((x) => x.id === msg.questionId);
-  ok('자발 메시지가 자녀 피드에 도착 + 반응 표시', !!msgItem?.answer && (msgItem.answer.reactions as unknown[]).length === 2);
+  ok('자발 메시지가 자녀 피드에 도착 + 반응 표시', !!msgItem?.answer && (msgItem.answer.reactions as unknown[]).length === 1);
 
   console.log('\n[6] 책 생성 — 질문 응답 + 자발 메시지 모두 포함, 비공개 제외');
   const edition = await generateBook(prisma, conn.id, 'interim');

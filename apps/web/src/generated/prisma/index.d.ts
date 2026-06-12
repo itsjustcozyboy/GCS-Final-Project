@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model Consent
+ * 
+ */
+export type Consent = $Result.DefaultSelection<Prisma.$ConsentPayload>
+/**
  * Model Session
  * 
  */
@@ -136,10 +141,30 @@ export const QuestionSource: {
   ai: 'ai',
   curated: 'curated',
   followup: 'followup',
-  custom: 'custom'
+  custom: 'custom',
+  parent_message: 'parent_message'
 };
 
 export type QuestionSource = (typeof QuestionSource)[keyof typeof QuestionSource]
+
+
+export const AnswerOrigin: {
+  question_response: 'question_response',
+  parent_initiated: 'parent_initiated'
+};
+
+export type AnswerOrigin = (typeof AnswerOrigin)[keyof typeof AnswerOrigin]
+
+
+export const ConsentType: {
+  privacy_required: 'privacy_required',
+  terms_required: 'terms_required',
+  age_over_14: 'age_over_14',
+  analytics: 'analytics',
+  marketing: 'marketing'
+};
+
+export type ConsentType = (typeof ConsentType)[keyof typeof ConsentType]
 
 }
 
@@ -170,6 +195,14 @@ export const BookEditionType: typeof $Enums.BookEditionType
 export type QuestionSource = $Enums.QuestionSource
 
 export const QuestionSource: typeof $Enums.QuestionSource
+
+export type AnswerOrigin = $Enums.AnswerOrigin
+
+export const AnswerOrigin: typeof $Enums.AnswerOrigin
+
+export type ConsentType = $Enums.ConsentType
+
+export const ConsentType: typeof $Enums.ConsentType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -298,6 +331,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.consent`: Exposes CRUD operations for the **Consent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Consents
+    * const consents = await prisma.consent.findMany()
+    * ```
+    */
+  get consent(): Prisma.ConsentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.session`: Exposes CRUD operations for the **Session** model.
@@ -850,6 +893,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    Consent: 'Consent',
     Session: 'Session',
     Connection: 'Connection',
     ConnectionInvite: 'ConnectionInvite',
@@ -879,7 +923,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "connection" | "connectionInvite" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "adminAudit"
+      modelProps: "user" | "consent" | "session" | "connection" | "connectionInvite" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "adminAudit"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -954,6 +998,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      Consent: {
+        payload: Prisma.$ConsentPayload<ExtArgs>
+        fields: Prisma.ConsentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConsentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConsentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          findFirst: {
+            args: Prisma.ConsentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConsentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          findMany: {
+            args: Prisma.ConsentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>[]
+          }
+          create: {
+            args: Prisma.ConsentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          createMany: {
+            args: Prisma.ConsentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConsentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>[]
+          }
+          delete: {
+            args: Prisma.ConsentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          update: {
+            args: Prisma.ConsentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConsentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConsentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConsentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConsentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConsentPayload>
+          }
+          aggregate: {
+            args: Prisma.ConsentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConsent>
+          }
+          groupBy: {
+            args: Prisma.ConsentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConsentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConsentCountArgs<ExtArgs>
+            result: $Utils.Optional<ConsentCountAggregateOutputType> | number
           }
         }
       }
@@ -1868,6 +1986,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    consent?: ConsentOmit
     session?: SessionOmit
     connection?: ConnectionOmit
     connectionInvite?: ConnectionInviteOmit
@@ -1966,6 +2085,7 @@ export namespace Prisma {
     sessions: number
     reactions: number
     accessLogs: number
+    consents: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1976,6 +2096,7 @@ export namespace Prisma {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     reactions?: boolean | UserCountOutputTypeCountReactionsArgs
     accessLogs?: boolean | UserCountOutputTypeCountAccessLogsArgs
+    consents?: boolean | UserCountOutputTypeCountConsentsArgs
   }
 
   // Custom InputTypes
@@ -2036,6 +2157,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAccessLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccessLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountConsentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConsentWhereInput
   }
 
 
@@ -2133,6 +2261,7 @@ export namespace Prisma {
     avatarUrl: string | null
     passwordHash: string | null
     consentAnalytics: boolean | null
+    consentMarketing: boolean | null
     consentAt: Date | null
     lastSeenAt: Date | null
     createdAt: Date | null
@@ -2148,6 +2277,7 @@ export namespace Prisma {
     avatarUrl: string | null
     passwordHash: string | null
     consentAnalytics: boolean | null
+    consentMarketing: boolean | null
     consentAt: Date | null
     lastSeenAt: Date | null
     createdAt: Date | null
@@ -2163,6 +2293,7 @@ export namespace Prisma {
     avatarUrl: number
     passwordHash: number
     consentAnalytics: number
+    consentMarketing: number
     consentAt: number
     lastSeenAt: number
     createdAt: number
@@ -2180,6 +2311,7 @@ export namespace Prisma {
     avatarUrl?: true
     passwordHash?: true
     consentAnalytics?: true
+    consentMarketing?: true
     consentAt?: true
     lastSeenAt?: true
     createdAt?: true
@@ -2195,6 +2327,7 @@ export namespace Prisma {
     avatarUrl?: true
     passwordHash?: true
     consentAnalytics?: true
+    consentMarketing?: true
     consentAt?: true
     lastSeenAt?: true
     createdAt?: true
@@ -2210,6 +2343,7 @@ export namespace Prisma {
     avatarUrl?: true
     passwordHash?: true
     consentAnalytics?: true
+    consentMarketing?: true
     consentAt?: true
     lastSeenAt?: true
     createdAt?: true
@@ -2298,6 +2432,7 @@ export namespace Prisma {
     avatarUrl: string | null
     passwordHash: string | null
     consentAnalytics: boolean
+    consentMarketing: boolean
     consentAt: Date | null
     lastSeenAt: Date | null
     createdAt: Date
@@ -2330,6 +2465,7 @@ export namespace Prisma {
     avatarUrl?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: boolean
     lastSeenAt?: boolean
     createdAt?: boolean
@@ -2342,6 +2478,7 @@ export namespace Prisma {
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     accessLogs?: boolean | User$accessLogsArgs<ExtArgs>
     admin?: boolean | User$adminArgs<ExtArgs>
+    consents?: boolean | User$consentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2354,6 +2491,7 @@ export namespace Prisma {
     avatarUrl?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: boolean
     lastSeenAt?: boolean
     createdAt?: boolean
@@ -2369,6 +2507,7 @@ export namespace Prisma {
     avatarUrl?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: boolean
     lastSeenAt?: boolean
     createdAt?: boolean
@@ -2384,13 +2523,14 @@ export namespace Prisma {
     avatarUrl?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: boolean
     lastSeenAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "passwordHash" | "consentAnalytics" | "consentAt" | "lastSeenAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "passwordHash" | "consentAnalytics" | "consentMarketing" | "consentAt" | "lastSeenAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sentConnections?: boolean | User$sentConnectionsArgs<ExtArgs>
     receivedConnections?: boolean | User$receivedConnectionsArgs<ExtArgs>
@@ -2400,6 +2540,7 @@ export namespace Prisma {
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     accessLogs?: boolean | User$accessLogsArgs<ExtArgs>
     admin?: boolean | User$adminArgs<ExtArgs>
+    consents?: boolean | User$consentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2416,6 +2557,7 @@ export namespace Prisma {
       reactions: Prisma.$ReactionPayload<ExtArgs>[]
       accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
       admin: Prisma.$AdminPayload<ExtArgs> | null
+      consents: Prisma.$ConsentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2426,6 +2568,7 @@ export namespace Prisma {
       avatarUrl: string | null
       passwordHash: string | null
       consentAnalytics: boolean
+      consentMarketing: boolean
       consentAt: Date | null
       lastSeenAt: Date | null
       createdAt: Date
@@ -2832,6 +2975,7 @@ export namespace Prisma {
     reactions<T extends User$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessLogs<T extends User$accessLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     admin<T extends User$adminArgs<ExtArgs> = {}>(args?: Subset<T, User$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    consents<T extends User$consentsArgs<ExtArgs> = {}>(args?: Subset<T, User$consentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2869,6 +3013,7 @@ export namespace Prisma {
     readonly avatarUrl: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly consentAnalytics: FieldRef<"User", 'Boolean'>
+    readonly consentMarketing: FieldRef<"User", 'Boolean'>
     readonly consentAt: FieldRef<"User", 'DateTime'>
     readonly lastSeenAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -3448,6 +3593,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.consents
+   */
+  export type User$consentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    where?: ConsentWhereInput
+    orderBy?: ConsentOrderByWithRelationInput | ConsentOrderByWithRelationInput[]
+    cursor?: ConsentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConsentScalarFieldEnum | ConsentScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3463,6 +3632,1077 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Consent
+   */
+
+  export type AggregateConsent = {
+    _count: ConsentCountAggregateOutputType | null
+    _min: ConsentMinAggregateOutputType | null
+    _max: ConsentMaxAggregateOutputType | null
+  }
+
+  export type ConsentMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.ConsentType | null
+    agreed: boolean | null
+    version: string | null
+    createdAt: Date | null
+  }
+
+  export type ConsentMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.ConsentType | null
+    agreed: boolean | null
+    version: string | null
+    createdAt: Date | null
+  }
+
+  export type ConsentCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    agreed: number
+    version: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ConsentMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    agreed?: true
+    version?: true
+    createdAt?: true
+  }
+
+  export type ConsentMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    agreed?: true
+    version?: true
+    createdAt?: true
+  }
+
+  export type ConsentCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    agreed?: true
+    version?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ConsentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Consent to aggregate.
+     */
+    where?: ConsentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Consents to fetch.
+     */
+    orderBy?: ConsentOrderByWithRelationInput | ConsentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConsentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Consents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Consents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Consents
+    **/
+    _count?: true | ConsentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConsentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConsentMaxAggregateInputType
+  }
+
+  export type GetConsentAggregateType<T extends ConsentAggregateArgs> = {
+        [P in keyof T & keyof AggregateConsent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConsent[P]>
+      : GetScalarType<T[P], AggregateConsent[P]>
+  }
+
+
+
+
+  export type ConsentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConsentWhereInput
+    orderBy?: ConsentOrderByWithAggregationInput | ConsentOrderByWithAggregationInput[]
+    by: ConsentScalarFieldEnum[] | ConsentScalarFieldEnum
+    having?: ConsentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConsentCountAggregateInputType | true
+    _min?: ConsentMinAggregateInputType
+    _max?: ConsentMaxAggregateInputType
+  }
+
+  export type ConsentGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version: string
+    createdAt: Date
+    _count: ConsentCountAggregateOutputType | null
+    _min: ConsentMinAggregateOutputType | null
+    _max: ConsentMaxAggregateOutputType | null
+  }
+
+  type GetConsentGroupByPayload<T extends ConsentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConsentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConsentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConsentGroupByOutputType[P]>
+            : GetScalarType<T[P], ConsentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConsentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    agreed?: boolean
+    version?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["consent"]>
+
+  export type ConsentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    agreed?: boolean
+    version?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["consent"]>
+
+  export type ConsentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    agreed?: boolean
+    version?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["consent"]>
+
+  export type ConsentSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    agreed?: boolean
+    version?: boolean
+    createdAt?: boolean
+  }
+
+  export type ConsentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "agreed" | "version" | "createdAt", ExtArgs["result"]["consent"]>
+  export type ConsentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ConsentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ConsentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ConsentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Consent"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.ConsentType
+      agreed: boolean
+      version: string
+      createdAt: Date
+    }, ExtArgs["result"]["consent"]>
+    composites: {}
+  }
+
+  type ConsentGetPayload<S extends boolean | null | undefined | ConsentDefaultArgs> = $Result.GetResult<Prisma.$ConsentPayload, S>
+
+  type ConsentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConsentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConsentCountAggregateInputType | true
+    }
+
+  export interface ConsentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Consent'], meta: { name: 'Consent' } }
+    /**
+     * Find zero or one Consent that matches the filter.
+     * @param {ConsentFindUniqueArgs} args - Arguments to find a Consent
+     * @example
+     * // Get one Consent
+     * const consent = await prisma.consent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConsentFindUniqueArgs>(args: SelectSubset<T, ConsentFindUniqueArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Consent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConsentFindUniqueOrThrowArgs} args - Arguments to find a Consent
+     * @example
+     * // Get one Consent
+     * const consent = await prisma.consent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConsentFindUniqueOrThrowArgs>(args: SelectSubset<T, ConsentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Consent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentFindFirstArgs} args - Arguments to find a Consent
+     * @example
+     * // Get one Consent
+     * const consent = await prisma.consent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConsentFindFirstArgs>(args?: SelectSubset<T, ConsentFindFirstArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Consent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentFindFirstOrThrowArgs} args - Arguments to find a Consent
+     * @example
+     * // Get one Consent
+     * const consent = await prisma.consent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConsentFindFirstOrThrowArgs>(args?: SelectSubset<T, ConsentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Consents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Consents
+     * const consents = await prisma.consent.findMany()
+     * 
+     * // Get first 10 Consents
+     * const consents = await prisma.consent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const consentWithIdOnly = await prisma.consent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConsentFindManyArgs>(args?: SelectSubset<T, ConsentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Consent.
+     * @param {ConsentCreateArgs} args - Arguments to create a Consent.
+     * @example
+     * // Create one Consent
+     * const Consent = await prisma.consent.create({
+     *   data: {
+     *     // ... data to create a Consent
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConsentCreateArgs>(args: SelectSubset<T, ConsentCreateArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Consents.
+     * @param {ConsentCreateManyArgs} args - Arguments to create many Consents.
+     * @example
+     * // Create many Consents
+     * const consent = await prisma.consent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConsentCreateManyArgs>(args?: SelectSubset<T, ConsentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Consents and returns the data saved in the database.
+     * @param {ConsentCreateManyAndReturnArgs} args - Arguments to create many Consents.
+     * @example
+     * // Create many Consents
+     * const consent = await prisma.consent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Consents and only return the `id`
+     * const consentWithIdOnly = await prisma.consent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConsentCreateManyAndReturnArgs>(args?: SelectSubset<T, ConsentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Consent.
+     * @param {ConsentDeleteArgs} args - Arguments to delete one Consent.
+     * @example
+     * // Delete one Consent
+     * const Consent = await prisma.consent.delete({
+     *   where: {
+     *     // ... filter to delete one Consent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConsentDeleteArgs>(args: SelectSubset<T, ConsentDeleteArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Consent.
+     * @param {ConsentUpdateArgs} args - Arguments to update one Consent.
+     * @example
+     * // Update one Consent
+     * const consent = await prisma.consent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConsentUpdateArgs>(args: SelectSubset<T, ConsentUpdateArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Consents.
+     * @param {ConsentDeleteManyArgs} args - Arguments to filter Consents to delete.
+     * @example
+     * // Delete a few Consents
+     * const { count } = await prisma.consent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConsentDeleteManyArgs>(args?: SelectSubset<T, ConsentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Consents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Consents
+     * const consent = await prisma.consent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConsentUpdateManyArgs>(args: SelectSubset<T, ConsentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Consents and returns the data updated in the database.
+     * @param {ConsentUpdateManyAndReturnArgs} args - Arguments to update many Consents.
+     * @example
+     * // Update many Consents
+     * const consent = await prisma.consent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Consents and only return the `id`
+     * const consentWithIdOnly = await prisma.consent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConsentUpdateManyAndReturnArgs>(args: SelectSubset<T, ConsentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Consent.
+     * @param {ConsentUpsertArgs} args - Arguments to update or create a Consent.
+     * @example
+     * // Update or create a Consent
+     * const consent = await prisma.consent.upsert({
+     *   create: {
+     *     // ... data to create a Consent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Consent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConsentUpsertArgs>(args: SelectSubset<T, ConsentUpsertArgs<ExtArgs>>): Prisma__ConsentClient<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Consents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentCountArgs} args - Arguments to filter Consents to count.
+     * @example
+     * // Count the number of Consents
+     * const count = await prisma.consent.count({
+     *   where: {
+     *     // ... the filter for the Consents we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConsentCountArgs>(
+      args?: Subset<T, ConsentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConsentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Consent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConsentAggregateArgs>(args: Subset<T, ConsentAggregateArgs>): Prisma.PrismaPromise<GetConsentAggregateType<T>>
+
+    /**
+     * Group by Consent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConsentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConsentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConsentGroupByArgs['orderBy'] }
+        : { orderBy?: ConsentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConsentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConsentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Consent model
+   */
+  readonly fields: ConsentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Consent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConsentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Consent model
+   */
+  interface ConsentFieldRefs {
+    readonly id: FieldRef<"Consent", 'String'>
+    readonly userId: FieldRef<"Consent", 'String'>
+    readonly type: FieldRef<"Consent", 'ConsentType'>
+    readonly agreed: FieldRef<"Consent", 'Boolean'>
+    readonly version: FieldRef<"Consent", 'String'>
+    readonly createdAt: FieldRef<"Consent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Consent findUnique
+   */
+  export type ConsentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter, which Consent to fetch.
+     */
+    where: ConsentWhereUniqueInput
+  }
+
+  /**
+   * Consent findUniqueOrThrow
+   */
+  export type ConsentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter, which Consent to fetch.
+     */
+    where: ConsentWhereUniqueInput
+  }
+
+  /**
+   * Consent findFirst
+   */
+  export type ConsentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter, which Consent to fetch.
+     */
+    where?: ConsentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Consents to fetch.
+     */
+    orderBy?: ConsentOrderByWithRelationInput | ConsentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Consents.
+     */
+    cursor?: ConsentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Consents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Consents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Consents.
+     */
+    distinct?: ConsentScalarFieldEnum | ConsentScalarFieldEnum[]
+  }
+
+  /**
+   * Consent findFirstOrThrow
+   */
+  export type ConsentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter, which Consent to fetch.
+     */
+    where?: ConsentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Consents to fetch.
+     */
+    orderBy?: ConsentOrderByWithRelationInput | ConsentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Consents.
+     */
+    cursor?: ConsentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Consents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Consents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Consents.
+     */
+    distinct?: ConsentScalarFieldEnum | ConsentScalarFieldEnum[]
+  }
+
+  /**
+   * Consent findMany
+   */
+  export type ConsentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter, which Consents to fetch.
+     */
+    where?: ConsentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Consents to fetch.
+     */
+    orderBy?: ConsentOrderByWithRelationInput | ConsentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Consents.
+     */
+    cursor?: ConsentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Consents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Consents.
+     */
+    skip?: number
+    distinct?: ConsentScalarFieldEnum | ConsentScalarFieldEnum[]
+  }
+
+  /**
+   * Consent create
+   */
+  export type ConsentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Consent.
+     */
+    data: XOR<ConsentCreateInput, ConsentUncheckedCreateInput>
+  }
+
+  /**
+   * Consent createMany
+   */
+  export type ConsentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Consents.
+     */
+    data: ConsentCreateManyInput | ConsentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Consent createManyAndReturn
+   */
+  export type ConsentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Consents.
+     */
+    data: ConsentCreateManyInput | ConsentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Consent update
+   */
+  export type ConsentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Consent.
+     */
+    data: XOR<ConsentUpdateInput, ConsentUncheckedUpdateInput>
+    /**
+     * Choose, which Consent to update.
+     */
+    where: ConsentWhereUniqueInput
+  }
+
+  /**
+   * Consent updateMany
+   */
+  export type ConsentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Consents.
+     */
+    data: XOR<ConsentUpdateManyMutationInput, ConsentUncheckedUpdateManyInput>
+    /**
+     * Filter which Consents to update
+     */
+    where?: ConsentWhereInput
+    /**
+     * Limit how many Consents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Consent updateManyAndReturn
+   */
+  export type ConsentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * The data used to update Consents.
+     */
+    data: XOR<ConsentUpdateManyMutationInput, ConsentUncheckedUpdateManyInput>
+    /**
+     * Filter which Consents to update
+     */
+    where?: ConsentWhereInput
+    /**
+     * Limit how many Consents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Consent upsert
+   */
+  export type ConsentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Consent to update in case it exists.
+     */
+    where: ConsentWhereUniqueInput
+    /**
+     * In case the Consent found by the `where` argument doesn't exist, create a new Consent with this data.
+     */
+    create: XOR<ConsentCreateInput, ConsentUncheckedCreateInput>
+    /**
+     * In case the Consent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConsentUpdateInput, ConsentUncheckedUpdateInput>
+  }
+
+  /**
+   * Consent delete
+   */
+  export type ConsentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
+    /**
+     * Filter which Consent to delete.
+     */
+    where: ConsentWhereUniqueInput
+  }
+
+  /**
+   * Consent deleteMany
+   */
+  export type ConsentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Consents to delete
+     */
+    where?: ConsentWhereInput
+    /**
+     * Limit how many Consents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Consent without action
+   */
+  export type ConsentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Consent
+     */
+    select?: ConsentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Consent
+     */
+    omit?: ConsentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConsentInclude<ExtArgs> | null
   }
 
 
@@ -8278,6 +9518,7 @@ export namespace Prisma {
     id: string | null
     questionId: string | null
     format: $Enums.AnswerFormat | null
+    origin: $Enums.AnswerOrigin | null
     body: string | null
     mediaUrl: string | null
     transcript: string | null
@@ -8293,6 +9534,7 @@ export namespace Prisma {
     id: string | null
     questionId: string | null
     format: $Enums.AnswerFormat | null
+    origin: $Enums.AnswerOrigin | null
     body: string | null
     mediaUrl: string | null
     transcript: string | null
@@ -8308,6 +9550,7 @@ export namespace Prisma {
     id: number
     questionId: number
     format: number
+    origin: number
     body: number
     mediaUrl: number
     transcript: number
@@ -8326,6 +9569,7 @@ export namespace Prisma {
     id?: true
     questionId?: true
     format?: true
+    origin?: true
     body?: true
     mediaUrl?: true
     transcript?: true
@@ -8341,6 +9585,7 @@ export namespace Prisma {
     id?: true
     questionId?: true
     format?: true
+    origin?: true
     body?: true
     mediaUrl?: true
     transcript?: true
@@ -8356,6 +9601,7 @@ export namespace Prisma {
     id?: true
     questionId?: true
     format?: true
+    origin?: true
     body?: true
     mediaUrl?: true
     transcript?: true
@@ -8445,6 +9691,7 @@ export namespace Prisma {
     id: string
     questionId: string
     format: $Enums.AnswerFormat
+    origin: $Enums.AnswerOrigin
     body: string | null
     mediaUrl: string | null
     transcript: string | null
@@ -8478,6 +9725,7 @@ export namespace Prisma {
     id?: boolean
     questionId?: boolean
     format?: boolean
+    origin?: boolean
     body?: boolean
     mediaUrl?: boolean
     transcript?: boolean
@@ -8497,6 +9745,7 @@ export namespace Prisma {
     id?: boolean
     questionId?: boolean
     format?: boolean
+    origin?: boolean
     body?: boolean
     mediaUrl?: boolean
     transcript?: boolean
@@ -8514,6 +9763,7 @@ export namespace Prisma {
     id?: boolean
     questionId?: boolean
     format?: boolean
+    origin?: boolean
     body?: boolean
     mediaUrl?: boolean
     transcript?: boolean
@@ -8531,6 +9781,7 @@ export namespace Prisma {
     id?: boolean
     questionId?: boolean
     format?: boolean
+    origin?: boolean
     body?: boolean
     mediaUrl?: boolean
     transcript?: boolean
@@ -8543,7 +9794,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "questionId" | "format" | "body" | "mediaUrl" | "transcript" | "skipped" | "receivedVia" | "isPrivate" | "keywords" | "aiComposed" | "createdAt" | "updatedAt", ExtArgs["result"]["answer"]>
+  export type AnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "questionId" | "format" | "origin" | "body" | "mediaUrl" | "transcript" | "skipped" | "receivedVia" | "isPrivate" | "keywords" | "aiComposed" | "createdAt" | "updatedAt", ExtArgs["result"]["answer"]>
   export type AnswerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     question?: boolean | QuestionDefaultArgs<ExtArgs>
     reactions?: boolean | Answer$reactionsArgs<ExtArgs>
@@ -8566,6 +9817,7 @@ export namespace Prisma {
       id: string
       questionId: string
       format: $Enums.AnswerFormat
+      origin: $Enums.AnswerOrigin
       body: string | null
       mediaUrl: string | null
       transcript: string | null
@@ -9004,6 +10256,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Answer", 'String'>
     readonly questionId: FieldRef<"Answer", 'String'>
     readonly format: FieldRef<"Answer", 'AnswerFormat'>
+    readonly origin: FieldRef<"Answer", 'AnswerOrigin'>
     readonly body: FieldRef<"Answer", 'String'>
     readonly mediaUrl: FieldRef<"Answer", 'String'>
     readonly transcript: FieldRef<"Answer", 'String'>
@@ -15893,6 +17146,7 @@ export namespace Prisma {
     avatarUrl: 'avatarUrl',
     passwordHash: 'passwordHash',
     consentAnalytics: 'consentAnalytics',
+    consentMarketing: 'consentMarketing',
     consentAt: 'consentAt',
     lastSeenAt: 'lastSeenAt',
     createdAt: 'createdAt',
@@ -15900,6 +17154,18 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const ConsentScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    agreed: 'agreed',
+    version: 'version',
+    createdAt: 'createdAt'
+  };
+
+  export type ConsentScalarFieldEnum = (typeof ConsentScalarFieldEnum)[keyof typeof ConsentScalarFieldEnum]
 
 
   export const SessionScalarFieldEnum: {
@@ -15972,6 +17238,7 @@ export namespace Prisma {
     id: 'id',
     questionId: 'questionId',
     format: 'format',
+    origin: 'origin',
     body: 'body',
     mediaUrl: 'mediaUrl',
     transcript: 'transcript',
@@ -16160,6 +17427,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ConsentType'
+   */
+  export type EnumConsentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConsentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ConsentType[]'
+   */
+  export type ListEnumConsentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConsentType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -16226,6 +17507,20 @@ export namespace Prisma {
    * Reference to a field of type 'AnswerFormat[]'
    */
   export type ListEnumAnswerFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnswerFormat[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AnswerOrigin'
+   */
+  export type EnumAnswerOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnswerOrigin'>
+    
+
+
+  /**
+   * Reference to a field of type 'AnswerOrigin[]'
+   */
+  export type ListEnumAnswerOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnswerOrigin[]'>
     
 
 
@@ -16300,6 +17595,7 @@ export namespace Prisma {
     avatarUrl?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
+    consentMarketing?: BoolFilter<"User"> | boolean
     consentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastSeenAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -16312,6 +17608,7 @@ export namespace Prisma {
     reactions?: ReactionListRelationFilter
     accessLogs?: AccessLogListRelationFilter
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    consents?: ConsentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -16323,6 +17620,7 @@ export namespace Prisma {
     avatarUrl?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
+    consentMarketing?: SortOrder
     consentAt?: SortOrderInput | SortOrder
     lastSeenAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -16335,6 +17633,7 @@ export namespace Prisma {
     reactions?: ReactionOrderByRelationAggregateInput
     accessLogs?: AccessLogOrderByRelationAggregateInput
     admin?: AdminOrderByWithRelationInput
+    consents?: ConsentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16349,6 +17648,7 @@ export namespace Prisma {
     avatarUrl?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
+    consentMarketing?: BoolFilter<"User"> | boolean
     consentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastSeenAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -16361,6 +17661,7 @@ export namespace Prisma {
     reactions?: ReactionListRelationFilter
     accessLogs?: AccessLogListRelationFilter
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    consents?: ConsentListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -16372,6 +17673,7 @@ export namespace Prisma {
     avatarUrl?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
+    consentMarketing?: SortOrder
     consentAt?: SortOrderInput | SortOrder
     lastSeenAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -16393,10 +17695,71 @@ export namespace Prisma {
     avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     consentAnalytics?: BoolWithAggregatesFilter<"User"> | boolean
+    consentMarketing?: BoolWithAggregatesFilter<"User"> | boolean
     consentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastSeenAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type ConsentWhereInput = {
+    AND?: ConsentWhereInput | ConsentWhereInput[]
+    OR?: ConsentWhereInput[]
+    NOT?: ConsentWhereInput | ConsentWhereInput[]
+    id?: StringFilter<"Consent"> | string
+    userId?: StringFilter<"Consent"> | string
+    type?: EnumConsentTypeFilter<"Consent"> | $Enums.ConsentType
+    agreed?: BoolFilter<"Consent"> | boolean
+    version?: StringFilter<"Consent"> | string
+    createdAt?: DateTimeFilter<"Consent"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ConsentOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    agreed?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ConsentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConsentWhereInput | ConsentWhereInput[]
+    OR?: ConsentWhereInput[]
+    NOT?: ConsentWhereInput | ConsentWhereInput[]
+    userId?: StringFilter<"Consent"> | string
+    type?: EnumConsentTypeFilter<"Consent"> | $Enums.ConsentType
+    agreed?: BoolFilter<"Consent"> | boolean
+    version?: StringFilter<"Consent"> | string
+    createdAt?: DateTimeFilter<"Consent"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ConsentOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    agreed?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    _count?: ConsentCountOrderByAggregateInput
+    _max?: ConsentMaxOrderByAggregateInput
+    _min?: ConsentMinOrderByAggregateInput
+  }
+
+  export type ConsentScalarWhereWithAggregatesInput = {
+    AND?: ConsentScalarWhereWithAggregatesInput | ConsentScalarWhereWithAggregatesInput[]
+    OR?: ConsentScalarWhereWithAggregatesInput[]
+    NOT?: ConsentScalarWhereWithAggregatesInput | ConsentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Consent"> | string
+    userId?: StringWithAggregatesFilter<"Consent"> | string
+    type?: EnumConsentTypeWithAggregatesFilter<"Consent"> | $Enums.ConsentType
+    agreed?: BoolWithAggregatesFilter<"Consent"> | boolean
+    version?: StringWithAggregatesFilter<"Consent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Consent"> | Date | string
   }
 
   export type SessionWhereInput = {
@@ -16763,6 +18126,7 @@ export namespace Prisma {
     id?: StringFilter<"Answer"> | string
     questionId?: StringFilter<"Answer"> | string
     format?: EnumAnswerFormatFilter<"Answer"> | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFilter<"Answer"> | $Enums.AnswerOrigin
     body?: StringNullableFilter<"Answer"> | string | null
     mediaUrl?: StringNullableFilter<"Answer"> | string | null
     transcript?: StringNullableFilter<"Answer"> | string | null
@@ -16781,6 +18145,7 @@ export namespace Prisma {
     id?: SortOrder
     questionId?: SortOrder
     format?: SortOrder
+    origin?: SortOrder
     body?: SortOrderInput | SortOrder
     mediaUrl?: SortOrderInput | SortOrder
     transcript?: SortOrderInput | SortOrder
@@ -16802,6 +18167,7 @@ export namespace Prisma {
     OR?: AnswerWhereInput[]
     NOT?: AnswerWhereInput | AnswerWhereInput[]
     format?: EnumAnswerFormatFilter<"Answer"> | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFilter<"Answer"> | $Enums.AnswerOrigin
     body?: StringNullableFilter<"Answer"> | string | null
     mediaUrl?: StringNullableFilter<"Answer"> | string | null
     transcript?: StringNullableFilter<"Answer"> | string | null
@@ -16820,6 +18186,7 @@ export namespace Prisma {
     id?: SortOrder
     questionId?: SortOrder
     format?: SortOrder
+    origin?: SortOrder
     body?: SortOrderInput | SortOrder
     mediaUrl?: SortOrderInput | SortOrder
     transcript?: SortOrderInput | SortOrder
@@ -16842,6 +18209,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Answer"> | string
     questionId?: StringWithAggregatesFilter<"Answer"> | string
     format?: EnumAnswerFormatWithAggregatesFilter<"Answer"> | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginWithAggregatesFilter<"Answer"> | $Enums.AnswerOrigin
     body?: StringNullableWithAggregatesFilter<"Answer"> | string | null
     mediaUrl?: StringNullableWithAggregatesFilter<"Answer"> | string | null
     transcript?: StringNullableWithAggregatesFilter<"Answer"> | string | null
@@ -17247,6 +18615,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -17259,6 +18628,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17270,6 +18640,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -17282,6 +18653,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17293,6 +18665,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17305,6 +18678,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17316,6 +18690,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17328,6 +18703,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17339,6 +18715,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -17354,6 +18731,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17369,10 +18747,73 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentCreateInput = {
+    id?: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutConsentsInput
+  }
+
+  export type ConsentUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
+    createdAt?: Date | string
+  }
+
+  export type ConsentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutConsentsNestedInput
+  }
+
+  export type ConsentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentCreateManyInput = {
+    id?: string
+    userId: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
+    createdAt?: Date | string
+  }
+
+  export type ConsentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionCreateInput = {
@@ -17765,6 +19206,7 @@ export namespace Prisma {
   export type AnswerCreateInput = {
     id?: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -17783,6 +19225,7 @@ export namespace Prisma {
     id?: string
     questionId: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -17799,6 +19242,7 @@ export namespace Prisma {
   export type AnswerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17817,6 +19261,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     questionId?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17834,6 +19279,7 @@ export namespace Prisma {
     id?: string
     questionId: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -17849,6 +19295,7 @@ export namespace Prisma {
   export type AnswerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17865,6 +19312,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     questionId?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18384,6 +19832,12 @@ export namespace Prisma {
     isNot?: AdminWhereInput | null
   }
 
+  export type ConsentListRelationFilter = {
+    every?: ConsentWhereInput
+    some?: ConsentWhereInput
+    none?: ConsentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18409,6 +19863,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ConsentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -18418,6 +19876,7 @@ export namespace Prisma {
     avatarUrl?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
+    consentMarketing?: SortOrder
     consentAt?: SortOrder
     lastSeenAt?: SortOrder
     createdAt?: SortOrder
@@ -18433,6 +19892,7 @@ export namespace Prisma {
     avatarUrl?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
+    consentMarketing?: SortOrder
     consentAt?: SortOrder
     lastSeenAt?: SortOrder
     createdAt?: SortOrder
@@ -18448,6 +19908,7 @@ export namespace Prisma {
     avatarUrl?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
+    consentMarketing?: SortOrder
     consentAt?: SortOrder
     lastSeenAt?: SortOrder
     createdAt?: SortOrder
@@ -18536,9 +19997,53 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumConsentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConsentType | EnumConsentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConsentTypeFilter<$PrismaModel> | $Enums.ConsentType
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type ConsentCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    agreed?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConsentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    agreed?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConsentMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    agreed?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumConsentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConsentType | EnumConsentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConsentTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConsentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConsentTypeFilter<$PrismaModel>
+    _max?: NestedEnumConsentTypeFilter<$PrismaModel>
   }
 
   export type SessionCountOrderByAggregateInput = {
@@ -18863,6 +20368,13 @@ export namespace Prisma {
     not?: NestedEnumAnswerFormatFilter<$PrismaModel> | $Enums.AnswerFormat
   }
 
+  export type EnumAnswerOriginFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnswerOrigin | EnumAnswerOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnswerOriginFilter<$PrismaModel> | $Enums.AnswerOrigin
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -18880,6 +20392,7 @@ export namespace Prisma {
     id?: SortOrder
     questionId?: SortOrder
     format?: SortOrder
+    origin?: SortOrder
     body?: SortOrder
     mediaUrl?: SortOrder
     transcript?: SortOrder
@@ -18896,6 +20409,7 @@ export namespace Prisma {
     id?: SortOrder
     questionId?: SortOrder
     format?: SortOrder
+    origin?: SortOrder
     body?: SortOrder
     mediaUrl?: SortOrder
     transcript?: SortOrder
@@ -18911,6 +20425,7 @@ export namespace Prisma {
     id?: SortOrder
     questionId?: SortOrder
     format?: SortOrder
+    origin?: SortOrder
     body?: SortOrder
     mediaUrl?: SortOrder
     transcript?: SortOrder
@@ -18930,6 +20445,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAnswerFormatFilter<$PrismaModel>
     _max?: NestedEnumAnswerFormatFilter<$PrismaModel>
+  }
+
+  export type EnumAnswerOriginWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnswerOrigin | EnumAnswerOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnswerOriginWithAggregatesFilter<$PrismaModel> | $Enums.AnswerOrigin
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAnswerOriginFilter<$PrismaModel>
+    _max?: NestedEnumAnswerOriginFilter<$PrismaModel>
   }
 
   export type AnswerScalarRelationFilter = {
@@ -19256,6 +20781,13 @@ export namespace Prisma {
     connect?: AdminWhereUniqueInput
   }
 
+  export type ConsentCreateNestedManyWithoutUserInput = {
+    create?: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput> | ConsentCreateWithoutUserInput[] | ConsentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConsentCreateOrConnectWithoutUserInput | ConsentCreateOrConnectWithoutUserInput[]
+    createMany?: ConsentCreateManyUserInputEnvelope
+    connect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+  }
+
   export type ConnectionUncheckedCreateNestedManyWithoutFromUserInput = {
     create?: XOR<ConnectionCreateWithoutFromUserInput, ConnectionUncheckedCreateWithoutFromUserInput> | ConnectionCreateWithoutFromUserInput[] | ConnectionUncheckedCreateWithoutFromUserInput[]
     connectOrCreate?: ConnectionCreateOrConnectWithoutFromUserInput | ConnectionCreateOrConnectWithoutFromUserInput[]
@@ -19309,6 +20841,13 @@ export namespace Prisma {
     create?: XOR<AdminCreateWithoutUserInput, AdminUncheckedCreateWithoutUserInput>
     connectOrCreate?: AdminCreateOrConnectWithoutUserInput
     connect?: AdminWhereUniqueInput
+  }
+
+  export type ConsentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput> | ConsentCreateWithoutUserInput[] | ConsentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConsentCreateOrConnectWithoutUserInput | ConsentCreateOrConnectWithoutUserInput[]
+    createMany?: ConsentCreateManyUserInputEnvelope
+    connect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19443,6 +20982,20 @@ export namespace Prisma {
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutUserInput, AdminUpdateWithoutUserInput>, AdminUncheckedUpdateWithoutUserInput>
   }
 
+  export type ConsentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput> | ConsentCreateWithoutUserInput[] | ConsentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConsentCreateOrConnectWithoutUserInput | ConsentCreateOrConnectWithoutUserInput[]
+    upsert?: ConsentUpsertWithWhereUniqueWithoutUserInput | ConsentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ConsentCreateManyUserInputEnvelope
+    set?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    disconnect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    delete?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    connect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    update?: ConsentUpdateWithWhereUniqueWithoutUserInput | ConsentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ConsentUpdateManyWithWhereWithoutUserInput | ConsentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ConsentScalarWhereInput | ConsentScalarWhereInput[]
+  }
+
   export type ConnectionUncheckedUpdateManyWithoutFromUserNestedInput = {
     create?: XOR<ConnectionCreateWithoutFromUserInput, ConnectionUncheckedCreateWithoutFromUserInput> | ConnectionCreateWithoutFromUserInput[] | ConnectionUncheckedCreateWithoutFromUserInput[]
     connectOrCreate?: ConnectionCreateOrConnectWithoutFromUserInput | ConnectionCreateOrConnectWithoutFromUserInput[]
@@ -19549,6 +21102,38 @@ export namespace Prisma {
     delete?: AdminWhereInput | boolean
     connect?: AdminWhereUniqueInput
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutUserInput, AdminUpdateWithoutUserInput>, AdminUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ConsentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput> | ConsentCreateWithoutUserInput[] | ConsentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConsentCreateOrConnectWithoutUserInput | ConsentCreateOrConnectWithoutUserInput[]
+    upsert?: ConsentUpsertWithWhereUniqueWithoutUserInput | ConsentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ConsentCreateManyUserInputEnvelope
+    set?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    disconnect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    delete?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    connect?: ConsentWhereUniqueInput | ConsentWhereUniqueInput[]
+    update?: ConsentUpdateWithWhereUniqueWithoutUserInput | ConsentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ConsentUpdateManyWithWhereWithoutUserInput | ConsentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ConsentScalarWhereInput | ConsentScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutConsentsInput = {
+    create?: XOR<UserCreateWithoutConsentsInput, UserUncheckedCreateWithoutConsentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConsentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumConsentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ConsentType
+  }
+
+  export type UserUpdateOneRequiredWithoutConsentsNestedInput = {
+    create?: XOR<UserCreateWithoutConsentsInput, UserUncheckedCreateWithoutConsentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConsentsInput
+    upsert?: UserUpsertWithoutConsentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutConsentsInput, UserUpdateWithoutConsentsInput>, UserUncheckedUpdateWithoutConsentsInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -19849,6 +21434,10 @@ export namespace Prisma {
     set?: $Enums.AnswerFormat
   }
 
+  export type EnumAnswerOriginFieldUpdateOperationsInput = {
+    set?: $Enums.AnswerOrigin
+  }
+
   export type AnswerUpdatekeywordsInput = {
     set?: string[]
     push?: string | string[]
@@ -20143,6 +21732,23 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumConsentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConsentType | EnumConsentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConsentTypeFilter<$PrismaModel> | $Enums.ConsentType
+  }
+
+  export type NestedEnumConsentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConsentType | EnumConsentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConsentType[] | ListEnumConsentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConsentTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConsentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConsentTypeFilter<$PrismaModel>
+    _max?: NestedEnumConsentTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumToneFilter<$PrismaModel = never> = {
     equals?: $Enums.Tone | EnumToneFieldRefInput<$PrismaModel>
     in?: $Enums.Tone[] | ListEnumToneFieldRefInput<$PrismaModel>
@@ -20228,6 +21834,13 @@ export namespace Prisma {
     not?: NestedEnumAnswerFormatFilter<$PrismaModel> | $Enums.AnswerFormat
   }
 
+  export type NestedEnumAnswerOriginFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnswerOrigin | EnumAnswerOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnswerOriginFilter<$PrismaModel> | $Enums.AnswerOrigin
+  }
+
   export type NestedEnumAnswerFormatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AnswerFormat | EnumAnswerFormatFieldRefInput<$PrismaModel>
     in?: $Enums.AnswerFormat[] | ListEnumAnswerFormatFieldRefInput<$PrismaModel>
@@ -20236,6 +21849,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAnswerFormatFilter<$PrismaModel>
     _max?: NestedEnumAnswerFormatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAnswerOriginWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnswerOrigin | EnumAnswerOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnswerOrigin[] | ListEnumAnswerOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnswerOriginWithAggregatesFilter<$PrismaModel> | $Enums.AnswerOrigin
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAnswerOriginFilter<$PrismaModel>
+    _max?: NestedEnumAnswerOriginFilter<$PrismaModel>
   }
 
   export type NestedEnumBookStatusFilter<$PrismaModel = never> = {
@@ -20570,6 +22193,32 @@ export namespace Prisma {
     create: XOR<AdminCreateWithoutUserInput, AdminUncheckedCreateWithoutUserInput>
   }
 
+  export type ConsentCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
+    createdAt?: Date | string
+  }
+
+  export type ConsentUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
+    createdAt?: Date | string
+  }
+
+  export type ConsentCreateOrConnectWithoutUserInput = {
+    where: ConsentWhereUniqueInput
+    create: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ConsentCreateManyUserInputEnvelope = {
+    data: ConsentCreateManyUserInput | ConsentCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ConnectionUpsertWithWhereUniqueWithoutFromUserInput = {
     where: ConnectionWhereUniqueInput
     update: XOR<ConnectionUpdateWithoutFromUserInput, ConnectionUncheckedUpdateWithoutFromUserInput>
@@ -20780,6 +22429,146 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ConsentUpsertWithWhereUniqueWithoutUserInput = {
+    where: ConsentWhereUniqueInput
+    update: XOR<ConsentUpdateWithoutUserInput, ConsentUncheckedUpdateWithoutUserInput>
+    create: XOR<ConsentCreateWithoutUserInput, ConsentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ConsentUpdateWithWhereUniqueWithoutUserInput = {
+    where: ConsentWhereUniqueInput
+    data: XOR<ConsentUpdateWithoutUserInput, ConsentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ConsentUpdateManyWithWhereWithoutUserInput = {
+    where: ConsentScalarWhereInput
+    data: XOR<ConsentUpdateManyMutationInput, ConsentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ConsentScalarWhereInput = {
+    AND?: ConsentScalarWhereInput | ConsentScalarWhereInput[]
+    OR?: ConsentScalarWhereInput[]
+    NOT?: ConsentScalarWhereInput | ConsentScalarWhereInput[]
+    id?: StringFilter<"Consent"> | string
+    userId?: StringFilter<"Consent"> | string
+    type?: EnumConsentTypeFilter<"Consent"> | $Enums.ConsentType
+    agreed?: BoolFilter<"Consent"> | boolean
+    version?: StringFilter<"Consent"> | string
+    createdAt?: DateTimeFilter<"Consent"> | Date | string
+  }
+
+  export type UserCreateWithoutConsentsInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentMarketing?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogCreateNestedManyWithoutUserInput
+    admin?: AdminCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutConsentsInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentMarketing?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
+    admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutConsentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutConsentsInput, UserUncheckedCreateWithoutConsentsInput>
+  }
+
+  export type UserUpsertWithoutConsentsInput = {
+    update: XOR<UserUpdateWithoutConsentsInput, UserUncheckedUpdateWithoutConsentsInput>
+    create: XOR<UserCreateWithoutConsentsInput, UserUncheckedCreateWithoutConsentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutConsentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutConsentsInput, UserUncheckedUpdateWithoutConsentsInput>
+  }
+
+  export type UserUpdateWithoutConsentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
+    admin?: AdminUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutConsentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
+    admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     email?: string | null
@@ -20789,6 +22578,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20800,6 +22590,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -20811,6 +22602,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20822,6 +22614,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -20849,6 +22642,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20860,6 +22654,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -20871,6 +22666,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20882,6 +22678,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSentConnectionsInput = {
@@ -20893,6 +22690,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20904,6 +22702,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentConnectionsInput = {
@@ -20915,6 +22714,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20926,6 +22726,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentConnectionsInput = {
@@ -20942,6 +22743,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20953,6 +22755,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReceivedConnectionsInput = {
@@ -20964,6 +22767,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -20975,6 +22779,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReceivedConnectionsInput = {
@@ -21105,6 +22910,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21116,6 +22922,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentConnectionsInput = {
@@ -21127,6 +22934,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21138,6 +22946,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReceivedConnectionsInput = {
@@ -21160,6 +22969,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21171,6 +22981,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedConnectionsInput = {
@@ -21182,6 +22993,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21193,6 +23005,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuestionUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -21307,6 +23120,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21318,6 +23132,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChildInvitesInput = {
@@ -21329,6 +23144,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21340,6 +23156,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChildInvitesInput = {
@@ -21356,6 +23173,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21367,6 +23185,7 @@ export namespace Prisma {
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAcceptedInvitesInput = {
@@ -21378,6 +23197,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21389,6 +23209,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAcceptedInvitesInput = {
@@ -21461,6 +23282,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21472,6 +23294,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChildInvitesInput = {
@@ -21483,6 +23306,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21494,6 +23318,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutAcceptedInvitesInput = {
@@ -21516,6 +23341,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21527,6 +23353,7 @@ export namespace Prisma {
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
@@ -21538,6 +23365,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21549,6 +23377,7 @@ export namespace Prisma {
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ConnectionUpsertWithoutInviteInput = {
@@ -21650,6 +23479,7 @@ export namespace Prisma {
   export type AnswerCreateWithoutQuestionInput = {
     id?: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -21666,6 +23496,7 @@ export namespace Prisma {
   export type AnswerUncheckedCreateWithoutQuestionInput = {
     id?: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -21749,6 +23580,7 @@ export namespace Prisma {
   export type AnswerUpdateWithoutQuestionInput = {
     id?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21765,6 +23597,7 @@ export namespace Prisma {
   export type AnswerUncheckedUpdateWithoutQuestionInput = {
     id?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21895,6 +23728,7 @@ export namespace Prisma {
   export type AnswerCreateWithoutReactionsInput = {
     id?: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -21912,6 +23746,7 @@ export namespace Prisma {
     id?: string
     questionId: string
     format?: $Enums.AnswerFormat
+    origin?: $Enums.AnswerOrigin
     body?: string | null
     mediaUrl?: string | null
     transcript?: string | null
@@ -21938,6 +23773,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21949,6 +23785,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReactionsInput = {
@@ -21960,6 +23797,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -21971,6 +23809,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReactionsInput = {
@@ -21992,6 +23831,7 @@ export namespace Prisma {
   export type AnswerUpdateWithoutReactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22009,6 +23849,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     questionId?: StringFieldUpdateOperationsInput | string
     format?: EnumAnswerFormatFieldUpdateOperationsInput | $Enums.AnswerFormat
+    origin?: EnumAnswerOriginFieldUpdateOperationsInput | $Enums.AnswerOrigin
     body?: NullableStringFieldUpdateOperationsInput | string | null
     mediaUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22041,6 +23882,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22052,6 +23894,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReactionsInput = {
@@ -22063,6 +23906,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22074,6 +23918,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ConnectionCreateWithoutBookEditionsInput = {
@@ -22181,6 +24026,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -22192,6 +24038,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccessLogsInput = {
@@ -22203,6 +24050,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -22214,6 +24062,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccessLogsInput = {
@@ -22241,6 +24090,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22252,6 +24102,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessLogsInput = {
@@ -22263,6 +24114,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22274,6 +24126,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAdminInput = {
@@ -22285,6 +24138,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -22296,6 +24150,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
+    consents?: ConsentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAdminInput = {
@@ -22307,6 +24162,7 @@ export namespace Prisma {
     avatarUrl?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
+    consentMarketing?: boolean
     consentAt?: Date | string | null
     lastSeenAt?: Date | string | null
     createdAt?: Date | string
@@ -22318,6 +24174,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAdminInput = {
@@ -22345,6 +24202,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22356,6 +24214,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
+    consents?: ConsentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAdminInput = {
@@ -22367,6 +24226,7 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentMarketing?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22378,6 +24238,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ConnectionCreateManyFromUserInput = {
@@ -22467,6 +24328,14 @@ export namespace Prisma {
     userAgent?: string | null
     path?: string | null
     referrer?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConsentCreateManyUserInput = {
+    id?: string
+    type: $Enums.ConsentType
+    agreed: boolean
+    version?: string
     createdAt?: Date | string
   }
 
@@ -22749,6 +24618,30 @@ export namespace Prisma {
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     path?: NullableStringFieldUpdateOperationsInput | string | null
     referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConsentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumConsentTypeFieldUpdateOperationsInput | $Enums.ConsentType
+    agreed?: BoolFieldUpdateOperationsInput | boolean
+    version?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
