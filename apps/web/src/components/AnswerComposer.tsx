@@ -234,8 +234,6 @@ export function AnswerComposer({
           {submit.isPending ? '보내는 중...' : isPrivate ? '🔒 간직하기' : '💌 답변 보내기'}
         </button>
       </div>
-      {/* compact 모드에서 questionBody 미사용 경고 방지용 숨김 참조 */}
-      <span className="hidden">{compact ? questionBody.slice(0, 0) : null}</span>
     </div>
   );
 }
