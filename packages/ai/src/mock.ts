@@ -46,6 +46,14 @@ const MOCK_QUESTIONS: Record<QuestionDepth, QuestionOutput> = {
 };
 
 export class MockAIClient implements AIClient {
+  async transcribeAudio(): Promise<{ text: string; isMock: boolean }> {
+    console.log('[MockAI] transcribeAudio 호출 (Mock 응답) — TODO: 실제 STT 연동');
+    return {
+      text: '(음성 답변이 도착했어요 — 자동 글 변환은 준비 중이에요. 재생 버튼을 눌러 들어보세요.)',
+      isMock: true,
+    };
+  }
+
   async generateQuestion(ctx: QuestionContext): Promise<QuestionOutput> {
     console.log('[MockAI] generateQuestion 호출 (Mock 응답)');
     const depth = Math.max(1, Math.min(5, ctx.currentDepth)) as QuestionDepth;
