@@ -44,15 +44,14 @@ export function AnswerComposer({
   const submit = trpc.answer.submit.useMutation({ onSuccess: onDone });
   const skip = trpc.answer.skip.useMutation({ onSuccess: onDone });
 
-  // 현재 동선에서 실제 제출될 형식
-  const effectiveFormat: Format = method === 'voice' ? 'audio' : media ? media.kind : format === 'audio' ? 'audio' : format;
-  const canSubmit = effectiveFormat === 'text' ? !!text.trim() : !!media || !!text.trim();
+  // 미디어가 첨부되면 그 형식으로, 아니면 글로 제출
+  const canSubmit = !!media || !!text.trim();
 
   function handleSubmit() {
     if (!canSubmit) return;
     submit.mutate({
       questionId,
-      format: media ? effectiveFormat : text.trim() ? (method === 'voice' ? 'text' : 'text') : effectiveFormat,
+      format: media ? media.kind : 'text',
       body: text.trim() || undefined,
       mediaUrl: media?.url,
       transcript: media?.transcript,
