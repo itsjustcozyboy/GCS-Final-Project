@@ -208,19 +208,23 @@ export default function FeedPage() {
 
   if (!firstConn) {
     return (
-      <div className="text-center space-y-4 py-12">
-        <div className="text-5xl">💌</div>
-        <div>
-          <p className="text-gray-700 font-medium">아직 연결된 관계가 없어요</p>
-          <p className="text-sm text-gray-400 mt-1">부모님을 초대하거나 초대 코드를 입력해보세요</p>
+      <>
+        <div className="text-center space-y-4 py-12">
+          <div className="text-5xl">💌</div>
+          <div>
+            <p className="text-gray-700 font-medium">아직 연결된 관계가 없어요</p>
+            <p className="text-sm text-gray-400 mt-1">부모님과의 연결을 시작해보세요</p>
+          </div>
+          <button
+            onClick={() => setShowStart(true)}
+            className="px-6 py-3 rounded-2xl text-white font-medium"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            연결 시작하기
+          </button>
         </div>
-        <button
-          className="px-6 py-3 rounded-2xl text-white font-medium"
-          style={{ backgroundColor: 'var(--color-primary)' }}
-        >
-          연결 시작하기
-        </button>
-      </div>
+        {showStart && <StartConnectionModal onClose={() => setShowStart(false)} />}
+      </>
     );
   }
 
