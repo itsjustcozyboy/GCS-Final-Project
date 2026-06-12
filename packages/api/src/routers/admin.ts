@@ -68,5 +68,3 @@ export const adminRouter = router({
       return { deletedCount: count };
     }),
 });
-
-void assertAdmin; // suppress unused warning
