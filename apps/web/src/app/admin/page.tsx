@@ -10,6 +10,7 @@ type Log = {
   ipAddress: string | null;
   userAgent: string | null;
   path: string | null;
+  referrer: string | null;
   createdAt: string | Date;
 };
 
