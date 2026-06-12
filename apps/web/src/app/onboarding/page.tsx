@@ -5,6 +5,34 @@ import { trpc } from '@/lib/trpc';
 
 type Step = 'role' | 'info' | 'connect' | 'done';
 
+type ConsentKey = 'privacy' | 'terms' | 'age14' | 'analytics' | 'marketing';
+
+const CONSENT_ITEMS: Array<{ key: ConsentKey; required: boolean; label: string; link?: string; desc?: string }> = [
+  {
+    key: 'privacy',
+    required: true,
+    label: '서비스 이용을 위한 개인정보 수집·이용 동의',
+    link: '/privacy',
+    desc: '항목: 이메일·이름·비밀번호·역할·답변 콘텐츠 / 목적: 회원 식별, 질문·답변 전달, 책 제작 / 보유: 탈퇴 시 파기',
+  },
+  { key: 'terms', required: true, label: '이용약관 동의', link: '/terms' },
+  {
+    key: 'age14',
+    required: true,
+    label: '만 14세 이상입니다',
+    // TODO: 만 14세 미만 법정대리인 동의 절차(보호자 이메일 동의) 도입 전까지는 만 14세 이상만 가입 가능
+    desc: '만 14세 미만은 법정대리인 동의가 필요하여 현재 가입할 수 없어요.',
+  },
+  {
+    key: 'analytics',
+    required: false,
+    label: '서비스 개선·분석을 위한 접속정보(IP·기기정보) 수집 동의',
+    link: '/privacy',
+    desc: '동의하지 않아도 가입과 이용에 불이익이 없으며, 미동의 시 분석용 식별정보를 수집하지 않아요. 보유: 탈퇴 또는 12개월',
+  },
+  { key: 'marketing', required: false, label: '마케팅·소식 알림 수신 동의' },
+];
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('role');
