@@ -231,12 +231,7 @@ export default function FeedPage() {
   const firstConn = connections.data?.[0];
   const utils = trpc.useUtils();
   const [showStart, setShowStart] = useState(false);
-
-  const sendQuestion = trpc.question.send.useMutation({
-    onSuccess: () => {
-      if (firstConn) void utils.question.list.invalidate({ connectionId: firstConn.id });
-    },
-  });
+  const [showComposer, setShowComposer] = useState(false);
 
   const questions = trpc.question.list.useQuery(
     { connectionId: firstConn?.id ?? '', limit: 20 },
