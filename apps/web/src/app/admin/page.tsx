@@ -26,13 +26,29 @@ export default function AdminPage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  const { data: adminCheck, isLoading: checkingAdmin } = trpc.admin.isAdmin.useQuery();
+  // 로그인 토큰이 없으면 로그인 페이지로 보낸다
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
+    if (!token) {
+      router.replace('/login?next=/admin');
+    } else {
+      setHasToken(true);
+    }
+  }, [router]);
+
+  const { data: adminCheck, isLoading, error } = trpc.admin.isAdmin.useQuery(undefined, {
+    enabled: hasToken === true,
+    retry: false,
+  });
+  const checkingAdmin = hasToken === null || (hasToken && isLoading);
 
   useEffect(() => {
-    if (!checkingAdmin && adminCheck && !adminCheck.isAdmin) {
+    // 로그인은 했지만 관리자가 아닌 경우 피드로
+    if (hasToken && !isLoading && (error || (adminCheck && !adminCheck.isAdmin))) {
       router.replace('/feed');
     }
-  }, [adminCheck, checkingAdmin, router]);
+  }, [adminCheck, isLoading, error, hasToken, router]);
 
   const { data, isLoading, refetch } = trpc.admin.getLogs.useQuery(
     { search: debouncedSearch || undefined, orderBy, limit: 100 },
