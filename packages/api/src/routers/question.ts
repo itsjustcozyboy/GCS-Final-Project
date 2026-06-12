@@ -40,11 +40,7 @@ function maskAnswer<T extends AnswerWithRelations>(
   };
 }
 
-async function getOwnedConnection(
-  db: Parameters<Parameters<typeof protectedProcedure.query>[0]>[0]['ctx']['db'],
-  connectionId: string,
-  userId: string,
-) {
+async function getOwnedConnection(db: Context['db'], connectionId: string, userId: string) {
   const conn = await db.connection.findUnique({
     where: { id: connectionId },
     include: { fromUser: { select: { id: true, name: true } } },
