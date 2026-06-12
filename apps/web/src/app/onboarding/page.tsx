@@ -10,6 +10,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<Step>('role');
   const [role, setRole] = useState<'child' | 'parent'>('child');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [consentAnalytics, setConsentAnalytics] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
   const [error, setError] = useState('');
