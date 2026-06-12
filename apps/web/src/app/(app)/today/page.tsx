@@ -186,6 +186,9 @@ export default function TodayPage() {
             )}
           </div>
         </div>
+        {isParent && (
+          <ParentMessageEntry connectionId={firstConn.id} childName={childName} onSent={refresh} />
+        )}
       </div>
     );
   }
