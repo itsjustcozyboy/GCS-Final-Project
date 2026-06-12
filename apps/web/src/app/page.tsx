@@ -50,6 +50,7 @@ export default function Home() {
           >
             이미 계정이 있어요 →
           </Link>
+          <AdminLink />
         </div>
       </div>
     </main>
