@@ -49,6 +49,9 @@ export default function OnboardingPage() {
   const [tone, setTone] = useState<'light' | 'deep'>('light');
   const [error, setError] = useState('');
 
+  const requiredConsented = consents.privacy && consents.terms && consents.age14;
+  const allConsented = requiredConsented && consents.analytics && consents.marketing;
+
   const createInvite = trpc.connection.createInvite.useMutation({
     onSuccess(data) {
       setInviteCode(data.code);
