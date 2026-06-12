@@ -10,7 +10,7 @@ type Log = {
   ipAddress: string | null;
   userAgent: string | null;
   path: string | null;
-  createdAt: Date;
+  createdAt: string | Date;
 };
 
 export default function AdminPage() {
