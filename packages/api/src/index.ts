@@ -18,6 +18,7 @@ import { connectionRouter } from './routers/connection';
 import { questionRouter } from './routers/question';
 import { answerRouter } from './routers/answer';
 import { reactionRouter } from './routers/reaction';
+import { messageRouter } from './routers/message';
 import { bookRouter } from './routers/book';
 import { trackingRouter } from './routers/tracking';
 
