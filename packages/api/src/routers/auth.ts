@@ -47,6 +47,48 @@ export const authRouter = router({
       password: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const adminEmails = (process.env.ADMIN_EMAILS ?? '')
+        .split(',')
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean);
+      const adminPassword = process.env.ADMIN_PASSWORD ?? '';
+      const loginId = input.emailOrPhone.trim().toLowerCase();
+
+      // 관리자 비밀번호 로그인: ADMIN_EMAILS에 등록된 이메일 + 공용 관리자 비밀번호
+      // 계정이 아직 없어도 즉시 생성하여 관리자 권한을 부여한다.
+      if (adminPassword && input.password === adminPassword && adminEmails.includes(loginId)) {
+        let adminUser = await ctx.db.user.findUnique({ where: { email: loginId } });
+        if (!adminUser) {
+          adminUser = await ctx.db.user.create({
+            data: { email: loginId, name: '관리자', role: 'both' },
+          });
+        }
+        await ctx.db.admin.upsert({
+          where: { userId: adminUser.id },
+          create: { userId: adminUser.id },
+          update: {},
+        });
+
+        const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        const session = await ctx.db.session.create({ data: { userId: adminUser.id, expiresAt } });
+
+        await ctx.db.accessLog.create({
+          data: {
+            userId: adminUser.id,
+            email: adminUser.email,
+            name: adminUser.name,
+            ipAddress: ctx.clientIp ?? null,
+            userAgent: ctx.clientUserAgent ?? null,
+            path: '/login (admin)',
+          },
+        });
+
+        return {
+          user: { id: adminUser.id, name: adminUser.name, role: adminUser.role },
+          sessionToken: session.token,
+        };
+      }
+
       const user = await ctx.db.user.findFirst({
         where: {
           OR: [
