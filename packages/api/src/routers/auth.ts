@@ -55,16 +55,20 @@ export const authRouter = router({
         },
       });
 
-      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: '계정을 찾을 수 없습니다.' });
+      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
 
-      // 개발 환경에서는 비밀번호 검사 우회 가능
-      if (process.env.NODE_ENV !== 'production' && input.password === 'demo') {
-        const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-        const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
-        return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
+      const { createHash } = await import('crypto');
+      const salt = process.env.PASSWORD_SALT ?? 'maeum-salt';
+      const inputHash = createHash('sha256').update(input.password + salt).digest('hex');
+
+      // 개발 환경: 비밀번호 "demo" 또는 저장된 해시와 일치하는 경우 허용
+      const isDemoLogin = process.env.NODE_ENV !== 'production' && input.password === 'demo';
+      const isValidPassword = user.passwordHash ? user.passwordHash === inputHash : isDemoLogin;
+
+      if (!isValidPassword) {
+        console.error(`[auth.login] 비밀번호 불일치 userId=${user.id}`);
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
       }
-
-      throw new TRPCError({ code: 'UNAUTHORIZED', message: '비밀번호가 올바르지 않습니다.' });
     }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
