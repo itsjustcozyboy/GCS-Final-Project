@@ -114,6 +114,51 @@ export async function selectQuestion(db: DB, connectionId: string) {
   };
 }
 
+export interface QuestionPayload {
+  body: string;
+  depth: number;
+  chapterTag?: string | null;
+  personTag?: string | null;
+  eraTag?: string | null;
+  source: 'ai' | 'curated' | 'followup' | 'custom';
+}
+
+// 질문 저장 + 채널 발송 (자동 선택/키워드 생성/직접 입력 공용)
+export async function deliverQuestion(db: DB, connectionId: string, payload: QuestionPayload) {
+  const connection = await db.connection.findUniqueOrThrow({
+    where: { id: connectionId },
+    include: { fromUser: true },
+  });
+
+  if (isSendBlocked(connection.sensitiveStatus)) {
+    return { sent: false as const, reason: connection.sensitiveStatus };
+  }
+
+  const question = await db.question.create({
+    data: {
+      connectionId,
+      body: payload.body,
+      depth: payload.depth,
+      chapterTag: payload.chapterTag,
+      personTag: payload.personTag,
+      eraTag: payload.eraTag,
+      source: payload.source,
+      sentAt: new Date(),
+    },
+  });
+
+  const channel = createChannelAdapter(connection.responseChannel as 'app' | 'kakao' | 'sms');
+  const target = connection.fromUser.phone ?? connection.fromUser.email ?? 'unknown';
+  await channel.send({
+    to: target,
+    templateId: 'daily_question',
+    channel: connection.responseChannel as 'app' | 'kakao' | 'sms',
+    variables: { name: connection.fromUser.name, question: question.body, questionId: question.id },
+  });
+
+  return { sent: true as const, questionId: question.id, question };
+}
+
 export async function sendDailyQuestion(db: DB, connectionId: string) {
   const result = await selectQuestion(db, connectionId);
 
