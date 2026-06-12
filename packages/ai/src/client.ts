@@ -64,7 +64,20 @@ export interface AnswerGuideOutput {
   }>;
 }
 
+// 음성 답변 자동 전사 (STT)
+export interface TranscribeInput {
+  mediaUrl: string;
+  mimeType?: string;
+}
+
+export interface TranscribeOutput {
+  text: string;
+  isMock?: boolean; // 실제 전사 엔진이 아닌 자리표시 텍스트인 경우
+}
+
 export interface AIClient {
+  // TODO: 실제 STT 연동(Whisper API 등) 전까지 Mock으로 동작
+  transcribeAudio(input: TranscribeInput): Promise<TranscribeOutput>;
   generateQuestion(ctx: QuestionContext): Promise<QuestionOutput>;
   generateQuestionFromKeywords(input: QuestionFromKeywordsInput): Promise<QuestionOutput>;
   composeAnswerFromKeywords(input: AnswerFromKeywordsInput): Promise<AnswerFromKeywordsOutput>;
