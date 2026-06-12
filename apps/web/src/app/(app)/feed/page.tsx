@@ -62,9 +62,136 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
   );
 }
 
+function StartConnectionModal({ onClose }: { onClose: () => void }) {
+  const utils = trpc.useUtils();
+  const [parentName, setParentName] = useState('');
+  const [tone, setTone] = useState<'light' | 'deep'>('light');
+
+  const start = trpc.connection.start.useMutation({
+    onSuccess: () => {
+      void utils.connection.list.invalidate();
+      onClose();
+    },
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-5 shadow-xl">
+        <div className="space-y-1">
+          <h2 className="text-lg font-bold text-gray-900">연결 시작하기</h2>
+          <p className="text-sm text-gray-500">이야기를 나눌 부모님(또는 어르신)의 이름을 알려주세요.</p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">상대방 이름</label>
+          <input
+            value={parentName}
+            onChange={(e) => setParentName(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none"
+            placeholder="예) 어머니, 김순자"
+          />
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">대화 톤</p>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { value: 'light', label: '🌸 가벼운 추억' },
+              { value: 'deep', label: '🌊 깊은 이야기' },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setTone(opt.value as 'light' | 'deep')}
+                className="p-3 rounded-xl border-2 text-center text-sm font-medium transition-all"
+                style={{
+                  borderColor: tone === opt.value ? 'var(--color-primary)' : 'var(--color-border)',
+                  backgroundColor: tone === opt.value ? '#EFF7F2' : 'white',
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {start.isError && <p className="text-sm text-red-500">{start.error.message}</p>}
+
+        <div className="flex gap-3 pt-1">
+          <button onClick={onClose} className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">
+            취소
+          </button>
+          <button
+            onClick={() => start.mutate({ parentName: parentName.trim(), tone })}
+            disabled={start.isPending || !parentName.trim()}
+            className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            {start.isPending ? '연결 중...' : '연결하기'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InlineAnswer({ questionId, connectionId }: { questionId: string; connectionId: string }) {
+  const utils = trpc.useUtils();
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState('');
+
+  const submit = trpc.answer.submit.useMutation({
+    onSuccess: () => {
+      setText('');
+      setOpen(false);
+      void utils.question.list.invalidate({ connectionId });
+    },
+  });
+
+  if (!open) {
+    return (
+      <button onClick={() => setOpen(true)} className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+        ✍️ 답변하기
+      </button>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm resize-none focus:outline-none"
+        style={{ minHeight: '80px' }}
+        placeholder="이야기를 들려주세요..."
+      />
+      <div className="flex gap-2">
+        <button onClick={() => setOpen(false)} className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-500">
+          취소
+        </button>
+        <button
+          onClick={() => submit.mutate({ questionId, format: 'text', body: text.trim(), receivedVia: 'app' })}
+          disabled={submit.isPending || !text.trim()}
+          className="px-4 py-2 rounded-xl text-white text-sm font-medium disabled:opacity-50"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          {submit.isPending ? '저장 중...' : '답변 보내기'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function FeedPage() {
   const connections = trpc.connection.list.useQuery();
   const firstConn = connections.data?.[0];
+  const utils = trpc.useUtils();
+  const [showStart, setShowStart] = useState(false);
+
+  const sendQuestion = trpc.question.send.useMutation({
+    onSuccess: () => {
+      if (firstConn) void utils.question.list.invalidate({ connectionId: firstConn.id });
+    },
+  });
 
   const questions = trpc.question.list.useQuery(
     { connectionId: firstConn?.id ?? '', limit: 20 },
