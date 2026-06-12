@@ -122,10 +122,13 @@ export default function TodayPage() {
   if (isParent && !question.answer) {
     if (submitted) {
       return (
-        <div className="text-center py-16 space-y-4">
-          <div className="text-5xl">🙏</div>
-          <p className="text-xl font-bold text-gray-900">고마워요!</p>
-          <p className="text-gray-500">소중한 이야기가 잘 전달됐어요</p>
+        <div className="space-y-6">
+          <div className="text-center py-10 space-y-4">
+            <div className="text-5xl">🙏</div>
+            <p className="text-2xl font-bold text-gray-900">고마워요!</p>
+            <p className="text-lg text-gray-500">소중한 이야기가 잘 전달됐어요</p>
+          </div>
+          <ParentMessageEntry connectionId={firstConn.id} childName={childName} onSent={refresh} />
         </div>
       );
     }
