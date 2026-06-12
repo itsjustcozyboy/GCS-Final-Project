@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next') || '/feed';
   const [form, setForm] = useState({ emailOrPhone: '', password: '' });
   const [error, setError] = useState('');
 
