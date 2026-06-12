@@ -128,6 +128,9 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   role: 'role',
   avatarUrl: 'avatarUrl',
+  passwordHash: 'passwordHash',
+  consentAnalytics: 'consentAnalytics',
+  consentAt: 'consentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -218,6 +221,31 @@ exports.Prisma.CuratedQuestionScalarFieldEnum = {
   language: 'language'
 };
 
+exports.Prisma.AccessLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  name: 'name',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  path: 'path',
+  referrer: 'referrer',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AdminScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+};
+
+exports.Prisma.AdminAuditScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  action: 'action',
+  targetIds: 'targetIds',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -293,7 +321,10 @@ exports.Prisma.ModelName = {
   Answer: 'Answer',
   Reaction: 'Reaction',
   BookEdition: 'BookEdition',
-  CuratedQuestion: 'CuratedQuestion'
+  CuratedQuestion: 'CuratedQuestion',
+  AccessLog: 'AccessLog',
+  Admin: 'Admin',
+  AdminAudit: 'AdminAudit'
 };
 
 /**

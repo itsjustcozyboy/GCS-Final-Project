@@ -1,11 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/client"
+  provider      = "prisma-client-js"
+  output        = "../generated/client"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -51,19 +53,24 @@ enum QuestionSource {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String?  @unique
-  phone     String?  @unique
-  name      String
-  role      Role
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String    @id @default(cuid())
+  email            String?   @unique
+  phone            String?   @unique
+  name             String
+  role             Role
+  avatarUrl        String?
+  passwordHash     String?
+  consentAnalytics Boolean   @default(false)
+  consentAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   sentConnections     Connection[] @relation("fromUser")
   receivedConnections Connection[] @relation("toUser")
   sessions            Session[]
   reactions           Reaction[]
+  accessLogs          AccessLog[]
+  admin               Admin?
 }
 
 model Session {
@@ -182,4 +189,38 @@ model CuratedQuestion {
 
   @@index([depth])
   @@index([chapterTag])
+}
+
+model AccessLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email     String?
+  name      String?
+  ipAddress String?
+  userAgent String?
+  path      String?
+  referrer  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Admin {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AdminAudit {
+  id        String   @id @default(cuid())
+  adminId   String
+  action    String
+  targetIds String[]
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
 }
