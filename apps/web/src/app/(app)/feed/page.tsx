@@ -247,12 +247,16 @@ export default function FeedPage() {
           <div className="text-4xl">🌱</div>
           <p className="text-gray-500">첫 번째 질문을 보내볼까요?</p>
           <button
-            onClick={() => {}}
-            className="px-6 py-3 rounded-2xl text-white font-medium"
+            onClick={() => sendQuestion.mutate({ connectionId: firstConn.id })}
+            disabled={sendQuestion.isPending}
+            className="px-6 py-3 rounded-2xl text-white font-medium disabled:opacity-50"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            오늘의 질문 보내기
+            {sendQuestion.isPending ? '보내는 중...' : '오늘의 질문 보내기'}
           </button>
+          {sendQuestion.data && !(sendQuestion.data as { sent: boolean }).sent && (
+            <p className="text-sm text-orange-500">⚠️ 현재 발송이 차단된 상태입니다</p>
+          )}
         </div>
       )}
 
