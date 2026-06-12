@@ -364,6 +364,211 @@ function LogsView({ search }: { search: string }) {
   );
 }
 
+// ─── 문의 관리 뷰 ─────────────────────────────────────────────
+type Inquiry = {
+  id: string;
+  userId: string | null;
+  email: string;
+  category: 'bug' | 'feature' | 'payment' | 'privacy' | 'etc' | null;
+  message: string;
+  status: 'new' | 'in_progress' | 'resolved';
+  emailSent: boolean;
+  createdAt: string | Date;
+};
+
+const INQUIRY_CATEGORY_LABEL: Record<string, string> = {
+  bug: '버그/오류', feature: '기능 제안', payment: '결제', privacy: '개인정보', etc: '기타',
+};
+const INQUIRY_STATUS_LABEL: Record<string, string> = {
+  new: '신규', in_progress: '처리 중', resolved: '완료',
+};
+const INQUIRY_STATUS_COLOR: Record<string, { bg: string; fg: string }> = {
+  new: { bg: '#FEE2E2', fg: '#DC2626' },
+  in_progress: { bg: '#FEF3C7', fg: '#B45309' },
+  resolved: { bg: '#D1FAE5', fg: '#047857' },
+};
+
+function InquiriesView({ search }: { search: string }) {
+  const [category, setCategory] = useState<'' | 'bug' | 'feature' | 'payment' | 'privacy' | 'etc'>('');
+  const [status, setStatus] = useState<'' | 'new' | 'in_progress' | 'resolved'>('');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const { data, isLoading, refetch } = trpc.inquiry.list.useQuery({
+    search: search || undefined,
+    category: category || undefined,
+    status: status || undefined,
+    limit: 100,
+  });
+
+  const setStatusMutation = trpc.inquiry.setStatus.useMutation({ onSuccess: () => void refetch() });
+  const deleteMutation = trpc.inquiry.deleteMany.useMutation({
+    onSuccess: () => {
+      setSelected(new Set());
+      setShowDeleteModal(false);
+      void refetch();
+    },
+  });
+
+  const inquiries: Inquiry[] = (data?.inquiries ?? []) as Inquiry[];
+  const allIds = inquiries.map((q) => q.id);
+  const allSelected = allIds.length > 0 && allIds.every((id) => selected.has(id));
+  const statusCounts = (data?.statusCounts ?? {}) as Record<string, number>;
+
+  function toggleOne(id: string) {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelected(next);
+  }
+
+  return (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-gray-500">
+          신규 <strong>{statusCounts.new ?? 0}</strong> · 처리 중 <strong>{statusCounts.in_progress ?? 0}</strong> · 완료 <strong>{statusCounts.resolved ?? 0}</strong>
+          {selected.size > 0 && ` · ${selected.size}건 선택됨`}
+        </p>
+        <div className="flex items-center gap-2">
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value as typeof category)}
+            className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
+            aria-label="유형 필터"
+          >
+            <option value="">전체 유형</option>
+            {Object.entries(INQUIRY_CATEGORY_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as typeof status)}
+            className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
+            aria-label="상태 필터"
+          >
+            <option value="">전체 상태</option>
+            {Object.entries(INQUIRY_STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+          {selected.size > 0 && (
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-xl hover:bg-red-600 transition-colors"
+            >
+              선택 삭제 ({selected.size})
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        {isLoading ? (
+          <div className="py-16 text-center text-gray-400 text-sm">로딩 중...</div>
+        ) : inquiries.length === 0 ? (
+          <div className="py-16 text-center text-gray-400 text-sm">접수된 문의가 없습니다.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={() => setSelected(allSelected ? new Set() : new Set(allIds))}
+                      className="w-4 h-4"
+                      aria-label="전체 선택"
+                    />
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">접수일</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">유형</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">이메일</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">내용</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">알림</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inquiries.map((q, i) => (
+                  <tr
+                    key={q.id}
+                    className={`border-b border-gray-50 hover:bg-gray-50 transition-colors align-top ${selected.has(q.id) ? 'bg-red-50' : i % 2 === 0 ? '' : 'bg-gray-50/30'}`}
+                  >
+                    <td className="px-4 py-3">
+                      <input type="checkbox" checked={selected.has(q.id)} onChange={() => toggleOne(q.id)} className="w-4 h-4" />
+                    </td>
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{formatDate(q.createdAt)}</td>
+                    <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                      {q.category ? INQUIRY_CATEGORY_LABEL[q.category] : <span className="text-gray-300">-</span>}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      <a href={`mailto:${q.email}`} className="underline decoration-gray-300 hover:text-gray-900">{q.email}</a>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700 max-w-[320px]">
+                      <button
+                        onClick={() => setExpanded(expanded === q.id ? null : q.id)}
+                        className="text-left w-full"
+                        title="눌러서 전문 보기"
+                      >
+                        {expanded === q.id ? (
+                          <span className="whitespace-pre-wrap">{q.message}</span>
+                        ) : (
+                          <span className="block truncate">{q.message}</span>
+                        )}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3" title={q.emailSent ? '관리자 메일 발송됨' : '메일 발송 실패 — DB에는 저장됨'}>
+                      {q.emailSent ? '📧' : <span className="text-red-400 text-xs font-medium">실패</span>}
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={q.status}
+                        onChange={(e) => setStatusMutation.mutate({ id: q.id, status: e.target.value as Inquiry['status'] })}
+                        disabled={setStatusMutation.isPending}
+                        className="px-2 py-1 rounded-lg text-xs font-medium border-0 focus:outline-none"
+                        style={{ backgroundColor: INQUIRY_STATUS_COLOR[q.status].bg, color: INQUIRY_STATUS_COLOR[q.status].fg }}
+                        aria-label="상태 변경"
+                      >
+                        {Object.entries(INQUIRY_STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl">
+            <h2 className="text-lg font-bold text-gray-900">정말 삭제하시겠습니까?</h2>
+            <p className="text-sm text-gray-500">
+              선택한 <strong>{selected.size}건</strong>의 문의가 영구 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+            </p>
+            {deleteMutation.isError && <p className="text-sm text-red-500">{deleteMutation.error.message}</p>}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
+              >
+                취소
+              </button>
+              <button
+                onClick={() => deleteMutation.mutate({ ids: Array.from(selected) })}
+                disabled={deleteMutation.isPending}
+                className="flex-1 py-3 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
+              >
+                {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── 페이지 ──────────────────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
