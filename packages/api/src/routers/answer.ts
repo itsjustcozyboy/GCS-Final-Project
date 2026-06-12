@@ -19,8 +19,8 @@ export const answerRouter = router({
         include: { connection: true },
       });
       if (!question) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (question.connection.fromUserId !== ctx.userId) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: '본인의 질문에만 답변할 수 있습니다.' });
+      if (question.connection.fromUserId !== ctx.userId && question.connection.toUserId !== ctx.userId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: '본인의 연결에만 답변할 수 있습니다.' });
       }
 
       const answer = await ctx.db.answer.upsert({
