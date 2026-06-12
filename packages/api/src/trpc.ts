@@ -6,6 +6,8 @@ export interface Context {
   db: typeof PrismaType;
   userId?: string;
   sessionToken?: string;
+  clientIp?: string;
+  clientUserAgent?: string;
 }
 
 const t = initTRPC.context<Context>().create({
