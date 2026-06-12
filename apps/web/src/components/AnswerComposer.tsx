@@ -267,9 +267,10 @@ export function AnswerComposer({
         ) : null}
         <button
           onClick={handleSubmit}
-          disabled={submit.isPending || (format === 'text' && !text.trim())}
-          className="flex-grow py-3 rounded-2xl text-white font-semibold disabled:opacity-50"
+          disabled={submit.isPending || !canSubmit}
+          className="flex-grow py-4 rounded-2xl text-white text-lg font-semibold disabled:opacity-50"
           style={{ backgroundColor: PRIMARY }}
+          aria-label={isPrivate ? '나만 간직하기로 저장' : '자녀에게 답변 보내기'}
         >
           {submit.isPending ? '보내는 중...' : isPrivate ? '🔒 간직하기' : '💌 답변 보내기'}
         </button>
