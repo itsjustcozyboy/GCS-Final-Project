@@ -86,8 +86,8 @@ export default function AdminPage() {
     deleteMutation.mutate({ ids: Array.from(selected) });
   }
 
-  function formatDate(d: Date) {
-    return new Date(d).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+  function formatDate(d: string | Date) {
+    return new Date(d as string).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   }
 
   function shortUA(ua: string | null) {
