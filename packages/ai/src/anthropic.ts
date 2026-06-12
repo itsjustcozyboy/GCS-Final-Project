@@ -31,6 +31,12 @@ export class AnthropicAIClient implements AIClient {
     this.client = new Anthropic({ apiKey });
   }
 
+  // Claude API는 STT를 제공하지 않으므로 Mock으로 위임
+  // TODO: 실제 음성 전사 엔진(예: OpenAI Whisper, Google STT) 연동
+  async transcribeAudio(input: Parameters<AIClient['transcribeAudio']>[0]) {
+    return this.fallback.transcribeAudio(input);
+  }
+
   async generateQuestion(ctx: QuestionContext): Promise<QuestionOutput> {
     try {
       const message = await this.client.messages.create({
