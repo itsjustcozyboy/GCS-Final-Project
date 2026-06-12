@@ -20,11 +20,12 @@ export function AnswerComposer({
   onSkip?: () => void;
   compact?: boolean;
 }) {
-  // 키워드 답변이 핵심 훅이므로 기본 탭으로
-  const [method, setMethod] = useState<Method>('keywords');
+  // 음성이 1순위 동선 (타이핑이 어려운 세대 배려), 키워드 답변이 그 다음 훅
+  const [method, setMethod] = useState<Method>('voice');
   const [keywords, setKeywords] = useState<string[]>([]);
   const [text, setText] = useState('');
   const [format, setFormat] = useState<Format>('text');
+  const [media, setMedia] = useState<UploadedMedia | null>(null);
   const [isPrivate, setIsPrivate] = useState(true); // 기본 비공개 — 부모가 직접 공개를 선택
   const [aiComposed, setAiComposed] = useState(false);
 
