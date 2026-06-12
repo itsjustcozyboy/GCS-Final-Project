@@ -20,8 +20,9 @@ export async function generateBook(db: DB, connectionId: string, editionType: 'i
   const chapterData: Record<string, { markdown: string; followupQuestions: string[] }> = {};
 
   for (const chapterName of CHAPTERS) {
+    // 비공개 답변은 책에서 제외 (부모가 공개로 전환하면 다음 판부터 포함)
     const chapterQuestions = connection.questions.filter(
-      (q) => q.chapterTag === chapterName && q.answer && !q.answer.skipped,
+      (q) => q.chapterTag === chapterName && q.answer && !q.answer.skipped && !q.answer.isPrivate,
     );
 
     if (chapterQuestions.length === 0) {
