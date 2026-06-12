@@ -32,7 +32,42 @@ export interface BookChapterOutput {
   followupQuestions: string[];
 }
 
+// 자녀: 키워드 → 질문 생성
+export interface QuestionFromKeywordsInput {
+  keywords: string[];
+  parentName: string;
+  tone: 'light' | 'deep';
+}
+
+// 부모: 키워드 → 답변 합성 (핵심 훅 — 낯간지러운 이야기를 키워드만으로)
+export interface AnswerFromKeywordsInput {
+  question: string;
+  keywords: string[];
+  parentName?: string;
+}
+
+export interface AnswerFromKeywordsOutput {
+  answer: string;
+}
+
+// 부모: 형식별 답변 가이드 (글/사진/영상/음성)
+export interface AnswerGuideInput {
+  question: string;
+}
+
+export interface AnswerGuideOutput {
+  guides: Array<{
+    format: 'text' | 'photo' | 'video' | 'audio';
+    title: string;
+    tip: string;
+    starter?: string; // 글 형식일 때 첫 문장 예시
+  }>;
+}
+
 export interface AIClient {
   generateQuestion(ctx: QuestionContext): Promise<QuestionOutput>;
+  generateQuestionFromKeywords(input: QuestionFromKeywordsInput): Promise<QuestionOutput>;
+  composeAnswerFromKeywords(input: AnswerFromKeywordsInput): Promise<AnswerFromKeywordsOutput>;
+  suggestAnswerGuide(input: AnswerGuideInput): Promise<AnswerGuideOutput>;
   editBookChapter(input: BookChapterInput): Promise<BookChapterOutput>;
 }
