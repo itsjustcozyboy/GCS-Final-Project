@@ -78,6 +78,7 @@ model User {
   avatarUrl        String?
   passwordHash     String?
   consentAnalytics Boolean   @default(false)
+  consentMarketing Boolean   @default(false)
   consentAt        DateTime?
   lastSeenAt       DateTime?
   createdAt        DateTime  @default(now())
