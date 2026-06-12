@@ -199,6 +199,9 @@ export default function AdminPage() {
                       <td className="px-4 py-3 text-gray-600">{log.email ?? <span className="text-gray-300">미동의</span>}</td>
                       <td className="px-4 py-3 font-mono text-gray-600 text-xs">{log.ipAddress ?? <span className="text-gray-300">-</span>}</td>
                       <td className="px-4 py-3 text-gray-600">{log.path ?? '-'}</td>
+                      <td className="px-4 py-3 text-gray-500 text-xs max-w-[160px] truncate" title={log.referrer ?? ''}>
+                        {log.referrer ? log.referrer : <span className="text-gray-300">직접 방문</span>}
+                      </td>
                       <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate" title={log.userAgent ?? ''}>
                         {shortUA(log.userAgent)}
                       </td>
