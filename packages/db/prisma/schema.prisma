@@ -92,6 +92,20 @@ model User {
   reactions           Reaction[]
   accessLogs          AccessLog[]
   admin               Admin?
+  consents            Consent[]
+}
+
+model Consent {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      ConsentType
+  agreed    Boolean
+  version   String      @default("v1.0") // 동의 시점의 약관/처리방침 버전
+  createdAt DateTime    @default(now())
+
+  @@index([userId])
+  @@index([type])
 }
 
 model Session {
