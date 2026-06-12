@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { POLICY_VERSION } from '@maeum/shared';
 
 export const authRouter = router({
   register: publicProcedure
@@ -11,11 +12,18 @@ export const authRouter = router({
         phone: z.string().regex(/^010\d{8}$/).optional(),
         role: z.enum(['child', 'parent', 'both']),
         password: z.string().min(6),
+        // [필수] 동의 — 미동의 시 가입 불가 (PIPA 필수/선택 분리)
+        consentPrivacy: z.literal(true, { errorMap: () => ({ message: '개인정보 수집·이용 동의(필수)가 필요합니다.' }) }),
+        consentTerms: z.literal(true, { errorMap: () => ({ message: '이용약관 동의(필수)가 필요합니다.' }) }),
+        // TODO: 만 14세 미만은 법정대리인 동의 절차 필요 — 현재는 만 14세 이상만 가입 허용
+        ageOver14: z.literal(true, { errorMap: () => ({ message: '만 14세 이상만 가입할 수 있습니다.' }) }),
+        // [선택] 동의 — 미동의해도 가입 가능
         consentAnalytics: z.boolean().default(false),
+        consentMarketing: z.boolean().default(false),
       }).refine((d) => d.email || d.phone, { message: '이메일 또는 전화번호가 필요합니다.' }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { password, consentAnalytics, ...userData } = input;
+      const { password, consentPrivacy, consentTerms, ageOver14, consentAnalytics, consentMarketing, ...userData } = input;
 
       if (userData.email) {
         const existing = await ctx.db.user.findUnique({ where: { email: userData.email } });
