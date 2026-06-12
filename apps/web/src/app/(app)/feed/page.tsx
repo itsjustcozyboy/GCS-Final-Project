@@ -237,9 +237,14 @@ export default function FeedPage() {
         <h2 className="text-lg font-bold text-gray-900">
           {firstConn.fromUser?.name}님과의 이야기
         </h2>
-        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-          {items.length}개의 답변
-        </span>
+        <button
+          onClick={() => sendQuestion.mutate({ connectionId: firstConn.id })}
+          disabled={sendQuestion.isPending}
+          className="text-xs font-medium px-3 py-1.5 rounded-full text-white disabled:opacity-50"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          {sendQuestion.isPending ? '보내는 중...' : '+ 질문 보내기'}
+        </button>
       </div>
 
       {items.length === 0 && (
