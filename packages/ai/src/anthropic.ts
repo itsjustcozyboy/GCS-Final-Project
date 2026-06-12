@@ -1,6 +1,24 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { AIClient, QuestionContext, QuestionOutput, BookChapterInput, BookChapterOutput } from './client';
-import { buildQuestionSystemPrompt, buildQuestionUserPrompt } from './prompts/question';
+import type {
+  AIClient,
+  QuestionContext,
+  QuestionOutput,
+  BookChapterInput,
+  BookChapterOutput,
+  QuestionFromKeywordsInput,
+  AnswerFromKeywordsInput,
+  AnswerFromKeywordsOutput,
+  AnswerGuideInput,
+  AnswerGuideOutput,
+} from './client';
+import {
+  buildQuestionSystemPrompt,
+  buildQuestionUserPrompt,
+  buildKeywordQuestionPrompt,
+  buildAnswerComposeSystemPrompt,
+  buildAnswerComposePrompt,
+  buildAnswerGuidePrompt,
+} from './prompts/question';
 import { buildBookSystemPrompt, buildBookUserPrompt } from './prompts/book';
 import { MockAIClient } from './mock';
 
