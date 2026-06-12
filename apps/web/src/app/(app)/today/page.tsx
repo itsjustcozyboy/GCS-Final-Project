@@ -178,6 +178,17 @@ export default function TodayPage() {
               </div>
             ) : (
               <>
+                {a.format === 'photo' && a.mediaUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={a.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover mb-2" />
+                )}
+                {a.format === 'video' && a.mediaUrl && (
+                  <video src={a.mediaUrl} controls className="rounded-xl max-h-64 w-full mb-2" aria-label="영상 답변" />
+                )}
+                {a.format === 'audio' && a.mediaUrl && (
+                  <audio src={a.mediaUrl} controls className="w-full mb-2" aria-label="음성 답변" />
+                )}
+                {a.transcript && <p className="text-sm text-gray-500 italic mb-1">📝 {a.transcript}</p>}
                 {a.body && <p className="text-base text-gray-900 whitespace-pre-wrap">{a.body}</p>}
                 <p className="text-xs text-green-600 mt-2">
                   ✅ 답변 완료{a.isPrivate ? ' · 🔒 비공개' : ''}
