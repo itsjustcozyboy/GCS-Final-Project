@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { QuestionComposer } from '@/components/QuestionComposer';
+import { AnswerComposer } from '@/components/AnswerComposer';
 
 function ReactionBar({ answerId, connectionId }: { answerId: string; connectionId: string }) {
   const [comment, setComment] = useState('');
