@@ -18,6 +18,7 @@ import { questionRouter } from './routers/question';
 import { answerRouter } from './routers/answer';
 import { reactionRouter } from './routers/reaction';
 import { bookRouter } from './routers/book';
+import { trackingRouter } from './routers/tracking';
 
 export const appRouter = router({
   auth: authRouter,
@@ -27,6 +28,7 @@ export const appRouter = router({
   answer: answerRouter,
   reaction: reactionRouter,
   book: bookRouter,
+  tracking: trackingRouter,
 });
 
 export type AppRouter = typeof appRouter;
