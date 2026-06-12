@@ -29,6 +29,7 @@ export const appRouter = router({
   question: questionRouter,
   answer: answerRouter,
   reaction: reactionRouter,
+  message: messageRouter,
   book: bookRouter,
   tracking: trackingRouter,
 });
