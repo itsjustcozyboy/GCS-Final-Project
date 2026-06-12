@@ -20,9 +20,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Link href="/feed" className="text-lg font-bold" style={{ color: 'var(--color-primary-dark)' }}>
           💌 마음 잇기
         </Link>
-        <Link href="/profile" className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm">
-          👤
-        </Link>
+        <div className="flex items-center gap-2">
+          {adminData?.isAdmin && (
+            <Link
+              href="/admin"
+              className="px-2.5 py-1 rounded-lg text-xs font-medium"
+              style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}
+            >
+              관리자
+            </Link>
+          )}
+          <Link href="/profile" className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm">
+            👤
+          </Link>
+        </div>
       </header>
 
       {/* 콘텐츠 */}
