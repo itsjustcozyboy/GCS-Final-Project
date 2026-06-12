@@ -308,8 +308,9 @@ export default function FeedPage() {
               <span className="text-sm text-gray-400 italic">건너뛰었어요</span>
             </div>
           ) : (
-            <div className="pl-7">
+            <div className="pl-7 space-y-2">
               <span className="text-sm text-gray-400">아직 답변을 기다리고 있어요...</span>
+              <InlineAnswer questionId={q.id} connectionId={firstConn.id} />
             </div>
           )}
 
