@@ -260,7 +260,8 @@ export function AnswerComposer({
           <button
             onClick={() => skip.mutate({ questionId })}
             disabled={skip.isPending}
-            className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-500 font-medium disabled:opacity-50"
+            className="flex-1 py-4 rounded-2xl border border-gray-200 text-gray-500 text-base font-medium disabled:opacity-50"
+            aria-label="이 질문은 다음에 답하기"
           >
             다음에 할게요
           </button>
