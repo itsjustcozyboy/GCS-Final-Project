@@ -67,6 +67,7 @@ export default function TodayPage() {
   const question = todayQ.data;
   const isParent = firstConn.fromUserId === me.data?.id;
   const parentName = firstConn.fromUser?.name ?? '부모님';
+  const childName = firstConn.toUser?.name ?? '자녀';
 
   function refresh() {
     if (!firstConn) return;
