@@ -28,7 +28,7 @@ export const authRouter = router({
       const passwordHash = createHash('sha256').update(password + salt).digest('hex');
 
       const user = await ctx.db.user.create({
-        data: { ...userData, name: userData.name },
+        data: { ...userData, name: userData.name, passwordHash },
       });
 
       // 세션 생성
@@ -36,9 +36,6 @@ export const authRouter = router({
       const session = await ctx.db.session.create({
         data: { userId: user.id, expiresAt },
       });
-
-      // passwordHash를 실제로는 user 모델에 저장해야 하나, 스키마 간결화를 위해 여기선 생략
-      void passwordHash;
 
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
