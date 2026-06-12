@@ -273,7 +273,8 @@ export default function FeedPage() {
   }
 
   const items = questions.data?.questions ?? [];
-  const otherUser = firstConn.fromUserId === me.data?.id ? firstConn.toUser : firstConn.fromUser;
+  const isParentView = firstConn.fromUserId === me.data?.id; // 부모(답변자) 시점인가
+  const otherUser = isParentView ? firstConn.toUser : firstConn.fromUser;
   const connectedDate = new Date(firstConn.createdAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 
   return (
@@ -292,15 +293,25 @@ export default function FeedPage() {
             {otherUser?.isOnline ? '접속중' : '미접속중'}
           </div>
         </div>
-        <button
-          onClick={() => sendQuestion.mutate({ connectionId: firstConn.id })}
-          disabled={sendQuestion.isPending}
-          className="text-xs font-medium px-3 py-1.5 rounded-full text-white disabled:opacity-50"
-          style={{ backgroundColor: 'var(--color-primary)' }}
-        >
-          {sendQuestion.isPending ? '보내는 중...' : '+ 질문 보내기'}
-        </button>
+        {!isParentView && (
+          <button
+            onClick={() => setShowComposer(true)}
+            className="text-xs font-medium px-3 py-1.5 rounded-full text-white"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            + 질문 보내기
+          </button>
+        )}
       </div>
+
+      {showComposer && (
+        <QuestionComposer
+          connectionId={firstConn.id}
+          parentName={firstConn.fromUser?.name ?? '부모님'}
+          onClose={() => setShowComposer(false)}
+          onSent={() => void utils.question.list.invalidate({ connectionId: firstConn.id })}
+        />
+      )}
 
       <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-50">
         <div className="flex gap-3">
