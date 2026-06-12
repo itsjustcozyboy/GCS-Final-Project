@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 
 export default function ProfilePage() {
