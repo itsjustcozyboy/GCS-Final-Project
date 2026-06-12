@@ -167,6 +167,9 @@ model Answer {
   transcript  String?
   skipped     Boolean      @default(false)
   receivedVia String       @default("app")
+  isPrivate   Boolean      @default(false) // 부모가 비공개로 설정하면 자녀에게 내용이 보이지 않음
+  keywords    String[]     @default([]) // 키워드 답변 시 입력한 키워드 (AI 합성 원본)
+  aiComposed  Boolean      @default(false) // AI가 키워드로 합성한 답변 여부
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
