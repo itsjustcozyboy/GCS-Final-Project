@@ -3,6 +3,29 @@ import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { QuestionComposer } from '@/components/QuestionComposer';
 import { AnswerComposer } from '@/components/AnswerComposer';
+import { ParentMessageComposer } from '@/components/ParentMessageComposer';
+
+// 답변/메시지의 미디어(사진·영상·음성) 표시
+function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | null; transcript: string | null } }) {
+  if (!answer.mediaUrl) {
+    return answer.transcript ? <p className="text-sm text-gray-500 italic">🎤 {answer.transcript}</p> : null;
+  }
+  return (
+    <div className="space-y-1">
+      {answer.format === 'photo' && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={answer.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover" />
+      )}
+      {answer.format === 'video' && (
+        <video src={answer.mediaUrl} controls className="rounded-xl max-h-64 w-full" aria-label="영상 답변" />
+      )}
+      {answer.format === 'audio' && (
+        <audio src={answer.mediaUrl} controls className="w-full" aria-label="음성 답변" />
+      )}
+      {answer.transcript && <p className="text-sm text-gray-500 italic">📝 {answer.transcript}</p>}
+    </div>
+  );
+}
 
 function ReactionBar({ answerId, connectionId }: { answerId: string; connectionId: string }) {
   const [comment, setComment] = useState('');
