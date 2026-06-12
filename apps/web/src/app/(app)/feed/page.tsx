@@ -424,15 +424,9 @@ export default function FeedPage() {
               </div>
             ) : (
               <div className="pl-7 space-y-2">
-                {q.answer.format === 'photo' && q.answer.mediaUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={q.answer.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover" />
-                )}
+                <AnswerMedia answer={q.answer} />
                 {q.answer.body && (
                   <p className="text-base text-gray-900 leading-relaxed whitespace-pre-wrap">{q.answer.body}</p>
-                )}
-                {q.answer.transcript && (
-                  <p className="text-sm text-gray-500 italic">🎤 {q.answer.transcript}</p>
                 )}
 
                 {/* 부모 본인 답변이면 공개/비공개 전환 */}
