@@ -15,7 +15,7 @@ export default function LoginPage() {
     onSuccess(data) {
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('userId', data.user.id);
-      router.push('/feed');
+      router.push(next);
     },
     onError(err) {
       setError(err.message);
