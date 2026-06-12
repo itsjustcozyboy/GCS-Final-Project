@@ -51,6 +51,31 @@ export default function ProfilePage() {
         </dl>
       </div>
 
+      {/* 약관·정책·도움말 */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-50 divide-y divide-gray-100">
+        {[
+          { href: '/terms', icon: '📄', label: '이용약관' },
+          { href: '/privacy', icon: '🔐', label: '개인정보 처리방침' },
+          { href: '/faq', icon: '💬', label: '자주 묻는 질문 (FAQ)' },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="flex items-center justify-between px-5 py-4 text-base text-gray-700 hover:bg-gray-50 first:rounded-t-2xl last:rounded-b-2xl"
+          >
+            <span className="flex items-center gap-3">
+              <span aria-hidden>{item.icon}</span>
+              {item.label}
+            </span>
+            <span className="text-gray-300" aria-hidden>›</span>
+          </Link>
+        ))}
+      </div>
+
+      <p className="text-xs text-gray-400 text-center">
+        문의: <a href="mailto:leokor1214@gachon.ac.kr" className="underline">leokor1214@gachon.ac.kr</a>
+      </p>
+
       {adminData?.isAdmin && (
         <button
           onClick={() => router.push('/admin')}
