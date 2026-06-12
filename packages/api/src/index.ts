@@ -1,5 +1,6 @@
 export * from './trpc';
 export * from './routers/auth';
+export * from './routers/admin';
 export * from './routers/connection';
 export * from './routers/question';
 export * from './routers/answer';
@@ -10,6 +11,7 @@ export * from './services/book-engine';
 
 import { router } from './trpc';
 import { authRouter } from './routers/auth';
+import { adminRouter } from './routers/admin';
 import { connectionRouter } from './routers/connection';
 import { questionRouter } from './routers/question';
 import { answerRouter } from './routers/answer';
@@ -18,6 +20,7 @@ import { bookRouter } from './routers/book';
 
 export const appRouter = router({
   auth: authRouter,
+  admin: adminRouter,
   connection: connectionRouter,
   question: questionRouter,
   answer: answerRouter,
