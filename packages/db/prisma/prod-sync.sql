@@ -91,3 +91,32 @@ BEGIN
       FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
   END IF;
 END $$;
+
+-- 서비스 문의 (2026-06-12, 문의/피드백 기능)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'InquiryCategory') THEN
+    CREATE TYPE "InquiryCategory" AS ENUM ('bug', 'feature', 'payment', 'privacy', 'etc');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'InquiryStatus') THEN
+    CREATE TYPE "InquiryStatus" AS ENUM ('new', 'in_progress', 'resolved');
+  END IF;
+END $$;
+
+CREATE TABLE IF NOT EXISTS "Inquiry" (
+    "id"        TEXT NOT NULL,
+    "userId"    TEXT,
+    "email"     TEXT NOT NULL,
+    "category"  "InquiryCategory",
+    "message"   TEXT NOT NULL,
+    "status"    "InquiryStatus" NOT NULL DEFAULT 'new',
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "emailSent" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Inquiry_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX IF NOT EXISTS "Inquiry_status_idx" ON "Inquiry"("status");
+CREATE INDEX IF NOT EXISTS "Inquiry_createdAt_idx" ON "Inquiry"("createdAt");
+CREATE INDEX IF NOT EXISTS "Inquiry_userId_idx" ON "Inquiry"("userId");

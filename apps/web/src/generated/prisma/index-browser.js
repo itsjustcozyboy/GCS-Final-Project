@@ -268,6 +268,19 @@ exports.Prisma.AdminScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.InquiryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  category: 'category',
+  message: 'message',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  emailSent: 'emailSent',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.AdminAuditScalarFieldEnum = {
   id: 'id',
   adminId: 'adminId',
@@ -358,6 +371,20 @@ exports.BookEditionType = exports.$Enums.BookEditionType = {
   final: 'final'
 };
 
+exports.InquiryCategory = exports.$Enums.InquiryCategory = {
+  bug: 'bug',
+  feature: 'feature',
+  payment: 'payment',
+  privacy: 'privacy',
+  etc: 'etc'
+};
+
+exports.InquiryStatus = exports.$Enums.InquiryStatus = {
+  new: 'new',
+  in_progress: 'in_progress',
+  resolved: 'resolved'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Consent: 'Consent',
@@ -371,6 +398,7 @@ exports.Prisma.ModelName = {
   CuratedQuestion: 'CuratedQuestion',
   AccessLog: 'AccessLog',
   Admin: 'Admin',
+  Inquiry: 'Inquiry',
   AdminAudit: 'AdminAudit'
 };
 

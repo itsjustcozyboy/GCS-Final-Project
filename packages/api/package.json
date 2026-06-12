@@ -12,17 +12,18 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@maeum/db": "workspace:*",
     "@maeum/ai": "workspace:*",
     "@maeum/channel": "workspace:*",
-    "@maeum/storage": "workspace:*",
+    "@maeum/db": "workspace:*",
     "@maeum/shared": "workspace:*",
+    "@maeum/storage": "workspace:*",
     "@trpc/server": "^11.0.0",
+    "resend": "^6.12.4",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "typescript": "^5.7.3",
     "@types/node": "^22.10.7",
+    "typescript": "^5.7.3",
     "vitest": "^3.0.4"
   }
 }
