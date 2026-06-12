@@ -128,37 +128,75 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* 개인정보 수집 동의 */}
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-2">
-              <label className="flex items-start gap-3 cursor-pointer">
+            {/* 개인정보 수집·이용 동의 (필수/선택 분리) */}
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-3">
+              <label className="flex items-center gap-3 cursor-pointer pb-2 border-b border-gray-200">
                 <input
                   type="checkbox"
-                  checked={consentAnalytics}
-                  onChange={(e) => setConsentAnalytics(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 accent-[var(--color-primary)]"
+                  checked={allConsented}
+                  onChange={(e) => {
+                    const v = e.target.checked;
+                    setConsents({ privacy: v, terms: v, age14: v, analytics: v, marketing: v });
+                  }}
+                  className="w-4 h-4 accent-[var(--color-primary)]"
+                  aria-label="전체 동의"
                 />
-                <span className="text-sm text-gray-700">
-                  (선택) 서비스 개선을 위해 접속 IP·기기 정보 수집에 동의합니다.
-                  거부해도 서비스 이용에 불이익이 없습니다.
-                </span>
+                <span className="text-sm font-semibold text-gray-800">전체 동의</span>
               </label>
-              <p className="text-xs text-gray-400 pl-7">
-                수집 목적: 서비스 이용 분석 · 보유 기간: 탈퇴 또는 12개월 중 먼저 도래하는 시점{' '}
-                <a href="/privacy" target="_blank" className="underline" style={{ color: 'var(--color-primary)' }}>
-                  개인정보처리방침
-                </a>
-              </p>
+
+              {CONSENT_ITEMS.map((item) => (
+                <div key={item.key}>
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={consents[item.key]}
+                      onChange={(e) => setConsents((p) => ({ ...p, [item.key]: e.target.checked }))}
+                      className="mt-0.5 w-4 h-4 accent-[var(--color-primary)]"
+                      aria-label={item.label}
+                    />
+                    <span className="text-sm text-gray-700 flex-1">
+                      <strong className={item.required ? 'text-red-500' : 'text-gray-400'}>
+                        [{item.required ? '필수' : '선택'}]
+                      </strong>{' '}
+                      {item.label}
+                      {item.link && (
+                        <>
+                          {' '}
+                          <a href={item.link} target="_blank" className="underline" style={{ color: 'var(--color-primary)' }}>
+                            전문 보기
+                          </a>
+                        </>
+                      )}
+                    </span>
+                  </label>
+                  {item.desc && <p className="text-xs text-gray-400 pl-7 mt-0.5">{item.desc}</p>}
+                </div>
+              ))}
             </div>
+
+            {!requiredConsented && (
+              <p className="text-xs text-gray-400">필수 항목에 모두 동의해야 가입할 수 있어요. 선택 항목은 동의하지 않아도 이용에 불이익이 없습니다.</p>
+            )}
 
             {error && <p className="text-sm text-red-500">{error}</p>}
 
             <button
-              onClick={() => register.mutate({ ...form, role, consentAnalytics })}
-              disabled={register.isPending}
+              onClick={() =>
+                register.mutate({
+                  ...form,
+                  role,
+                  consentPrivacy: true,
+                  consentTerms: true,
+                  ageOver14: true,
+                  consentAnalytics: consents.analytics,
+                  consentMarketing: consents.marketing,
+                })
+              }
+              disabled={register.isPending || !requiredConsented}
               className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {register.isPending ? '가입 중...' : '계속하기'}
+              {register.isPending ? '가입 중...' : requiredConsented ? '계속하기' : '필수 항목에 동의해주세요'}
             </button>
           </div>
         </div>
