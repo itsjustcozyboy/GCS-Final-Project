@@ -47,7 +47,7 @@ export const answerRouter = router({
         include: { connection: true },
       });
       if (!question) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (question.connection.fromUserId !== ctx.userId) {
+      if (question.connection.fromUserId !== ctx.userId && question.connection.toUserId !== ctx.userId) {
         throw new TRPCError({ code: 'FORBIDDEN' });
       }
 
