@@ -10,7 +10,13 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<Step>('role');
   const [role, setRole] = useState<'child' | 'parent'>('child');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [consentAnalytics, setConsentAnalytics] = useState(false);
+  const [consents, setConsents] = useState({
+    privacy: false, // [필수] 개인정보 수집·이용
+    terms: false, // [필수] 이용약관
+    age14: false, // [필수] 만 14세 이상
+    analytics: false, // [선택] 접속정보 수집
+    marketing: false, // [선택] 마케팅·알림
+  });
   const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
   const [error, setError] = useState('');
