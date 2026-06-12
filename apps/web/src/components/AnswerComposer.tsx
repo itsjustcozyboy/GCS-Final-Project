@@ -173,15 +173,23 @@ export function AnswerComposer({
             ].map((f) => (
               <button
                 key={f.value}
-                onClick={() => setFormat(f.value as Format)}
-                className="p-2.5 rounded-xl border-2 flex items-center gap-2 text-sm font-medium transition-all"
+                onClick={() => {
+                  if (f.value === 'audio') {
+                    setMethod('voice');
+                    return;
+                  }
+                  setFormat(f.value as Format);
+                  if (media && media.kind !== f.value) setMedia(null);
+                }}
+                aria-label={f.label}
+                className="p-3 rounded-xl border-2 flex items-center gap-2 text-sm font-medium transition-all"
                 style={{
                   borderColor: format === f.value ? PRIMARY : 'var(--color-border)',
                   backgroundColor: format === f.value ? '#EFF7F2' : 'white',
                   color: format === f.value ? 'var(--color-primary-dark)' : '#6B6B6B',
                 }}
               >
-                <span>{f.icon}</span>
+                <span aria-hidden>{f.icon}</span>
                 <span>{f.label}</span>
               </button>
             ))}
@@ -196,13 +204,24 @@ export function AnswerComposer({
               className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
               style={{ minHeight: '130px', fontSize: '17px' }}
               placeholder="편하게 이야기해주세요..."
+              aria-label="답변 작성"
             />
           ) : (
-            <div className="rounded-xl border-2 border-dashed border-gray-200 p-6 text-center text-gray-400 space-y-2">
-              <div className="text-3xl">{format === 'photo' ? '📸' : format === 'video' ? '🎥' : '🎤'}</div>
-              <p className="text-sm">
-                {format === 'photo' ? '사진을 여기에 첨부하세요' : format === 'video' ? '영상을 업로드하세요' : '음성 녹음 기능은 앱에서 사용 가능해요'}
-              </p>
+            <div className="space-y-2">
+              <MediaAttach
+                kind={format === 'photo' ? 'photo' : 'video'}
+                uploaded={media && media.kind === format ? media : null}
+                onUploaded={setMedia}
+                onClear={() => setMedia(null)}
+              />
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
+                style={{ minHeight: '70px', fontSize: '17px' }}
+                placeholder="곁들이고 싶은 한마디 (선택)"
+                aria-label="곁들이는 글"
+              />
             </div>
           )}
         </div>
