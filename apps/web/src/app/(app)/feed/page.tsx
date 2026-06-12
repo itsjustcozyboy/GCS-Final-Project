@@ -391,13 +391,24 @@ export default function FeedPage() {
 
       {items.map((q) => (
         <div key={q.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-50 space-y-3">
-          {/* 질문 */}
-          <div className="flex gap-2 items-start">
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: 'var(--color-primary-light)' }}>
-              Q
-            </span>
-            <p className="text-sm text-gray-600 flex-1">{q.body}</p>
-          </div>
+          {/* 질문 — 부모가 먼저 전한 마음은 별도 헤더로 */}
+          {q.source === 'parent_message' ? (
+            <div className="flex gap-2 items-center">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#FDF2F8', color: '#DB2777' }}>
+                💝
+              </span>
+              <p className="text-sm font-medium flex-1" style={{ color: '#DB2777' }}>
+                {firstConn.fromUser?.name}님이 먼저 마음을 전했어요
+              </p>
+            </div>
+          ) : (
+            <div className="flex gap-2 items-start">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: 'var(--color-primary-light)' }}>
+                Q
+              </span>
+              <p className="text-sm text-gray-600 flex-1">{q.body}</p>
+            </div>
+          )}
 
           {/* 답변 */}
           {q.answer && !q.answer.skipped ? (
