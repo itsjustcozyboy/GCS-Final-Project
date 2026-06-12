@@ -359,40 +359,65 @@ export default function FeedPage() {
 
           {/* 답변 */}
           {q.answer && !q.answer.skipped ? (
-            <div className="pl-7 space-y-2">
-              {q.answer.format === 'photo' && q.answer.mediaUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={q.answer.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover" />
-              )}
-              {q.answer.body && (
-                <p className="text-base text-gray-900 leading-relaxed whitespace-pre-wrap">{q.answer.body}</p>
-              )}
-              {q.answer.transcript && (
-                <p className="text-sm text-gray-500 italic">🎤 {q.answer.transcript}</p>
-              )}
-
-              {/* 반응들 */}
-              {q.answer.reactions.length > 0 && (
-                <div className="flex flex-wrap gap-1 pt-1">
-                  {q.answer.reactions.map((r) => (
-                    <span key={r.id} className="inline-flex items-center gap-1 text-xs bg-gray-50 px-2 py-1 rounded-full">
-                      {r.emoji && <span>{r.emoji}</span>}
-                      {r.comment && <span className="text-gray-600">{r.comment}</span>}
-                    </span>
-                  ))}
+            (q.answer as { masked?: boolean }).masked ? (
+              /* 자녀 시점 — 부모가 비공개로 간직한 답변 */
+              <div className="pl-7">
+                <div className="flex items-center gap-2 rounded-xl bg-gray-50 p-3 text-gray-400">
+                  <span className="text-lg">🔒</span>
+                  <p className="text-sm">
+                    {firstConn.fromUser?.name}님이 답변을 남기셨지만, 마음속에 간직하기로 했어요.
+                  </p>
                 </div>
-              )}
+              </div>
+            ) : (
+              <div className="pl-7 space-y-2">
+                {q.answer.format === 'photo' && q.answer.mediaUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={q.answer.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover" />
+                )}
+                {q.answer.body && (
+                  <p className="text-base text-gray-900 leading-relaxed whitespace-pre-wrap">{q.answer.body}</p>
+                )}
+                {q.answer.transcript && (
+                  <p className="text-sm text-gray-500 italic">🎤 {q.answer.transcript}</p>
+                )}
 
-              <ReactionBar answerId={q.answer.id} connectionId={firstConn.id} />
-            </div>
+                {/* 부모 본인 답변이면 공개/비공개 전환 */}
+                {isParentView && (
+                  <VisibilityToggle
+                    answerId={q.answer.id}
+                    isPrivate={q.answer.isPrivate}
+                    connectionId={firstConn.id}
+                  />
+                )}
+
+                {/* 반응들 */}
+                {q.answer.reactions.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {q.answer.reactions.map((r) => (
+                      <span key={r.id} className="inline-flex items-center gap-1 text-xs bg-gray-50 px-2 py-1 rounded-full">
+                        {r.emoji && <span>{r.emoji}</span>}
+                        {r.comment && <span className="text-gray-600">{r.comment}</span>}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* 자녀만 반응 가능 */}
+                {!isParentView && <ReactionBar answerId={q.answer.id} connectionId={firstConn.id} />}
+              </div>
+            )
           ) : q.answer?.skipped ? (
             <div className="pl-7">
               <span className="text-sm text-gray-400 italic">건너뛰었어요</span>
             </div>
           ) : (
             <div className="pl-7 space-y-2">
-              <span className="text-sm text-gray-400">아직 답변을 기다리고 있어요...</span>
-              <InlineAnswer questionId={q.id} connectionId={firstConn.id} />
+              {isParentView ? (
+                <InlineAnswer questionId={q.id} connectionId={firstConn.id} />
+              ) : (
+                <span className="text-sm text-gray-400">아직 답변을 기다리고 있어요...</span>
+              )}
             </div>
           )}
 
