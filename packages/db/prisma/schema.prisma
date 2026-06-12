@@ -292,6 +292,23 @@ model Admin {
   @@index([userId])
 }
 
+model Inquiry {
+  id        String           @id @default(cuid())
+  userId    String?          // 로그인 사용자면 연결 (탈퇴 시 문의는 남기되 연결 해제)
+  email     String           // 회신용
+  category  InquiryCategory?
+  message   String
+  status    InquiryStatus    @default(new)
+  ipAddress String?          // 분석 수집에 동의한 사용자만 (PIPA)
+  userAgent String?          // 동의한 사용자만
+  emailSent Boolean          @default(false) // 관리자 알림 메일 발송 성공 여부
+  createdAt DateTime         @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([userId])
+}
+
 model AdminAudit {
   id         String   @id @default(cuid())
   adminId    String
