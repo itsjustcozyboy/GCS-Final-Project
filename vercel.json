@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx prisma generate --schema=packages/db/prisma/schema.prisma && pnpm turbo build --filter=@maeum/web...",
+  "buildCommand": "cd packages/db && pnpm exec prisma generate && cd ../.. && pnpm turbo build --filter=@maeum/web...",
   "installCommand": "pnpm install",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs"
