@@ -175,7 +175,8 @@ export default function AdminPage() {
                     <th className="px-4 py-3 text-left font-medium text-gray-600">이름</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-600">이메일</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-600">IP</th>
-                    <th className="px-4 py-3 text-left font-medium text-gray-600">경로</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-600">접속 경로</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-600">유입 경로</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-600">기기</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-600">접속 일시</th>
                   </tr>
