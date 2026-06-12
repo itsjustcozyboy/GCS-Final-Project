@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure, type Context } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendDailyQuestion, deliverQuestion, calcNextDepth } from '../services/question-engine';
 import { createAIClient } from '@maeum/ai';
