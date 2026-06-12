@@ -62,37 +62,61 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
   );
 }
 
-function StartConnectionModal({ onClose }: { onClose: () => void }) {
+function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'both'; onClose: () => void }) {
   const utils = trpc.useUtils();
-  const [parentName, setParentName] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
 
-  const start = trpc.connection.start.useMutation({
+  const createInvite = trpc.connection.createInvite.useMutation();
+  const acceptInvite = trpc.connection.acceptInvite.useMutation({
     onSuccess: () => {
       void utils.connection.list.invalidate();
       onClose();
     },
   });
 
+  const normalizedInviteCode = inviteCode.replace(/[\s-]/g, '').toUpperCase();
+  const isParent = role === 'parent';
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-5 shadow-xl">
         <div className="space-y-1">
           <h2 className="text-lg font-bold text-gray-900">연결 시작하기</h2>
-          <p className="text-sm text-gray-500">이야기를 나눌 부모님(또는 어르신)의 이름을 알려주세요.</p>
+          <p className="text-sm text-gray-500">
+            {isParent ? '자녀가 만든 초대 코드를 입력해주세요.' : '부모님께 전달할 초대 코드를 만들어요.'}
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">상대방 이름</label>
-          <input
-            value={parentName}
-            onChange={(e) => setParentName(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none"
-            placeholder="예) 어머니, 김순자"
-          />
-        </div>
+        {isParent ? (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">초대 코드</label>
+            <input
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base font-mono tracking-widest text-center focus:outline-none"
+              placeholder="XXXXXXXX"
+              maxLength={12}
+            />
+          </div>
+        ) : createInvite.data ? (
+          <div className="rounded-2xl bg-gray-50 p-5 text-center space-y-4">
+            <p className="text-sm text-gray-500">부모님께 전달할 코드</p>
+            <div className="text-3xl font-bold tracking-[0.25em] text-gray-900 font-mono">
+              {createInvite.data.code}
+            </div>
+            <button
+              onClick={() => navigator.clipboard?.writeText(createInvite.data.code)}
+              className="w-full py-3 rounded-xl text-white text-sm font-semibold"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              코드 복사하기
+            </button>
+          </div>
+        ) : null}
 
-        <div>
+        {!isParent && !createInvite.data && (
+          <div>
           <p className="text-sm font-medium text-gray-700 mb-2">대화 톤</p>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -112,22 +136,35 @@ function StartConnectionModal({ onClose }: { onClose: () => void }) {
               </button>
             ))}
           </div>
-        </div>
+          </div>
+        )}
 
-        {start.isError && <p className="text-sm text-red-500">{start.error.message}</p>}
+        {createInvite.isError && <p className="text-sm text-red-500">{createInvite.error.message}</p>}
+        {acceptInvite.isError && <p className="text-sm text-red-500">{acceptInvite.error.message}</p>}
 
         <div className="flex gap-3 pt-1">
           <button onClick={onClose} className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">
             취소
           </button>
-          <button
-            onClick={() => start.mutate({ parentName: parentName.trim(), tone })}
-            disabled={start.isPending || !parentName.trim()}
-            className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
-            {start.isPending ? '연결 중...' : '연결하기'}
-          </button>
+          {isParent ? (
+            <button
+              onClick={() => acceptInvite.mutate({ inviteCode: normalizedInviteCode })}
+              disabled={acceptInvite.isPending || normalizedInviteCode.length < 4}
+              className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              {acceptInvite.isPending ? '연결 중...' : '연결하기'}
+            </button>
+          ) : (
+            <button
+              onClick={() => createInvite.mutate({ tone, regenerate: !!createInvite.data })}
+              disabled={createInvite.isPending}
+              className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              {createInvite.isPending ? '생성 중...' : createInvite.data ? '다시 만들기' : '코드 만들기'}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -182,7 +219,8 @@ function InlineAnswer({ questionId, connectionId }: { questionId: string; connec
 }
 
 export default function FeedPage() {
-  const connections = trpc.connection.list.useQuery();
+  const me = trpc.auth.me.useQuery();
+  const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: 30_000 });
   const firstConn = connections.data?.[0];
   const utils = trpc.useUtils();
   const [showStart, setShowStart] = useState(false);
@@ -198,7 +236,7 @@ export default function FeedPage() {
     { enabled: !!firstConn?.id },
   );
 
-  if (connections.isLoading) {
+  if (connections.isLoading || me.isLoading) {
     return (
       <div className="flex items-center justify-center h-40 text-gray-400">
         <div className="animate-spin text-2xl">🌀</div>
@@ -207,13 +245,17 @@ export default function FeedPage() {
   }
 
   if (!firstConn) {
+    const isParent = me.data?.role === 'parent';
+
     return (
       <>
         <div className="text-center space-y-4 py-12">
           <div className="text-5xl">💌</div>
           <div>
             <p className="text-gray-700 font-medium">아직 연결된 관계가 없어요</p>
-            <p className="text-sm text-gray-400 mt-1">부모님과의 연결을 시작해보세요</p>
+            <p className="text-sm text-gray-400 mt-1">
+              {isParent ? '자녀에게 받은 초대 코드를 입력해주세요' : '초대 코드를 만들어 부모님께 보내주세요'}
+            </p>
           </div>
           <button
             onClick={() => setShowStart(true)}
@@ -223,20 +265,31 @@ export default function FeedPage() {
             연결 시작하기
           </button>
         </div>
-        {showStart && <StartConnectionModal onClose={() => setShowStart(false)} />}
+        {showStart && <StartConnectionModal role={me.data?.role ?? 'child'} onClose={() => setShowStart(false)} />}
       </>
     );
   }
 
   const items = questions.data?.questions ?? [];
+  const otherUser = firstConn.fromUserId === me.data?.id ? firstConn.toUser : firstConn.fromUser;
+  const connectedDate = new Date(firstConn.createdAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 
   return (
     <div className="space-y-4">
       {/* 헤더 */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900">
-          {firstConn.fromUser?.name}님과의 이야기
-        </h2>
+        <div>
+          <h2 className="text-lg font-bold text-gray-900">
+            {otherUser?.name}님과의 이야기
+          </h2>
+          <div className="mt-1 inline-flex items-center gap-1.5 text-xs text-gray-500">
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: otherUser?.isOnline ? '#22C55E' : '#D1D5DB' }}
+            />
+            {otherUser?.isOnline ? '접속중' : '미접속중'}
+          </div>
+        </div>
         <button
           onClick={() => sendQuestion.mutate({ connectionId: firstConn.id })}
           disabled={sendQuestion.isPending}
@@ -245,6 +298,20 @@ export default function FeedPage() {
         >
           {sendQuestion.isPending ? '보내는 중...' : '+ 질문 보내기'}
         </button>
+      </div>
+
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-50">
+        <div className="flex gap-3">
+          <span className="w-9 h-9 rounded-full flex items-center justify-center text-lg" style={{ backgroundColor: '#EFF7F2' }}>
+            🔗
+          </span>
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-gray-900">
+              {firstConn.fromUser?.name}님과 {firstConn.toUser?.name}님이 연결되었어요.
+            </p>
+            <p className="text-xs text-gray-400">{connectedDate}</p>
+          </div>
+        </div>
       </div>
 
       {items.length === 0 && (

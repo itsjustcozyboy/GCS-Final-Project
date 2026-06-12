@@ -29,6 +29,11 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  */
 export type Connection = $Result.DefaultSelection<Prisma.$ConnectionPayload>
 /**
+ * Model ConnectionInvite
+ * 
+ */
+export type ConnectionInvite = $Result.DefaultSelection<Prisma.$ConnectionInvitePayload>
+/**
  * Model Question
  * 
  */
@@ -312,6 +317,16 @@ export class PrismaClient<
     * ```
     */
   get connection(): Prisma.ConnectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.connectionInvite`: Exposes CRUD operations for the **ConnectionInvite** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConnectionInvites
+    * const connectionInvites = await prisma.connectionInvite.findMany()
+    * ```
+    */
+  get connectionInvite(): Prisma.ConnectionInviteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.question`: Exposes CRUD operations for the **Question** model.
@@ -836,6 +851,7 @@ export namespace Prisma {
     User: 'User',
     Session: 'Session',
     Connection: 'Connection',
+    ConnectionInvite: 'ConnectionInvite',
     Question: 'Question',
     Answer: 'Answer',
     Reaction: 'Reaction',
@@ -862,7 +878,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "connection" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "adminAudit"
+      modelProps: "user" | "session" | "connection" | "connectionInvite" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "adminAudit"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1085,6 +1101,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ConnectionCountArgs<ExtArgs>
             result: $Utils.Optional<ConnectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConnectionInvite: {
+        payload: Prisma.$ConnectionInvitePayload<ExtArgs>
+        fields: Prisma.ConnectionInviteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConnectionInviteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConnectionInviteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          findFirst: {
+            args: Prisma.ConnectionInviteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConnectionInviteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          findMany: {
+            args: Prisma.ConnectionInviteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>[]
+          }
+          create: {
+            args: Prisma.ConnectionInviteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          createMany: {
+            args: Prisma.ConnectionInviteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConnectionInviteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>[]
+          }
+          delete: {
+            args: Prisma.ConnectionInviteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          update: {
+            args: Prisma.ConnectionInviteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          deleteMany: {
+            args: Prisma.ConnectionInviteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConnectionInviteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConnectionInviteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>[]
+          }
+          upsert: {
+            args: Prisma.ConnectionInviteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConnectionInvitePayload>
+          }
+          aggregate: {
+            args: Prisma.ConnectionInviteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConnectionInvite>
+          }
+          groupBy: {
+            args: Prisma.ConnectionInviteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConnectionInviteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConnectionInviteCountArgs<ExtArgs>
+            result: $Utils.Optional<ConnectionInviteCountAggregateOutputType> | number
           }
         }
       }
@@ -1779,6 +1869,7 @@ export namespace Prisma {
     user?: UserOmit
     session?: SessionOmit
     connection?: ConnectionOmit
+    connectionInvite?: ConnectionInviteOmit
     question?: QuestionOmit
     answer?: AnswerOmit
     reaction?: ReactionOmit
@@ -1869,6 +1960,8 @@ export namespace Prisma {
   export type UserCountOutputType = {
     sentConnections: number
     receivedConnections: number
+    childInvites: number
+    acceptedInvites: number
     sessions: number
     reactions: number
     accessLogs: number
@@ -1877,6 +1970,8 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sentConnections?: boolean | UserCountOutputTypeCountSentConnectionsArgs
     receivedConnections?: boolean | UserCountOutputTypeCountReceivedConnectionsArgs
+    childInvites?: boolean | UserCountOutputTypeCountChildInvitesArgs
+    acceptedInvites?: boolean | UserCountOutputTypeCountAcceptedInvitesArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     reactions?: boolean | UserCountOutputTypeCountReactionsArgs
     accessLogs?: boolean | UserCountOutputTypeCountAccessLogsArgs
@@ -1905,6 +2000,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReceivedConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConnectionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChildInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConnectionInviteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAcceptedInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConnectionInviteWhereInput
   }
 
   /**
@@ -2024,6 +2133,7 @@ export namespace Prisma {
     passwordHash: string | null
     consentAnalytics: boolean | null
     consentAt: Date | null
+    lastSeenAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2038,6 +2148,7 @@ export namespace Prisma {
     passwordHash: string | null
     consentAnalytics: boolean | null
     consentAt: Date | null
+    lastSeenAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2052,6 +2163,7 @@ export namespace Prisma {
     passwordHash: number
     consentAnalytics: number
     consentAt: number
+    lastSeenAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2068,6 +2180,7 @@ export namespace Prisma {
     passwordHash?: true
     consentAnalytics?: true
     consentAt?: true
+    lastSeenAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2082,6 +2195,7 @@ export namespace Prisma {
     passwordHash?: true
     consentAnalytics?: true
     consentAt?: true
+    lastSeenAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2096,6 +2210,7 @@ export namespace Prisma {
     passwordHash?: true
     consentAnalytics?: true
     consentAt?: true
+    lastSeenAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2183,6 +2298,7 @@ export namespace Prisma {
     passwordHash: string | null
     consentAnalytics: boolean
     consentAt: Date | null
+    lastSeenAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2214,10 +2330,13 @@ export namespace Prisma {
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentAt?: boolean
+    lastSeenAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     sentConnections?: boolean | User$sentConnectionsArgs<ExtArgs>
     receivedConnections?: boolean | User$receivedConnectionsArgs<ExtArgs>
+    childInvites?: boolean | User$childInvitesArgs<ExtArgs>
+    acceptedInvites?: boolean | User$acceptedInvitesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     accessLogs?: boolean | User$accessLogsArgs<ExtArgs>
@@ -2235,6 +2354,7 @@ export namespace Prisma {
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentAt?: boolean
+    lastSeenAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2249,6 +2369,7 @@ export namespace Prisma {
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentAt?: boolean
+    lastSeenAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2263,14 +2384,17 @@ export namespace Prisma {
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentAt?: boolean
+    lastSeenAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "passwordHash" | "consentAnalytics" | "consentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "passwordHash" | "consentAnalytics" | "consentAt" | "lastSeenAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sentConnections?: boolean | User$sentConnectionsArgs<ExtArgs>
     receivedConnections?: boolean | User$receivedConnectionsArgs<ExtArgs>
+    childInvites?: boolean | User$childInvitesArgs<ExtArgs>
+    acceptedInvites?: boolean | User$acceptedInvitesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     accessLogs?: boolean | User$accessLogsArgs<ExtArgs>
@@ -2285,6 +2409,8 @@ export namespace Prisma {
     objects: {
       sentConnections: Prisma.$ConnectionPayload<ExtArgs>[]
       receivedConnections: Prisma.$ConnectionPayload<ExtArgs>[]
+      childInvites: Prisma.$ConnectionInvitePayload<ExtArgs>[]
+      acceptedInvites: Prisma.$ConnectionInvitePayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       reactions: Prisma.$ReactionPayload<ExtArgs>[]
       accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
@@ -2300,6 +2426,7 @@ export namespace Prisma {
       passwordHash: string | null
       consentAnalytics: boolean
       consentAt: Date | null
+      lastSeenAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2698,6 +2825,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sentConnections<T extends User$sentConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sentConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     receivedConnections<T extends User$receivedConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    childInvites<T extends User$childInvitesArgs<ExtArgs> = {}>(args?: Subset<T, User$childInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    acceptedInvites<T extends User$acceptedInvitesArgs<ExtArgs> = {}>(args?: Subset<T, User$acceptedInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reactions<T extends User$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessLogs<T extends User$accessLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2740,6 +2869,7 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly consentAnalytics: FieldRef<"User", 'Boolean'>
     readonly consentAt: FieldRef<"User", 'DateTime'>
+    readonly lastSeenAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -3175,6 +3305,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConnectionScalarFieldEnum | ConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * User.childInvites
+   */
+  export type User$childInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    where?: ConnectionInviteWhereInput
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    cursor?: ConnectionInviteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConnectionInviteScalarFieldEnum | ConnectionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * User.acceptedInvites
+   */
+  export type User$acceptedInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    where?: ConnectionInviteWhereInput
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    cursor?: ConnectionInviteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConnectionInviteScalarFieldEnum | ConnectionInviteScalarFieldEnum[]
   }
 
   /**
@@ -4639,6 +4817,7 @@ export namespace Prisma {
     toUser?: boolean | UserDefaultArgs<ExtArgs>
     questions?: boolean | Connection$questionsArgs<ExtArgs>
     bookEditions?: boolean | Connection$bookEditionsArgs<ExtArgs>
+    invite?: boolean | Connection$inviteArgs<ExtArgs>
     _count?: boolean | ConnectionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["connection"]>
 
@@ -4706,6 +4885,7 @@ export namespace Prisma {
     toUser?: boolean | UserDefaultArgs<ExtArgs>
     questions?: boolean | Connection$questionsArgs<ExtArgs>
     bookEditions?: boolean | Connection$bookEditionsArgs<ExtArgs>
+    invite?: boolean | Connection$inviteArgs<ExtArgs>
     _count?: boolean | ConnectionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ConnectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4724,6 +4904,7 @@ export namespace Prisma {
       toUser: Prisma.$UserPayload<ExtArgs>
       questions: Prisma.$QuestionPayload<ExtArgs>[]
       bookEditions: Prisma.$BookEditionPayload<ExtArgs>[]
+      invite: Prisma.$ConnectionInvitePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5139,6 +5320,7 @@ export namespace Prisma {
     toUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     questions<T extends Connection$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Connection$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bookEditions<T extends Connection$bookEditionsArgs<ExtArgs> = {}>(args?: Subset<T, Connection$bookEditionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookEditionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    invite<T extends Connection$inviteArgs<ExtArgs> = {}>(args?: Subset<T, Connection$inviteArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5627,6 +5809,25 @@ export namespace Prisma {
   }
 
   /**
+   * Connection.invite
+   */
+  export type Connection$inviteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    where?: ConnectionInviteWhereInput
+  }
+
+  /**
    * Connection without action
    */
   export type ConnectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5642,6 +5843,1243 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ConnectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConnectionInvite
+   */
+
+  export type AggregateConnectionInvite = {
+    _count: ConnectionInviteCountAggregateOutputType | null
+    _avg: ConnectionInviteAvgAggregateOutputType | null
+    _sum: ConnectionInviteSumAggregateOutputType | null
+    _min: ConnectionInviteMinAggregateOutputType | null
+    _max: ConnectionInviteMaxAggregateOutputType | null
+  }
+
+  export type ConnectionInviteAvgAggregateOutputType = {
+    intimacy: number | null
+  }
+
+  export type ConnectionInviteSumAggregateOutputType = {
+    intimacy: number | null
+  }
+
+  export type ConnectionInviteMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    childId: string | null
+    acceptedById: string | null
+    connectionId: string | null
+    tone: $Enums.Tone | null
+    intimacy: number | null
+    cohabiting: boolean | null
+    responseChannel: string | null
+    createdAt: Date | null
+    acceptedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type ConnectionInviteMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    childId: string | null
+    acceptedById: string | null
+    connectionId: string | null
+    tone: $Enums.Tone | null
+    intimacy: number | null
+    cohabiting: boolean | null
+    responseChannel: string | null
+    createdAt: Date | null
+    acceptedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type ConnectionInviteCountAggregateOutputType = {
+    id: number
+    code: number
+    childId: number
+    acceptedById: number
+    connectionId: number
+    tone: number
+    intimacy: number
+    cohabiting: number
+    responseChannel: number
+    createdAt: number
+    acceptedAt: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type ConnectionInviteAvgAggregateInputType = {
+    intimacy?: true
+  }
+
+  export type ConnectionInviteSumAggregateInputType = {
+    intimacy?: true
+  }
+
+  export type ConnectionInviteMinAggregateInputType = {
+    id?: true
+    code?: true
+    childId?: true
+    acceptedById?: true
+    connectionId?: true
+    tone?: true
+    intimacy?: true
+    cohabiting?: true
+    responseChannel?: true
+    createdAt?: true
+    acceptedAt?: true
+    expiresAt?: true
+  }
+
+  export type ConnectionInviteMaxAggregateInputType = {
+    id?: true
+    code?: true
+    childId?: true
+    acceptedById?: true
+    connectionId?: true
+    tone?: true
+    intimacy?: true
+    cohabiting?: true
+    responseChannel?: true
+    createdAt?: true
+    acceptedAt?: true
+    expiresAt?: true
+  }
+
+  export type ConnectionInviteCountAggregateInputType = {
+    id?: true
+    code?: true
+    childId?: true
+    acceptedById?: true
+    connectionId?: true
+    tone?: true
+    intimacy?: true
+    cohabiting?: true
+    responseChannel?: true
+    createdAt?: true
+    acceptedAt?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type ConnectionInviteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConnectionInvite to aggregate.
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConnectionInvites to fetch.
+     */
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConnectionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConnectionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConnectionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConnectionInvites
+    **/
+    _count?: true | ConnectionInviteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConnectionInviteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConnectionInviteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConnectionInviteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConnectionInviteMaxAggregateInputType
+  }
+
+  export type GetConnectionInviteAggregateType<T extends ConnectionInviteAggregateArgs> = {
+        [P in keyof T & keyof AggregateConnectionInvite]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConnectionInvite[P]>
+      : GetScalarType<T[P], AggregateConnectionInvite[P]>
+  }
+
+
+
+
+  export type ConnectionInviteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConnectionInviteWhereInput
+    orderBy?: ConnectionInviteOrderByWithAggregationInput | ConnectionInviteOrderByWithAggregationInput[]
+    by: ConnectionInviteScalarFieldEnum[] | ConnectionInviteScalarFieldEnum
+    having?: ConnectionInviteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConnectionInviteCountAggregateInputType | true
+    _avg?: ConnectionInviteAvgAggregateInputType
+    _sum?: ConnectionInviteSumAggregateInputType
+    _min?: ConnectionInviteMinAggregateInputType
+    _max?: ConnectionInviteMaxAggregateInputType
+  }
+
+  export type ConnectionInviteGroupByOutputType = {
+    id: string
+    code: string
+    childId: string
+    acceptedById: string | null
+    connectionId: string | null
+    tone: $Enums.Tone
+    intimacy: number
+    cohabiting: boolean
+    responseChannel: string
+    createdAt: Date
+    acceptedAt: Date | null
+    expiresAt: Date | null
+    _count: ConnectionInviteCountAggregateOutputType | null
+    _avg: ConnectionInviteAvgAggregateOutputType | null
+    _sum: ConnectionInviteSumAggregateOutputType | null
+    _min: ConnectionInviteMinAggregateOutputType | null
+    _max: ConnectionInviteMaxAggregateOutputType | null
+  }
+
+  type GetConnectionInviteGroupByPayload<T extends ConnectionInviteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConnectionInviteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConnectionInviteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConnectionInviteGroupByOutputType[P]>
+            : GetScalarType<T[P], ConnectionInviteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConnectionInviteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    childId?: boolean
+    acceptedById?: boolean
+    connectionId?: boolean
+    tone?: boolean
+    intimacy?: boolean
+    cohabiting?: boolean
+    responseChannel?: boolean
+    createdAt?: boolean
+    acceptedAt?: boolean
+    expiresAt?: boolean
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }, ExtArgs["result"]["connectionInvite"]>
+
+  export type ConnectionInviteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    childId?: boolean
+    acceptedById?: boolean
+    connectionId?: boolean
+    tone?: boolean
+    intimacy?: boolean
+    cohabiting?: boolean
+    responseChannel?: boolean
+    createdAt?: boolean
+    acceptedAt?: boolean
+    expiresAt?: boolean
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }, ExtArgs["result"]["connectionInvite"]>
+
+  export type ConnectionInviteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    childId?: boolean
+    acceptedById?: boolean
+    connectionId?: boolean
+    tone?: boolean
+    intimacy?: boolean
+    cohabiting?: boolean
+    responseChannel?: boolean
+    createdAt?: boolean
+    acceptedAt?: boolean
+    expiresAt?: boolean
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }, ExtArgs["result"]["connectionInvite"]>
+
+  export type ConnectionInviteSelectScalar = {
+    id?: boolean
+    code?: boolean
+    childId?: boolean
+    acceptedById?: boolean
+    connectionId?: boolean
+    tone?: boolean
+    intimacy?: boolean
+    cohabiting?: boolean
+    responseChannel?: boolean
+    createdAt?: boolean
+    acceptedAt?: boolean
+    expiresAt?: boolean
+  }
+
+  export type ConnectionInviteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "childId" | "acceptedById" | "connectionId" | "tone" | "intimacy" | "cohabiting" | "responseChannel" | "createdAt" | "acceptedAt" | "expiresAt", ExtArgs["result"]["connectionInvite"]>
+  export type ConnectionInviteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }
+  export type ConnectionInviteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }
+  export type ConnectionInviteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    child?: boolean | UserDefaultArgs<ExtArgs>
+    acceptedBy?: boolean | ConnectionInvite$acceptedByArgs<ExtArgs>
+    connection?: boolean | ConnectionInvite$connectionArgs<ExtArgs>
+  }
+
+  export type $ConnectionInvitePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConnectionInvite"
+    objects: {
+      child: Prisma.$UserPayload<ExtArgs>
+      acceptedBy: Prisma.$UserPayload<ExtArgs> | null
+      connection: Prisma.$ConnectionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      childId: string
+      acceptedById: string | null
+      connectionId: string | null
+      tone: $Enums.Tone
+      intimacy: number
+      cohabiting: boolean
+      responseChannel: string
+      createdAt: Date
+      acceptedAt: Date | null
+      expiresAt: Date | null
+    }, ExtArgs["result"]["connectionInvite"]>
+    composites: {}
+  }
+
+  type ConnectionInviteGetPayload<S extends boolean | null | undefined | ConnectionInviteDefaultArgs> = $Result.GetResult<Prisma.$ConnectionInvitePayload, S>
+
+  type ConnectionInviteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConnectionInviteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConnectionInviteCountAggregateInputType | true
+    }
+
+  export interface ConnectionInviteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConnectionInvite'], meta: { name: 'ConnectionInvite' } }
+    /**
+     * Find zero or one ConnectionInvite that matches the filter.
+     * @param {ConnectionInviteFindUniqueArgs} args - Arguments to find a ConnectionInvite
+     * @example
+     * // Get one ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConnectionInviteFindUniqueArgs>(args: SelectSubset<T, ConnectionInviteFindUniqueArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConnectionInvite that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConnectionInviteFindUniqueOrThrowArgs} args - Arguments to find a ConnectionInvite
+     * @example
+     * // Get one ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConnectionInviteFindUniqueOrThrowArgs>(args: SelectSubset<T, ConnectionInviteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConnectionInvite that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteFindFirstArgs} args - Arguments to find a ConnectionInvite
+     * @example
+     * // Get one ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConnectionInviteFindFirstArgs>(args?: SelectSubset<T, ConnectionInviteFindFirstArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConnectionInvite that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteFindFirstOrThrowArgs} args - Arguments to find a ConnectionInvite
+     * @example
+     * // Get one ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConnectionInviteFindFirstOrThrowArgs>(args?: SelectSubset<T, ConnectionInviteFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConnectionInvites that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConnectionInvites
+     * const connectionInvites = await prisma.connectionInvite.findMany()
+     * 
+     * // Get first 10 ConnectionInvites
+     * const connectionInvites = await prisma.connectionInvite.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const connectionInviteWithIdOnly = await prisma.connectionInvite.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConnectionInviteFindManyArgs>(args?: SelectSubset<T, ConnectionInviteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConnectionInvite.
+     * @param {ConnectionInviteCreateArgs} args - Arguments to create a ConnectionInvite.
+     * @example
+     * // Create one ConnectionInvite
+     * const ConnectionInvite = await prisma.connectionInvite.create({
+     *   data: {
+     *     // ... data to create a ConnectionInvite
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConnectionInviteCreateArgs>(args: SelectSubset<T, ConnectionInviteCreateArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConnectionInvites.
+     * @param {ConnectionInviteCreateManyArgs} args - Arguments to create many ConnectionInvites.
+     * @example
+     * // Create many ConnectionInvites
+     * const connectionInvite = await prisma.connectionInvite.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConnectionInviteCreateManyArgs>(args?: SelectSubset<T, ConnectionInviteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConnectionInvites and returns the data saved in the database.
+     * @param {ConnectionInviteCreateManyAndReturnArgs} args - Arguments to create many ConnectionInvites.
+     * @example
+     * // Create many ConnectionInvites
+     * const connectionInvite = await prisma.connectionInvite.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConnectionInvites and only return the `id`
+     * const connectionInviteWithIdOnly = await prisma.connectionInvite.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConnectionInviteCreateManyAndReturnArgs>(args?: SelectSubset<T, ConnectionInviteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConnectionInvite.
+     * @param {ConnectionInviteDeleteArgs} args - Arguments to delete one ConnectionInvite.
+     * @example
+     * // Delete one ConnectionInvite
+     * const ConnectionInvite = await prisma.connectionInvite.delete({
+     *   where: {
+     *     // ... filter to delete one ConnectionInvite
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConnectionInviteDeleteArgs>(args: SelectSubset<T, ConnectionInviteDeleteArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConnectionInvite.
+     * @param {ConnectionInviteUpdateArgs} args - Arguments to update one ConnectionInvite.
+     * @example
+     * // Update one ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConnectionInviteUpdateArgs>(args: SelectSubset<T, ConnectionInviteUpdateArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConnectionInvites.
+     * @param {ConnectionInviteDeleteManyArgs} args - Arguments to filter ConnectionInvites to delete.
+     * @example
+     * // Delete a few ConnectionInvites
+     * const { count } = await prisma.connectionInvite.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConnectionInviteDeleteManyArgs>(args?: SelectSubset<T, ConnectionInviteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConnectionInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConnectionInvites
+     * const connectionInvite = await prisma.connectionInvite.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConnectionInviteUpdateManyArgs>(args: SelectSubset<T, ConnectionInviteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConnectionInvites and returns the data updated in the database.
+     * @param {ConnectionInviteUpdateManyAndReturnArgs} args - Arguments to update many ConnectionInvites.
+     * @example
+     * // Update many ConnectionInvites
+     * const connectionInvite = await prisma.connectionInvite.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConnectionInvites and only return the `id`
+     * const connectionInviteWithIdOnly = await prisma.connectionInvite.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConnectionInviteUpdateManyAndReturnArgs>(args: SelectSubset<T, ConnectionInviteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConnectionInvite.
+     * @param {ConnectionInviteUpsertArgs} args - Arguments to update or create a ConnectionInvite.
+     * @example
+     * // Update or create a ConnectionInvite
+     * const connectionInvite = await prisma.connectionInvite.upsert({
+     *   create: {
+     *     // ... data to create a ConnectionInvite
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConnectionInvite we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConnectionInviteUpsertArgs>(args: SelectSubset<T, ConnectionInviteUpsertArgs<ExtArgs>>): Prisma__ConnectionInviteClient<$Result.GetResult<Prisma.$ConnectionInvitePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConnectionInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteCountArgs} args - Arguments to filter ConnectionInvites to count.
+     * @example
+     * // Count the number of ConnectionInvites
+     * const count = await prisma.connectionInvite.count({
+     *   where: {
+     *     // ... the filter for the ConnectionInvites we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConnectionInviteCountArgs>(
+      args?: Subset<T, ConnectionInviteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConnectionInviteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConnectionInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConnectionInviteAggregateArgs>(args: Subset<T, ConnectionInviteAggregateArgs>): Prisma.PrismaPromise<GetConnectionInviteAggregateType<T>>
+
+    /**
+     * Group by ConnectionInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConnectionInviteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConnectionInviteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConnectionInviteGroupByArgs['orderBy'] }
+        : { orderBy?: ConnectionInviteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConnectionInviteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConnectionInviteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConnectionInvite model
+   */
+  readonly fields: ConnectionInviteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConnectionInvite.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConnectionInviteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    child<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    acceptedBy<T extends ConnectionInvite$acceptedByArgs<ExtArgs> = {}>(args?: Subset<T, ConnectionInvite$acceptedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    connection<T extends ConnectionInvite$connectionArgs<ExtArgs> = {}>(args?: Subset<T, ConnectionInvite$connectionArgs<ExtArgs>>): Prisma__ConnectionClient<$Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConnectionInvite model
+   */
+  interface ConnectionInviteFieldRefs {
+    readonly id: FieldRef<"ConnectionInvite", 'String'>
+    readonly code: FieldRef<"ConnectionInvite", 'String'>
+    readonly childId: FieldRef<"ConnectionInvite", 'String'>
+    readonly acceptedById: FieldRef<"ConnectionInvite", 'String'>
+    readonly connectionId: FieldRef<"ConnectionInvite", 'String'>
+    readonly tone: FieldRef<"ConnectionInvite", 'Tone'>
+    readonly intimacy: FieldRef<"ConnectionInvite", 'Int'>
+    readonly cohabiting: FieldRef<"ConnectionInvite", 'Boolean'>
+    readonly responseChannel: FieldRef<"ConnectionInvite", 'String'>
+    readonly createdAt: FieldRef<"ConnectionInvite", 'DateTime'>
+    readonly acceptedAt: FieldRef<"ConnectionInvite", 'DateTime'>
+    readonly expiresAt: FieldRef<"ConnectionInvite", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConnectionInvite findUnique
+   */
+  export type ConnectionInviteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which ConnectionInvite to fetch.
+     */
+    where: ConnectionInviteWhereUniqueInput
+  }
+
+  /**
+   * ConnectionInvite findUniqueOrThrow
+   */
+  export type ConnectionInviteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which ConnectionInvite to fetch.
+     */
+    where: ConnectionInviteWhereUniqueInput
+  }
+
+  /**
+   * ConnectionInvite findFirst
+   */
+  export type ConnectionInviteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which ConnectionInvite to fetch.
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConnectionInvites to fetch.
+     */
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConnectionInvites.
+     */
+    cursor?: ConnectionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConnectionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConnectionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConnectionInvites.
+     */
+    distinct?: ConnectionInviteScalarFieldEnum | ConnectionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * ConnectionInvite findFirstOrThrow
+   */
+  export type ConnectionInviteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which ConnectionInvite to fetch.
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConnectionInvites to fetch.
+     */
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConnectionInvites.
+     */
+    cursor?: ConnectionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConnectionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConnectionInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConnectionInvites.
+     */
+    distinct?: ConnectionInviteScalarFieldEnum | ConnectionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * ConnectionInvite findMany
+   */
+  export type ConnectionInviteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which ConnectionInvites to fetch.
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConnectionInvites to fetch.
+     */
+    orderBy?: ConnectionInviteOrderByWithRelationInput | ConnectionInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConnectionInvites.
+     */
+    cursor?: ConnectionInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConnectionInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConnectionInvites.
+     */
+    skip?: number
+    distinct?: ConnectionInviteScalarFieldEnum | ConnectionInviteScalarFieldEnum[]
+  }
+
+  /**
+   * ConnectionInvite create
+   */
+  export type ConnectionInviteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConnectionInvite.
+     */
+    data: XOR<ConnectionInviteCreateInput, ConnectionInviteUncheckedCreateInput>
+  }
+
+  /**
+   * ConnectionInvite createMany
+   */
+  export type ConnectionInviteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConnectionInvites.
+     */
+    data: ConnectionInviteCreateManyInput | ConnectionInviteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConnectionInvite createManyAndReturn
+   */
+  export type ConnectionInviteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConnectionInvites.
+     */
+    data: ConnectionInviteCreateManyInput | ConnectionInviteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConnectionInvite update
+   */
+  export type ConnectionInviteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConnectionInvite.
+     */
+    data: XOR<ConnectionInviteUpdateInput, ConnectionInviteUncheckedUpdateInput>
+    /**
+     * Choose, which ConnectionInvite to update.
+     */
+    where: ConnectionInviteWhereUniqueInput
+  }
+
+  /**
+   * ConnectionInvite updateMany
+   */
+  export type ConnectionInviteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConnectionInvites.
+     */
+    data: XOR<ConnectionInviteUpdateManyMutationInput, ConnectionInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which ConnectionInvites to update
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * Limit how many ConnectionInvites to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConnectionInvite updateManyAndReturn
+   */
+  export type ConnectionInviteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * The data used to update ConnectionInvites.
+     */
+    data: XOR<ConnectionInviteUpdateManyMutationInput, ConnectionInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which ConnectionInvites to update
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * Limit how many ConnectionInvites to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConnectionInvite upsert
+   */
+  export type ConnectionInviteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConnectionInvite to update in case it exists.
+     */
+    where: ConnectionInviteWhereUniqueInput
+    /**
+     * In case the ConnectionInvite found by the `where` argument doesn't exist, create a new ConnectionInvite with this data.
+     */
+    create: XOR<ConnectionInviteCreateInput, ConnectionInviteUncheckedCreateInput>
+    /**
+     * In case the ConnectionInvite was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConnectionInviteUpdateInput, ConnectionInviteUncheckedUpdateInput>
+  }
+
+  /**
+   * ConnectionInvite delete
+   */
+  export type ConnectionInviteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
+    /**
+     * Filter which ConnectionInvite to delete.
+     */
+    where: ConnectionInviteWhereUniqueInput
+  }
+
+  /**
+   * ConnectionInvite deleteMany
+   */
+  export type ConnectionInviteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConnectionInvites to delete
+     */
+    where?: ConnectionInviteWhereInput
+    /**
+     * Limit how many ConnectionInvites to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConnectionInvite.acceptedBy
+   */
+  export type ConnectionInvite$acceptedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ConnectionInvite.connection
+   */
+  export type ConnectionInvite$connectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Connection
+     */
+    select?: ConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Connection
+     */
+    omit?: ConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInclude<ExtArgs> | null
+    where?: ConnectionWhereInput
+  }
+
+  /**
+   * ConnectionInvite without action
+   */
+  export type ConnectionInviteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConnectionInvite
+     */
+    select?: ConnectionInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConnectionInvite
+     */
+    omit?: ConnectionInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConnectionInviteInclude<ExtArgs> | null
   }
 
 
@@ -14420,6 +15858,7 @@ export namespace Prisma {
     passwordHash: 'passwordHash',
     consentAnalytics: 'consentAnalytics',
     consentAt: 'consentAt',
+    lastSeenAt: 'lastSeenAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14457,6 +15896,24 @@ export namespace Prisma {
   };
 
   export type ConnectionScalarFieldEnum = (typeof ConnectionScalarFieldEnum)[keyof typeof ConnectionScalarFieldEnum]
+
+
+  export const ConnectionInviteScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    childId: 'childId',
+    acceptedById: 'acceptedById',
+    connectionId: 'connectionId',
+    tone: 'tone',
+    intimacy: 'intimacy',
+    cohabiting: 'cohabiting',
+    responseChannel: 'responseChannel',
+    createdAt: 'createdAt',
+    acceptedAt: 'acceptedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type ConnectionInviteScalarFieldEnum = (typeof ConnectionInviteScalarFieldEnum)[keyof typeof ConnectionInviteScalarFieldEnum]
 
 
   export const QuestionScalarFieldEnum: {
@@ -14805,10 +16262,13 @@ export namespace Prisma {
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
     consentAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastSeenAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sentConnections?: ConnectionListRelationFilter
     receivedConnections?: ConnectionListRelationFilter
+    childInvites?: ConnectionInviteListRelationFilter
+    acceptedInvites?: ConnectionInviteListRelationFilter
     sessions?: SessionListRelationFilter
     reactions?: ReactionListRelationFilter
     accessLogs?: AccessLogListRelationFilter
@@ -14825,10 +16285,13 @@ export namespace Prisma {
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
     consentAt?: SortOrderInput | SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     sentConnections?: ConnectionOrderByRelationAggregateInput
     receivedConnections?: ConnectionOrderByRelationAggregateInput
+    childInvites?: ConnectionInviteOrderByRelationAggregateInput
+    acceptedInvites?: ConnectionInviteOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     reactions?: ReactionOrderByRelationAggregateInput
     accessLogs?: AccessLogOrderByRelationAggregateInput
@@ -14848,10 +16311,13 @@ export namespace Prisma {
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
     consentAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastSeenAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sentConnections?: ConnectionListRelationFilter
     receivedConnections?: ConnectionListRelationFilter
+    childInvites?: ConnectionInviteListRelationFilter
+    acceptedInvites?: ConnectionInviteListRelationFilter
     sessions?: SessionListRelationFilter
     reactions?: ReactionListRelationFilter
     accessLogs?: AccessLogListRelationFilter
@@ -14868,6 +16334,7 @@ export namespace Prisma {
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
     consentAt?: SortOrderInput | SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -14888,6 +16355,7 @@ export namespace Prisma {
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     consentAnalytics?: BoolWithAggregatesFilter<"User"> | boolean
     consentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    lastSeenAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -14970,6 +16438,7 @@ export namespace Prisma {
     toUser?: XOR<UserScalarRelationFilter, UserWhereInput>
     questions?: QuestionListRelationFilter
     bookEditions?: BookEditionListRelationFilter
+    invite?: XOR<ConnectionInviteNullableScalarRelationFilter, ConnectionInviteWhereInput> | null
   }
 
   export type ConnectionOrderByWithRelationInput = {
@@ -14992,6 +16461,7 @@ export namespace Prisma {
     toUser?: UserOrderByWithRelationInput
     questions?: QuestionOrderByRelationAggregateInput
     bookEditions?: BookEditionOrderByRelationAggregateInput
+    invite?: ConnectionInviteOrderByWithRelationInput
   }
 
   export type ConnectionWhereUniqueInput = Prisma.AtLeast<{
@@ -15017,6 +16487,7 @@ export namespace Prisma {
     toUser?: XOR<UserScalarRelationFilter, UserWhereInput>
     questions?: QuestionListRelationFilter
     bookEditions?: BookEditionListRelationFilter
+    invite?: XOR<ConnectionInviteNullableScalarRelationFilter, ConnectionInviteWhereInput> | null
   }, "id" | "inviteCode">
 
   export type ConnectionOrderByWithAggregationInput = {
@@ -15061,6 +16532,104 @@ export namespace Prisma {
     inviteCode?: StringNullableWithAggregatesFilter<"Connection"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Connection"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Connection"> | Date | string
+  }
+
+  export type ConnectionInviteWhereInput = {
+    AND?: ConnectionInviteWhereInput | ConnectionInviteWhereInput[]
+    OR?: ConnectionInviteWhereInput[]
+    NOT?: ConnectionInviteWhereInput | ConnectionInviteWhereInput[]
+    id?: StringFilter<"ConnectionInvite"> | string
+    code?: StringFilter<"ConnectionInvite"> | string
+    childId?: StringFilter<"ConnectionInvite"> | string
+    acceptedById?: StringNullableFilter<"ConnectionInvite"> | string | null
+    connectionId?: StringNullableFilter<"ConnectionInvite"> | string | null
+    tone?: EnumToneFilter<"ConnectionInvite"> | $Enums.Tone
+    intimacy?: IntFilter<"ConnectionInvite"> | number
+    cohabiting?: BoolFilter<"ConnectionInvite"> | boolean
+    responseChannel?: StringFilter<"ConnectionInvite"> | string
+    createdAt?: DateTimeFilter<"ConnectionInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+    child?: XOR<UserScalarRelationFilter, UserWhereInput>
+    acceptedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    connection?: XOR<ConnectionNullableScalarRelationFilter, ConnectionWhereInput> | null
+  }
+
+  export type ConnectionInviteOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    childId?: SortOrder
+    acceptedById?: SortOrderInput | SortOrder
+    connectionId?: SortOrderInput | SortOrder
+    tone?: SortOrder
+    intimacy?: SortOrder
+    cohabiting?: SortOrder
+    responseChannel?: SortOrder
+    createdAt?: SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    child?: UserOrderByWithRelationInput
+    acceptedBy?: UserOrderByWithRelationInput
+    connection?: ConnectionOrderByWithRelationInput
+  }
+
+  export type ConnectionInviteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    connectionId?: string
+    AND?: ConnectionInviteWhereInput | ConnectionInviteWhereInput[]
+    OR?: ConnectionInviteWhereInput[]
+    NOT?: ConnectionInviteWhereInput | ConnectionInviteWhereInput[]
+    childId?: StringFilter<"ConnectionInvite"> | string
+    acceptedById?: StringNullableFilter<"ConnectionInvite"> | string | null
+    tone?: EnumToneFilter<"ConnectionInvite"> | $Enums.Tone
+    intimacy?: IntFilter<"ConnectionInvite"> | number
+    cohabiting?: BoolFilter<"ConnectionInvite"> | boolean
+    responseChannel?: StringFilter<"ConnectionInvite"> | string
+    createdAt?: DateTimeFilter<"ConnectionInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+    child?: XOR<UserScalarRelationFilter, UserWhereInput>
+    acceptedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    connection?: XOR<ConnectionNullableScalarRelationFilter, ConnectionWhereInput> | null
+  }, "id" | "code" | "connectionId">
+
+  export type ConnectionInviteOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    childId?: SortOrder
+    acceptedById?: SortOrderInput | SortOrder
+    connectionId?: SortOrderInput | SortOrder
+    tone?: SortOrder
+    intimacy?: SortOrder
+    cohabiting?: SortOrder
+    responseChannel?: SortOrder
+    createdAt?: SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: ConnectionInviteCountOrderByAggregateInput
+    _avg?: ConnectionInviteAvgOrderByAggregateInput
+    _max?: ConnectionInviteMaxOrderByAggregateInput
+    _min?: ConnectionInviteMinOrderByAggregateInput
+    _sum?: ConnectionInviteSumOrderByAggregateInput
+  }
+
+  export type ConnectionInviteScalarWhereWithAggregatesInput = {
+    AND?: ConnectionInviteScalarWhereWithAggregatesInput | ConnectionInviteScalarWhereWithAggregatesInput[]
+    OR?: ConnectionInviteScalarWhereWithAggregatesInput[]
+    NOT?: ConnectionInviteScalarWhereWithAggregatesInput | ConnectionInviteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConnectionInvite"> | string
+    code?: StringWithAggregatesFilter<"ConnectionInvite"> | string
+    childId?: StringWithAggregatesFilter<"ConnectionInvite"> | string
+    acceptedById?: StringNullableWithAggregatesFilter<"ConnectionInvite"> | string | null
+    connectionId?: StringNullableWithAggregatesFilter<"ConnectionInvite"> | string | null
+    tone?: EnumToneWithAggregatesFilter<"ConnectionInvite"> | $Enums.Tone
+    intimacy?: IntWithAggregatesFilter<"ConnectionInvite"> | number
+    cohabiting?: BoolWithAggregatesFilter<"ConnectionInvite"> | boolean
+    responseChannel?: StringWithAggregatesFilter<"ConnectionInvite"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ConnectionInvite"> | Date | string
+    acceptedAt?: DateTimeNullableWithAggregatesFilter<"ConnectionInvite"> | Date | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"ConnectionInvite"> | Date | string | null
   }
 
   export type QuestionWhereInput = {
@@ -15625,10 +17194,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
@@ -15645,10 +17217,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
@@ -15665,10 +17240,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
@@ -15685,10 +17263,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
@@ -15705,6 +17286,7 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15719,6 +17301,7 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15733,6 +17316,7 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15810,6 +17394,7 @@ export namespace Prisma {
     toUser: UserCreateNestedOneWithoutReceivedConnectionsInput
     questions?: QuestionCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUncheckedCreateInput = {
@@ -15830,6 +17415,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: QuestionUncheckedCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionUncheckedCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUpdateInput = {
@@ -15850,6 +17436,7 @@ export namespace Prisma {
     toUser?: UserUpdateOneRequiredWithoutReceivedConnectionsNestedInput
     questions?: QuestionUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateInput = {
@@ -15870,6 +17457,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: QuestionUncheckedUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUncheckedUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionCreateManyInput = {
@@ -15922,6 +17510,108 @@ export namespace Prisma {
     inviteCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConnectionInviteCreateInput = {
+    id?: string
+    code: string
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    child: UserCreateNestedOneWithoutChildInvitesInput
+    acceptedBy?: UserCreateNestedOneWithoutAcceptedInvitesInput
+    connection?: ConnectionCreateNestedOneWithoutInviteInput
+  }
+
+  export type ConnectionInviteUncheckedCreateInput = {
+    id?: string
+    code: string
+    childId: string
+    acceptedById?: string | null
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    child?: UserUpdateOneRequiredWithoutChildInvitesNestedInput
+    acceptedBy?: UserUpdateOneWithoutAcceptedInvitesNestedInput
+    connection?: ConnectionUpdateOneWithoutInviteNestedInput
+  }
+
+  export type ConnectionInviteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    childId?: StringFieldUpdateOperationsInput | string
+    acceptedById?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConnectionInviteCreateManyInput = {
+    id?: string
+    code: string
+    childId: string
+    acceptedById?: string | null
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConnectionInviteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    childId?: StringFieldUpdateOperationsInput | string
+    acceptedById?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type QuestionCreateInput = {
@@ -16590,6 +18280,12 @@ export namespace Prisma {
     none?: ConnectionWhereInput
   }
 
+  export type ConnectionInviteListRelationFilter = {
+    every?: ConnectionInviteWhereInput
+    some?: ConnectionInviteWhereInput
+    none?: ConnectionInviteWhereInput
+  }
+
   export type SessionListRelationFilter = {
     every?: SessionWhereInput
     some?: SessionWhereInput
@@ -16622,6 +18318,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ConnectionInviteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type SessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -16644,6 +18344,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentAt?: SortOrder
+    lastSeenAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16658,6 +18359,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentAt?: SortOrder
+    lastSeenAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16672,6 +18374,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentAt?: SortOrder
+    lastSeenAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16824,6 +18527,11 @@ export namespace Prisma {
     none?: BookEditionWhereInput
   }
 
+  export type ConnectionInviteNullableScalarRelationFilter = {
+    is?: ConnectionInviteWhereInput | null
+    isNot?: ConnectionInviteWhereInput | null
+  }
+
   export type QuestionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -16934,6 +18642,69 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSensitiveStatusFilter<$PrismaModel>
     _max?: NestedEnumSensitiveStatusFilter<$PrismaModel>
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type ConnectionNullableScalarRelationFilter = {
+    is?: ConnectionWhereInput | null
+    isNot?: ConnectionWhereInput | null
+  }
+
+  export type ConnectionInviteCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    childId?: SortOrder
+    acceptedById?: SortOrder
+    connectionId?: SortOrder
+    tone?: SortOrder
+    intimacy?: SortOrder
+    cohabiting?: SortOrder
+    responseChannel?: SortOrder
+    createdAt?: SortOrder
+    acceptedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type ConnectionInviteAvgOrderByAggregateInput = {
+    intimacy?: SortOrder
+  }
+
+  export type ConnectionInviteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    childId?: SortOrder
+    acceptedById?: SortOrder
+    connectionId?: SortOrder
+    tone?: SortOrder
+    intimacy?: SortOrder
+    cohabiting?: SortOrder
+    responseChannel?: SortOrder
+    createdAt?: SortOrder
+    acceptedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type ConnectionInviteMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    childId?: SortOrder
+    acceptedById?: SortOrder
+    connectionId?: SortOrder
+    tone?: SortOrder
+    intimacy?: SortOrder
+    cohabiting?: SortOrder
+    responseChannel?: SortOrder
+    createdAt?: SortOrder
+    acceptedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type ConnectionInviteSumOrderByAggregateInput = {
+    intimacy?: SortOrder
   }
 
   export type EnumQuestionSourceFilter<$PrismaModel = never> = {
@@ -17267,11 +19038,6 @@ export namespace Prisma {
     depth?: SortOrder
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type AccessLogCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -17367,6 +19133,20 @@ export namespace Prisma {
     connect?: ConnectionWhereUniqueInput | ConnectionWhereUniqueInput[]
   }
 
+  export type ConnectionInviteCreateNestedManyWithoutChildInput = {
+    create?: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput> | ConnectionInviteCreateWithoutChildInput[] | ConnectionInviteUncheckedCreateWithoutChildInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutChildInput | ConnectionInviteCreateOrConnectWithoutChildInput[]
+    createMany?: ConnectionInviteCreateManyChildInputEnvelope
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+  }
+
+  export type ConnectionInviteCreateNestedManyWithoutAcceptedByInput = {
+    create?: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput> | ConnectionInviteCreateWithoutAcceptedByInput[] | ConnectionInviteUncheckedCreateWithoutAcceptedByInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutAcceptedByInput | ConnectionInviteCreateOrConnectWithoutAcceptedByInput[]
+    createMany?: ConnectionInviteCreateManyAcceptedByInputEnvelope
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -17406,6 +19186,20 @@ export namespace Prisma {
     connectOrCreate?: ConnectionCreateOrConnectWithoutToUserInput | ConnectionCreateOrConnectWithoutToUserInput[]
     createMany?: ConnectionCreateManyToUserInputEnvelope
     connect?: ConnectionWhereUniqueInput | ConnectionWhereUniqueInput[]
+  }
+
+  export type ConnectionInviteUncheckedCreateNestedManyWithoutChildInput = {
+    create?: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput> | ConnectionInviteCreateWithoutChildInput[] | ConnectionInviteUncheckedCreateWithoutChildInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutChildInput | ConnectionInviteCreateOrConnectWithoutChildInput[]
+    createMany?: ConnectionInviteCreateManyChildInputEnvelope
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+  }
+
+  export type ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput = {
+    create?: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput> | ConnectionInviteCreateWithoutAcceptedByInput[] | ConnectionInviteUncheckedCreateWithoutAcceptedByInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutAcceptedByInput | ConnectionInviteCreateOrConnectWithoutAcceptedByInput[]
+    createMany?: ConnectionInviteCreateManyAcceptedByInputEnvelope
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
   }
 
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
@@ -17487,6 +19281,34 @@ export namespace Prisma {
     deleteMany?: ConnectionScalarWhereInput | ConnectionScalarWhereInput[]
   }
 
+  export type ConnectionInviteUpdateManyWithoutChildNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput> | ConnectionInviteCreateWithoutChildInput[] | ConnectionInviteUncheckedCreateWithoutChildInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutChildInput | ConnectionInviteCreateOrConnectWithoutChildInput[]
+    upsert?: ConnectionInviteUpsertWithWhereUniqueWithoutChildInput | ConnectionInviteUpsertWithWhereUniqueWithoutChildInput[]
+    createMany?: ConnectionInviteCreateManyChildInputEnvelope
+    set?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    disconnect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    delete?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    update?: ConnectionInviteUpdateWithWhereUniqueWithoutChildInput | ConnectionInviteUpdateWithWhereUniqueWithoutChildInput[]
+    updateMany?: ConnectionInviteUpdateManyWithWhereWithoutChildInput | ConnectionInviteUpdateManyWithWhereWithoutChildInput[]
+    deleteMany?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
+  }
+
+  export type ConnectionInviteUpdateManyWithoutAcceptedByNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput> | ConnectionInviteCreateWithoutAcceptedByInput[] | ConnectionInviteUncheckedCreateWithoutAcceptedByInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutAcceptedByInput | ConnectionInviteCreateOrConnectWithoutAcceptedByInput[]
+    upsert?: ConnectionInviteUpsertWithWhereUniqueWithoutAcceptedByInput | ConnectionInviteUpsertWithWhereUniqueWithoutAcceptedByInput[]
+    createMany?: ConnectionInviteCreateManyAcceptedByInputEnvelope
+    set?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    disconnect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    delete?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    update?: ConnectionInviteUpdateWithWhereUniqueWithoutAcceptedByInput | ConnectionInviteUpdateWithWhereUniqueWithoutAcceptedByInput[]
+    updateMany?: ConnectionInviteUpdateManyWithWhereWithoutAcceptedByInput | ConnectionInviteUpdateManyWithWhereWithoutAcceptedByInput[]
+    deleteMany?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
+  }
+
   export type SessionUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -17565,6 +19387,34 @@ export namespace Prisma {
     update?: ConnectionUpdateWithWhereUniqueWithoutToUserInput | ConnectionUpdateWithWhereUniqueWithoutToUserInput[]
     updateMany?: ConnectionUpdateManyWithWhereWithoutToUserInput | ConnectionUpdateManyWithWhereWithoutToUserInput[]
     deleteMany?: ConnectionScalarWhereInput | ConnectionScalarWhereInput[]
+  }
+
+  export type ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput> | ConnectionInviteCreateWithoutChildInput[] | ConnectionInviteUncheckedCreateWithoutChildInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutChildInput | ConnectionInviteCreateOrConnectWithoutChildInput[]
+    upsert?: ConnectionInviteUpsertWithWhereUniqueWithoutChildInput | ConnectionInviteUpsertWithWhereUniqueWithoutChildInput[]
+    createMany?: ConnectionInviteCreateManyChildInputEnvelope
+    set?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    disconnect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    delete?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    update?: ConnectionInviteUpdateWithWhereUniqueWithoutChildInput | ConnectionInviteUpdateWithWhereUniqueWithoutChildInput[]
+    updateMany?: ConnectionInviteUpdateManyWithWhereWithoutChildInput | ConnectionInviteUpdateManyWithWhereWithoutChildInput[]
+    deleteMany?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
+  }
+
+  export type ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput> | ConnectionInviteCreateWithoutAcceptedByInput[] | ConnectionInviteUncheckedCreateWithoutAcceptedByInput[]
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutAcceptedByInput | ConnectionInviteCreateOrConnectWithoutAcceptedByInput[]
+    upsert?: ConnectionInviteUpsertWithWhereUniqueWithoutAcceptedByInput | ConnectionInviteUpsertWithWhereUniqueWithoutAcceptedByInput[]
+    createMany?: ConnectionInviteCreateManyAcceptedByInputEnvelope
+    set?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    disconnect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    delete?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    connect?: ConnectionInviteWhereUniqueInput | ConnectionInviteWhereUniqueInput[]
+    update?: ConnectionInviteUpdateWithWhereUniqueWithoutAcceptedByInput | ConnectionInviteUpdateWithWhereUniqueWithoutAcceptedByInput[]
+    updateMany?: ConnectionInviteUpdateManyWithWhereWithoutAcceptedByInput | ConnectionInviteUpdateManyWithWhereWithoutAcceptedByInput[]
+    deleteMany?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
   }
 
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -17659,6 +19509,12 @@ export namespace Prisma {
     connect?: BookEditionWhereUniqueInput | BookEditionWhereUniqueInput[]
   }
 
+  export type ConnectionInviteCreateNestedOneWithoutConnectionInput = {
+    create?: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutConnectionInput
+    connect?: ConnectionInviteWhereUniqueInput
+  }
+
   export type QuestionUncheckedCreateNestedManyWithoutConnectionInput = {
     create?: XOR<QuestionCreateWithoutConnectionInput, QuestionUncheckedCreateWithoutConnectionInput> | QuestionCreateWithoutConnectionInput[] | QuestionUncheckedCreateWithoutConnectionInput[]
     connectOrCreate?: QuestionCreateOrConnectWithoutConnectionInput | QuestionCreateOrConnectWithoutConnectionInput[]
@@ -17671,6 +19527,12 @@ export namespace Prisma {
     connectOrCreate?: BookEditionCreateOrConnectWithoutConnectionInput | BookEditionCreateOrConnectWithoutConnectionInput[]
     createMany?: BookEditionCreateManyConnectionInputEnvelope
     connect?: BookEditionWhereUniqueInput | BookEditionWhereUniqueInput[]
+  }
+
+  export type ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput = {
+    create?: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutConnectionInput
+    connect?: ConnectionInviteWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -17733,6 +19595,16 @@ export namespace Prisma {
     deleteMany?: BookEditionScalarWhereInput | BookEditionScalarWhereInput[]
   }
 
+  export type ConnectionInviteUpdateOneWithoutConnectionNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutConnectionInput
+    upsert?: ConnectionInviteUpsertWithoutConnectionInput
+    disconnect?: ConnectionInviteWhereInput | boolean
+    delete?: ConnectionInviteWhereInput | boolean
+    connect?: ConnectionInviteWhereUniqueInput
+    update?: XOR<XOR<ConnectionInviteUpdateToOneWithWhereWithoutConnectionInput, ConnectionInviteUpdateWithoutConnectionInput>, ConnectionInviteUncheckedUpdateWithoutConnectionInput>
+  }
+
   export type QuestionUncheckedUpdateManyWithoutConnectionNestedInput = {
     create?: XOR<QuestionCreateWithoutConnectionInput, QuestionUncheckedCreateWithoutConnectionInput> | QuestionCreateWithoutConnectionInput[] | QuestionUncheckedCreateWithoutConnectionInput[]
     connectOrCreate?: QuestionCreateOrConnectWithoutConnectionInput | QuestionCreateOrConnectWithoutConnectionInput[]
@@ -17759,6 +19631,62 @@ export namespace Prisma {
     update?: BookEditionUpdateWithWhereUniqueWithoutConnectionInput | BookEditionUpdateWithWhereUniqueWithoutConnectionInput[]
     updateMany?: BookEditionUpdateManyWithWhereWithoutConnectionInput | BookEditionUpdateManyWithWhereWithoutConnectionInput[]
     deleteMany?: BookEditionScalarWhereInput | BookEditionScalarWhereInput[]
+  }
+
+  export type ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput = {
+    create?: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+    connectOrCreate?: ConnectionInviteCreateOrConnectWithoutConnectionInput
+    upsert?: ConnectionInviteUpsertWithoutConnectionInput
+    disconnect?: ConnectionInviteWhereInput | boolean
+    delete?: ConnectionInviteWhereInput | boolean
+    connect?: ConnectionInviteWhereUniqueInput
+    update?: XOR<XOR<ConnectionInviteUpdateToOneWithWhereWithoutConnectionInput, ConnectionInviteUpdateWithoutConnectionInput>, ConnectionInviteUncheckedUpdateWithoutConnectionInput>
+  }
+
+  export type UserCreateNestedOneWithoutChildInvitesInput = {
+    create?: XOR<UserCreateWithoutChildInvitesInput, UserUncheckedCreateWithoutChildInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChildInvitesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAcceptedInvitesInput = {
+    create?: XOR<UserCreateWithoutAcceptedInvitesInput, UserUncheckedCreateWithoutAcceptedInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAcceptedInvitesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ConnectionCreateNestedOneWithoutInviteInput = {
+    create?: XOR<ConnectionCreateWithoutInviteInput, ConnectionUncheckedCreateWithoutInviteInput>
+    connectOrCreate?: ConnectionCreateOrConnectWithoutInviteInput
+    connect?: ConnectionWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutChildInvitesNestedInput = {
+    create?: XOR<UserCreateWithoutChildInvitesInput, UserUncheckedCreateWithoutChildInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChildInvitesInput
+    upsert?: UserUpsertWithoutChildInvitesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChildInvitesInput, UserUpdateWithoutChildInvitesInput>, UserUncheckedUpdateWithoutChildInvitesInput>
+  }
+
+  export type UserUpdateOneWithoutAcceptedInvitesNestedInput = {
+    create?: XOR<UserCreateWithoutAcceptedInvitesInput, UserUncheckedCreateWithoutAcceptedInvitesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAcceptedInvitesInput
+    upsert?: UserUpsertWithoutAcceptedInvitesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAcceptedInvitesInput, UserUpdateWithoutAcceptedInvitesInput>, UserUncheckedUpdateWithoutAcceptedInvitesInput>
+  }
+
+  export type ConnectionUpdateOneWithoutInviteNestedInput = {
+    create?: XOR<ConnectionCreateWithoutInviteInput, ConnectionUncheckedCreateWithoutInviteInput>
+    connectOrCreate?: ConnectionCreateOrConnectWithoutInviteInput
+    upsert?: ConnectionUpsertWithoutInviteInput
+    disconnect?: ConnectionWhereInput | boolean
+    delete?: ConnectionWhereInput | boolean
+    connect?: ConnectionWhereUniqueInput
+    update?: XOR<XOR<ConnectionUpdateToOneWithWhereWithoutInviteInput, ConnectionUpdateWithoutInviteInput>, ConnectionUncheckedUpdateWithoutInviteInput>
   }
 
   export type ConnectionCreateNestedOneWithoutQuestionsInput = {
@@ -18293,6 +20221,7 @@ export namespace Prisma {
     toUser: UserCreateNestedOneWithoutReceivedConnectionsInput
     questions?: QuestionCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUncheckedCreateWithoutFromUserInput = {
@@ -18312,6 +20241,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: QuestionUncheckedCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionUncheckedCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionCreateOrConnectWithoutFromUserInput = {
@@ -18341,6 +20271,7 @@ export namespace Prisma {
     fromUser: UserCreateNestedOneWithoutSentConnectionsInput
     questions?: QuestionCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUncheckedCreateWithoutToUserInput = {
@@ -18360,6 +20291,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: QuestionUncheckedCreateNestedManyWithoutConnectionInput
     bookEditions?: BookEditionUncheckedCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionCreateOrConnectWithoutToUserInput = {
@@ -18369,6 +20301,82 @@ export namespace Prisma {
 
   export type ConnectionCreateManyToUserInputEnvelope = {
     data: ConnectionCreateManyToUserInput | ConnectionCreateManyToUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConnectionInviteCreateWithoutChildInput = {
+    id?: string
+    code: string
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    acceptedBy?: UserCreateNestedOneWithoutAcceptedInvitesInput
+    connection?: ConnectionCreateNestedOneWithoutInviteInput
+  }
+
+  export type ConnectionInviteUncheckedCreateWithoutChildInput = {
+    id?: string
+    code: string
+    acceptedById?: string | null
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteCreateOrConnectWithoutChildInput = {
+    where: ConnectionInviteWhereUniqueInput
+    create: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput>
+  }
+
+  export type ConnectionInviteCreateManyChildInputEnvelope = {
+    data: ConnectionInviteCreateManyChildInput | ConnectionInviteCreateManyChildInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConnectionInviteCreateWithoutAcceptedByInput = {
+    id?: string
+    code: string
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    child: UserCreateNestedOneWithoutChildInvitesInput
+    connection?: ConnectionCreateNestedOneWithoutInviteInput
+  }
+
+  export type ConnectionInviteUncheckedCreateWithoutAcceptedByInput = {
+    id?: string
+    code: string
+    childId: string
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteCreateOrConnectWithoutAcceptedByInput = {
+    where: ConnectionInviteWhereUniqueInput
+    create: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput>
+  }
+
+  export type ConnectionInviteCreateManyAcceptedByInputEnvelope = {
+    data: ConnectionInviteCreateManyAcceptedByInput | ConnectionInviteCreateManyAcceptedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -18524,6 +20532,56 @@ export namespace Prisma {
     data: XOR<ConnectionUpdateManyMutationInput, ConnectionUncheckedUpdateManyWithoutToUserInput>
   }
 
+  export type ConnectionInviteUpsertWithWhereUniqueWithoutChildInput = {
+    where: ConnectionInviteWhereUniqueInput
+    update: XOR<ConnectionInviteUpdateWithoutChildInput, ConnectionInviteUncheckedUpdateWithoutChildInput>
+    create: XOR<ConnectionInviteCreateWithoutChildInput, ConnectionInviteUncheckedCreateWithoutChildInput>
+  }
+
+  export type ConnectionInviteUpdateWithWhereUniqueWithoutChildInput = {
+    where: ConnectionInviteWhereUniqueInput
+    data: XOR<ConnectionInviteUpdateWithoutChildInput, ConnectionInviteUncheckedUpdateWithoutChildInput>
+  }
+
+  export type ConnectionInviteUpdateManyWithWhereWithoutChildInput = {
+    where: ConnectionInviteScalarWhereInput
+    data: XOR<ConnectionInviteUpdateManyMutationInput, ConnectionInviteUncheckedUpdateManyWithoutChildInput>
+  }
+
+  export type ConnectionInviteScalarWhereInput = {
+    AND?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
+    OR?: ConnectionInviteScalarWhereInput[]
+    NOT?: ConnectionInviteScalarWhereInput | ConnectionInviteScalarWhereInput[]
+    id?: StringFilter<"ConnectionInvite"> | string
+    code?: StringFilter<"ConnectionInvite"> | string
+    childId?: StringFilter<"ConnectionInvite"> | string
+    acceptedById?: StringNullableFilter<"ConnectionInvite"> | string | null
+    connectionId?: StringNullableFilter<"ConnectionInvite"> | string | null
+    tone?: EnumToneFilter<"ConnectionInvite"> | $Enums.Tone
+    intimacy?: IntFilter<"ConnectionInvite"> | number
+    cohabiting?: BoolFilter<"ConnectionInvite"> | boolean
+    responseChannel?: StringFilter<"ConnectionInvite"> | string
+    createdAt?: DateTimeFilter<"ConnectionInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"ConnectionInvite"> | Date | string | null
+  }
+
+  export type ConnectionInviteUpsertWithWhereUniqueWithoutAcceptedByInput = {
+    where: ConnectionInviteWhereUniqueInput
+    update: XOR<ConnectionInviteUpdateWithoutAcceptedByInput, ConnectionInviteUncheckedUpdateWithoutAcceptedByInput>
+    create: XOR<ConnectionInviteCreateWithoutAcceptedByInput, ConnectionInviteUncheckedCreateWithoutAcceptedByInput>
+  }
+
+  export type ConnectionInviteUpdateWithWhereUniqueWithoutAcceptedByInput = {
+    where: ConnectionInviteWhereUniqueInput
+    data: XOR<ConnectionInviteUpdateWithoutAcceptedByInput, ConnectionInviteUncheckedUpdateWithoutAcceptedByInput>
+  }
+
+  export type ConnectionInviteUpdateManyWithWhereWithoutAcceptedByInput = {
+    where: ConnectionInviteScalarWhereInput
+    data: XOR<ConnectionInviteUpdateManyMutationInput, ConnectionInviteUncheckedUpdateManyWithoutAcceptedByInput>
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -18641,10 +20699,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
@@ -18660,10 +20721,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
@@ -18695,10 +20759,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
@@ -18714,10 +20781,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
@@ -18733,9 +20803,12 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
@@ -18752,9 +20825,12 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
@@ -18776,9 +20852,12 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
@@ -18795,9 +20874,12 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
@@ -18879,6 +20961,39 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConnectionInviteCreateWithoutConnectionInput = {
+    id?: string
+    code: string
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    child: UserCreateNestedOneWithoutChildInvitesInput
+    acceptedBy?: UserCreateNestedOneWithoutAcceptedInvitesInput
+  }
+
+  export type ConnectionInviteUncheckedCreateWithoutConnectionInput = {
+    id?: string
+    code: string
+    childId: string
+    acceptedById?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteCreateOrConnectWithoutConnectionInput = {
+    where: ConnectionInviteWhereUniqueInput
+    create: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+  }
+
   export type UserUpsertWithoutSentConnectionsInput = {
     update: XOR<UserUpdateWithoutSentConnectionsInput, UserUncheckedUpdateWithoutSentConnectionsInput>
     create: XOR<UserCreateWithoutSentConnectionsInput, UserUncheckedCreateWithoutSentConnectionsInput>
@@ -18900,9 +21015,12 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
@@ -18919,9 +21037,12 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
@@ -18949,9 +21070,12 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
@@ -18968,9 +21092,12 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
@@ -19041,6 +21168,349 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BookEdition"> | Date | string
   }
 
+  export type ConnectionInviteUpsertWithoutConnectionInput = {
+    update: XOR<ConnectionInviteUpdateWithoutConnectionInput, ConnectionInviteUncheckedUpdateWithoutConnectionInput>
+    create: XOR<ConnectionInviteCreateWithoutConnectionInput, ConnectionInviteUncheckedCreateWithoutConnectionInput>
+    where?: ConnectionInviteWhereInput
+  }
+
+  export type ConnectionInviteUpdateToOneWithWhereWithoutConnectionInput = {
+    where?: ConnectionInviteWhereInput
+    data: XOR<ConnectionInviteUpdateWithoutConnectionInput, ConnectionInviteUncheckedUpdateWithoutConnectionInput>
+  }
+
+  export type ConnectionInviteUpdateWithoutConnectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    child?: UserUpdateOneRequiredWithoutChildInvitesNestedInput
+    acceptedBy?: UserUpdateOneWithoutAcceptedInvitesNestedInput
+  }
+
+  export type ConnectionInviteUncheckedUpdateWithoutConnectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    childId?: StringFieldUpdateOperationsInput | string
+    acceptedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserCreateWithoutChildInvitesInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogCreateNestedManyWithoutUserInput
+    admin?: AdminCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChildInvitesInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
+    admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChildInvitesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChildInvitesInput, UserUncheckedCreateWithoutChildInvitesInput>
+  }
+
+  export type UserCreateWithoutAcceptedInvitesInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogCreateNestedManyWithoutUserInput
+    admin?: AdminCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAcceptedInvitesInput = {
+    id?: string
+    email?: string | null
+    phone?: string | null
+    name: string
+    role: $Enums.Role
+    avatarUrl?: string | null
+    passwordHash?: string | null
+    consentAnalytics?: boolean
+    consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
+    receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
+    accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
+    admin?: AdminUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAcceptedInvitesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAcceptedInvitesInput, UserUncheckedCreateWithoutAcceptedInvitesInput>
+  }
+
+  export type ConnectionCreateWithoutInviteInput = {
+    id?: string
+    intimacy?: number
+    cohabiting?: boolean
+    hasConflict?: boolean
+    responseChannel?: string
+    tone?: $Enums.Tone
+    sensitiveStatus?: $Enums.SensitiveStatus
+    currentDepth?: number
+    skipCount?: number
+    answerCount?: number
+    inviteCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fromUser: UserCreateNestedOneWithoutSentConnectionsInput
+    toUser: UserCreateNestedOneWithoutReceivedConnectionsInput
+    questions?: QuestionCreateNestedManyWithoutConnectionInput
+    bookEditions?: BookEditionCreateNestedManyWithoutConnectionInput
+  }
+
+  export type ConnectionUncheckedCreateWithoutInviteInput = {
+    id?: string
+    fromUserId: string
+    toUserId: string
+    intimacy?: number
+    cohabiting?: boolean
+    hasConflict?: boolean
+    responseChannel?: string
+    tone?: $Enums.Tone
+    sensitiveStatus?: $Enums.SensitiveStatus
+    currentDepth?: number
+    skipCount?: number
+    answerCount?: number
+    inviteCode?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutConnectionInput
+    bookEditions?: BookEditionUncheckedCreateNestedManyWithoutConnectionInput
+  }
+
+  export type ConnectionCreateOrConnectWithoutInviteInput = {
+    where: ConnectionWhereUniqueInput
+    create: XOR<ConnectionCreateWithoutInviteInput, ConnectionUncheckedCreateWithoutInviteInput>
+  }
+
+  export type UserUpsertWithoutChildInvitesInput = {
+    update: XOR<UserUpdateWithoutChildInvitesInput, UserUncheckedUpdateWithoutChildInvitesInput>
+    create: XOR<UserCreateWithoutChildInvitesInput, UserUncheckedCreateWithoutChildInvitesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChildInvitesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChildInvitesInput, UserUncheckedUpdateWithoutChildInvitesInput>
+  }
+
+  export type UserUpdateWithoutChildInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
+    admin?: AdminUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChildInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
+    admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutAcceptedInvitesInput = {
+    update: XOR<UserUpdateWithoutAcceptedInvitesInput, UserUncheckedUpdateWithoutAcceptedInvitesInput>
+    create: XOR<UserCreateWithoutAcceptedInvitesInput, UserUncheckedCreateWithoutAcceptedInvitesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAcceptedInvitesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAcceptedInvitesInput, UserUncheckedUpdateWithoutAcceptedInvitesInput>
+  }
+
+  export type UserUpdateWithoutAcceptedInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
+    admin?: AdminUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
+    consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
+    receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
+    accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
+    admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type ConnectionUpsertWithoutInviteInput = {
+    update: XOR<ConnectionUpdateWithoutInviteInput, ConnectionUncheckedUpdateWithoutInviteInput>
+    create: XOR<ConnectionCreateWithoutInviteInput, ConnectionUncheckedCreateWithoutInviteInput>
+    where?: ConnectionWhereInput
+  }
+
+  export type ConnectionUpdateToOneWithWhereWithoutInviteInput = {
+    where?: ConnectionWhereInput
+    data: XOR<ConnectionUpdateWithoutInviteInput, ConnectionUncheckedUpdateWithoutInviteInput>
+  }
+
+  export type ConnectionUpdateWithoutInviteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    hasConflict?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    sensitiveStatus?: EnumSensitiveStatusFieldUpdateOperationsInput | $Enums.SensitiveStatus
+    currentDepth?: IntFieldUpdateOperationsInput | number
+    skipCount?: IntFieldUpdateOperationsInput | number
+    answerCount?: IntFieldUpdateOperationsInput | number
+    inviteCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fromUser?: UserUpdateOneRequiredWithoutSentConnectionsNestedInput
+    toUser?: UserUpdateOneRequiredWithoutReceivedConnectionsNestedInput
+    questions?: QuestionUpdateManyWithoutConnectionNestedInput
+    bookEditions?: BookEditionUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type ConnectionUncheckedUpdateWithoutInviteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromUserId?: StringFieldUpdateOperationsInput | string
+    toUserId?: StringFieldUpdateOperationsInput | string
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    hasConflict?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    sensitiveStatus?: EnumSensitiveStatusFieldUpdateOperationsInput | $Enums.SensitiveStatus
+    currentDepth?: IntFieldUpdateOperationsInput | number
+    skipCount?: IntFieldUpdateOperationsInput | number
+    answerCount?: IntFieldUpdateOperationsInput | number
+    inviteCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutConnectionNestedInput
+    bookEditions?: BookEditionUncheckedUpdateManyWithoutConnectionNestedInput
+  }
+
   export type ConnectionCreateWithoutQuestionsInput = {
     id?: string
     intimacy?: number
@@ -19058,6 +21528,7 @@ export namespace Prisma {
     fromUser: UserCreateNestedOneWithoutSentConnectionsInput
     toUser: UserCreateNestedOneWithoutReceivedConnectionsInput
     bookEditions?: BookEditionCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUncheckedCreateWithoutQuestionsInput = {
@@ -19077,6 +21548,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookEditions?: BookEditionUncheckedCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionCreateOrConnectWithoutQuestionsInput = {
@@ -19143,6 +21615,7 @@ export namespace Prisma {
     fromUser?: UserUpdateOneRequiredWithoutSentConnectionsNestedInput
     toUser?: UserUpdateOneRequiredWithoutReceivedConnectionsNestedInput
     bookEditions?: BookEditionUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateWithoutQuestionsInput = {
@@ -19162,6 +21635,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookEditions?: BookEditionUncheckedUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput
   }
 
   export type AnswerUpsertWithoutQuestionInput = {
@@ -19356,10 +21830,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
@@ -19375,10 +21852,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
@@ -19447,10 +21927,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
@@ -19466,10 +21949,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
@@ -19492,6 +21978,7 @@ export namespace Prisma {
     fromUser: UserCreateNestedOneWithoutSentConnectionsInput
     toUser: UserCreateNestedOneWithoutReceivedConnectionsInput
     questions?: QuestionCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionUncheckedCreateWithoutBookEditionsInput = {
@@ -19511,6 +21998,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: QuestionUncheckedCreateNestedManyWithoutConnectionInput
+    invite?: ConnectionInviteUncheckedCreateNestedOneWithoutConnectionInput
   }
 
   export type ConnectionCreateOrConnectWithoutBookEditionsInput = {
@@ -19546,6 +22034,7 @@ export namespace Prisma {
     fromUser?: UserUpdateOneRequiredWithoutSentConnectionsNestedInput
     toUser?: UserUpdateOneRequiredWithoutReceivedConnectionsNestedInput
     questions?: QuestionUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateWithoutBookEditionsInput = {
@@ -19565,6 +22054,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: QuestionUncheckedUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput
   }
 
   export type UserCreateWithoutAccessLogsInput = {
@@ -19577,10 +22067,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     admin?: AdminCreateNestedOneWithoutUserInput
@@ -19596,10 +22089,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     admin?: AdminUncheckedCreateNestedOneWithoutUserInput
@@ -19631,10 +22127,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     admin?: AdminUpdateOneWithoutUserNestedInput
@@ -19650,10 +22149,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     admin?: AdminUncheckedUpdateOneWithoutUserNestedInput
@@ -19669,10 +22171,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     reactions?: ReactionCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogCreateNestedManyWithoutUserInput
@@ -19688,10 +22193,13 @@ export namespace Prisma {
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentAt?: Date | string | null
+    lastSeenAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sentConnections?: ConnectionUncheckedCreateNestedManyWithoutFromUserInput
     receivedConnections?: ConnectionUncheckedCreateNestedManyWithoutToUserInput
+    childInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutChildInput
+    acceptedInvites?: ConnectionInviteUncheckedCreateNestedManyWithoutAcceptedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
     accessLogs?: AccessLogUncheckedCreateNestedManyWithoutUserInput
@@ -19723,10 +22231,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     reactions?: ReactionUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUpdateManyWithoutUserNestedInput
@@ -19742,10 +22253,13 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentConnections?: ConnectionUncheckedUpdateManyWithoutFromUserNestedInput
     receivedConnections?: ConnectionUncheckedUpdateManyWithoutToUserNestedInput
+    childInvites?: ConnectionInviteUncheckedUpdateManyWithoutChildNestedInput
+    acceptedInvites?: ConnectionInviteUncheckedUpdateManyWithoutAcceptedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
     accessLogs?: AccessLogUncheckedUpdateManyWithoutUserNestedInput
@@ -19783,6 +22297,34 @@ export namespace Prisma {
     inviteCode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type ConnectionInviteCreateManyChildInput = {
+    id?: string
+    code: string
+    acceptedById?: string | null
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type ConnectionInviteCreateManyAcceptedByInput = {
+    id?: string
+    code: string
+    childId: string
+    connectionId?: string | null
+    tone?: $Enums.Tone
+    intimacy?: number
+    cohabiting?: boolean
+    responseChannel?: string
+    createdAt?: Date | string
+    acceptedAt?: Date | string | null
+    expiresAt?: Date | string | null
   }
 
   export type SessionCreateManyUserInput = {
@@ -19830,6 +22372,7 @@ export namespace Prisma {
     toUser?: UserUpdateOneRequiredWithoutReceivedConnectionsNestedInput
     questions?: QuestionUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateWithoutFromUserInput = {
@@ -19849,6 +22392,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: QuestionUncheckedUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUncheckedUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateManyWithoutFromUserInput = {
@@ -19885,6 +22429,7 @@ export namespace Prisma {
     fromUser?: UserUpdateOneRequiredWithoutSentConnectionsNestedInput
     questions?: QuestionUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateWithoutToUserInput = {
@@ -19904,6 +22449,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: QuestionUncheckedUpdateManyWithoutConnectionNestedInput
     bookEditions?: BookEditionUncheckedUpdateManyWithoutConnectionNestedInput
+    invite?: ConnectionInviteUncheckedUpdateOneWithoutConnectionNestedInput
   }
 
   export type ConnectionUncheckedUpdateManyWithoutToUserInput = {
@@ -19921,6 +22467,90 @@ export namespace Prisma {
     inviteCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConnectionInviteUpdateWithoutChildInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedBy?: UserUpdateOneWithoutAcceptedInvitesNestedInput
+    connection?: ConnectionUpdateOneWithoutInviteNestedInput
+  }
+
+  export type ConnectionInviteUncheckedUpdateWithoutChildInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    acceptedById?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConnectionInviteUncheckedUpdateManyWithoutChildInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    acceptedById?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConnectionInviteUpdateWithoutAcceptedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    child?: UserUpdateOneRequiredWithoutChildInvitesNestedInput
+    connection?: ConnectionUpdateOneWithoutInviteNestedInput
+  }
+
+  export type ConnectionInviteUncheckedUpdateWithoutAcceptedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    childId?: StringFieldUpdateOperationsInput | string
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConnectionInviteUncheckedUpdateManyWithoutAcceptedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    childId?: StringFieldUpdateOperationsInput | string
+    connectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: EnumToneFieldUpdateOperationsInput | $Enums.Tone
+    intimacy?: IntFieldUpdateOperationsInput | number
+    cohabiting?: BoolFieldUpdateOperationsInput | boolean
+    responseChannel?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SessionUpdateWithoutUserInput = {

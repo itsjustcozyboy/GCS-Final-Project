@@ -1,81 +1,184 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure, type Context } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { randomInt } from 'crypto';
+
+const INVITE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const ONLINE_WINDOW_MS = 2 * 60 * 1000;
+
+function normalizeInviteCode(code: string) {
+  return code.replace(/[\s-]/g, '').toUpperCase();
+}
+
+function makeInviteCode() {
+  let code = '';
+  for (let i = 0; i < 8; i += 1) {
+    code += INVITE_ALPHABET[randomInt(INVITE_ALPHABET.length)];
+  }
+  return code;
+}
+
+async function createUniqueInviteCode(db: Context['db']) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const code = makeInviteCode();
+    const existing = await db.connectionInvite.findUnique({ where: { code }, select: { id: true } });
+    if (!existing) return code;
+  }
+  throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: '초대 코드를 생성하지 못했습니다.' });
+}
+
+function withOnlineStatus<T extends { lastSeenAt: Date | null }>(user: T) {
+  return {
+    ...user,
+    isOnline: !!user.lastSeenAt && Date.now() - user.lastSeenAt.getTime() <= ONLINE_WINDOW_MS,
+  };
+}
 
 export const connectionRouter = router({
-  create: protectedProcedure
+  createInvite: protectedProcedure
     .input(z.object({
-      fromUserId: z.string(),
-      intimacy: z.number().int().min(1).max(5).default(3),
-      cohabiting: z.boolean().default(false),
-      hasConflict: z.boolean().default(false),
-      responseChannel: z.enum(['app', 'kakao', 'sms']).default('app'),
-      tone: z.enum(['light', 'deep']).default('light'),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const inviteCode = Math.random().toString(36).slice(2, 10).toUpperCase();
-      return ctx.db.connection.create({
-        data: {
-          ...input,
-          toUserId: ctx.userId,
-          inviteCode,
-        },
-      });
-    }),
-
-  // 새 연결 시작 — 상대(부모님) 정보를 입력받아 사용자와 연결을 한 번에 생성
-  start: protectedProcedure
-    .input(z.object({
-      parentName: z.string().min(1).max(50),
       tone: z.enum(['light', 'deep']).default('light'),
       intimacy: z.number().int().min(1).max(5).default(3),
       cohabiting: z.boolean().default(false),
       responseChannel: z.enum(['app', 'kakao', 'sms']).default('app'),
+      regenerate: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
-      // 이미 연결이 있으면 그대로 반환 (중복 생성 방지)
-      const existing = await ctx.db.connection.findFirst({
-        where: { OR: [{ fromUserId: ctx.userId }, { toUserId: ctx.userId }] },
+      const { regenerate, ...inviteData } = input;
+      const me = await ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        select: { role: true },
       });
-      if (existing) return existing;
+      if (!me) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (me.role === 'parent') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: '자녀 계정에서 초대 코드를 만들 수 있습니다.' });
+      }
 
-      // 이야기를 들려줄 상대(부모님) 사용자 레코드 생성
-      const parent = await ctx.db.user.create({
-        data: { name: input.parentName, role: 'parent' },
+      const existingInvite = await ctx.db.connectionInvite.findFirst({
+        where: { childId: ctx.userId, acceptedAt: null },
+        orderBy: { createdAt: 'desc' },
       });
+      if (existingInvite) {
+        return ctx.db.connectionInvite.update({
+          where: { id: existingInvite.id },
+          data: {
+            ...inviteData,
+            ...(regenerate ? { code: await createUniqueInviteCode(ctx.db) } : {}),
+          },
+          include: { child: { select: { id: true, name: true } } },
+        });
+      }
 
-      const inviteCode = Math.random().toString(36).slice(2, 10).toUpperCase();
-      return ctx.db.connection.create({
+      return ctx.db.connectionInvite.create({
         data: {
-          fromUserId: parent.id,
-          toUserId: ctx.userId,
-          tone: input.tone,
-          intimacy: input.intimacy,
-          cohabiting: input.cohabiting,
-          responseChannel: input.responseChannel,
-          inviteCode,
+          ...inviteData,
+          childId: ctx.userId,
+          code: await createUniqueInviteCode(ctx.db),
         },
+        include: { child: { select: { id: true, name: true } } },
       });
     }),
 
   acceptInvite: protectedProcedure
-    .input(z.object({ inviteCode: z.string() }))
+    .input(z.object({ inviteCode: z.string().min(4).max(24) }))
     .mutation(async ({ ctx, input }) => {
-      const conn = await ctx.db.connection.findUnique({ where: { inviteCode: input.inviteCode } });
-      if (!conn) throw new TRPCError({ code: 'NOT_FOUND', message: '초대 코드를 찾을 수 없습니다.' });
-      return conn;
+      const code = normalizeInviteCode(input.inviteCode);
+      const invite = await ctx.db.connectionInvite.findUnique({
+        where: { code },
+        include: { child: { select: { id: true, name: true } } },
+      });
+      if (!invite) throw new TRPCError({ code: 'NOT_FOUND', message: '초대 코드를 찾을 수 없습니다.' });
+      if (invite.childId === ctx.userId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '본인이 만든 초대 코드는 직접 입력할 수 없습니다.' });
+      }
+      if (invite.acceptedAt && invite.connectionId) {
+        const conn = await ctx.db.connection.findUnique({
+          where: { id: invite.connectionId },
+          include: {
+            fromUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+            toUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+          },
+        });
+        if (conn && (conn.fromUserId === ctx.userId || conn.toUserId === ctx.userId)) {
+          return {
+            ...conn,
+            fromUser: withOnlineStatus(conn.fromUser),
+            toUser: withOnlineStatus(conn.toUser),
+          };
+        }
+        throw new TRPCError({ code: 'CONFLICT', message: '이미 사용된 초대 코드입니다.' });
+      }
+
+      const conn = await ctx.db.$transaction(async (tx) => {
+        const claimed = await tx.connectionInvite.updateMany({
+          where: { id: invite.id, acceptedAt: null },
+          data: {
+            acceptedById: ctx.userId,
+            acceptedAt: new Date(),
+          },
+        });
+        if (claimed.count !== 1) {
+          throw new TRPCError({ code: 'CONFLICT', message: '이미 사용된 초대 코드입니다.' });
+        }
+
+        const existing = await tx.connection.findFirst({
+          where: {
+            OR: [
+              { fromUserId: ctx.userId, toUserId: invite.childId },
+              { fromUserId: invite.childId, toUserId: ctx.userId },
+            ],
+          },
+        });
+
+        const connection = existing ?? await tx.connection.create({
+          data: {
+            fromUserId: ctx.userId,
+            toUserId: invite.childId,
+            tone: invite.tone,
+            intimacy: invite.intimacy,
+            cohabiting: invite.cohabiting,
+            responseChannel: invite.responseChannel,
+            inviteCode: invite.code,
+          },
+        });
+
+        await tx.connectionInvite.update({
+          where: { id: invite.id },
+          data: { connectionId: connection.id },
+        });
+
+        return tx.connection.findUniqueOrThrow({
+          where: { id: connection.id },
+          include: {
+            fromUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+            toUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+          },
+        });
+      });
+
+      return {
+        ...conn,
+        fromUser: withOnlineStatus(conn.fromUser),
+        toUser: withOnlineStatus(conn.toUser),
+      };
     }),
 
   list: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.connection.findMany({
+    const connections = await ctx.db.connection.findMany({
       where: {
         OR: [{ fromUserId: ctx.userId }, { toUserId: ctx.userId }],
       },
       include: {
-        fromUser: { select: { id: true, name: true, avatarUrl: true } },
-        toUser: { select: { id: true, name: true, avatarUrl: true } },
+        fromUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+        toUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
+    return connections.map((conn) => ({
+      ...conn,
+      fromUser: withOnlineStatus(conn.fromUser),
+      toUser: withOnlineStatus(conn.toUser),
+    }));
   }),
 
   get: protectedProcedure
@@ -84,15 +187,19 @@ export const connectionRouter = router({
       const conn = await ctx.db.connection.findUnique({
         where: { id: input.id },
         include: {
-          fromUser: { select: { id: true, name: true, avatarUrl: true } },
-          toUser: { select: { id: true, name: true, avatarUrl: true } },
+          fromUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
+          toUser: { select: { id: true, name: true, avatarUrl: true, lastSeenAt: true } },
         },
       });
       if (!conn) throw new TRPCError({ code: 'NOT_FOUND' });
       if (conn.fromUserId !== ctx.userId && conn.toUserId !== ctx.userId) {
         throw new TRPCError({ code: 'FORBIDDEN' });
       }
-      return conn;
+      return {
+        ...conn,
+        fromUser: withOnlineStatus(conn.fromUser),
+        toUser: withOnlineStatus(conn.toUser),
+      };
     }),
 
   updateSensitiveStatus: protectedProcedure

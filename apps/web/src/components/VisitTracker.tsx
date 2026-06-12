@@ -7,6 +7,7 @@ import { trpc } from '@/lib/trpc';
 export function VisitTracker() {
   const pathname = usePathname();
   const log = trpc.tracking.log.useMutation();
+  const heartbeat = trpc.tracking.heartbeat.useMutation();
 
   useEffect(() => {
     log.mutate({
@@ -16,6 +17,19 @@ export function VisitTracker() {
     // pathname이 바뀔 때마다 1회만 기록
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !localStorage.getItem('sessionToken')) return;
+
+    heartbeat.mutate();
+    const id = window.setInterval(() => {
+      if (localStorage.getItem('sessionToken')) heartbeat.mutate();
+    }, 45_000);
+
+    return () => window.clearInterval(id);
+    // heartbeat mutation identity is stable enough for this app-level tracker.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return null;
 }

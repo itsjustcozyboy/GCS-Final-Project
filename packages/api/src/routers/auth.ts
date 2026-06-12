@@ -32,6 +32,7 @@ export const authRouter = router({
           passwordHash,
           consentAnalytics,
           consentAt: consentAnalytics ? new Date() : null,
+          lastSeenAt: new Date(),
         },
       });
 
@@ -60,9 +61,10 @@ export const authRouter = router({
         let adminUser = await ctx.db.user.findUnique({ where: { email: loginId } });
         if (!adminUser) {
           adminUser = await ctx.db.user.create({
-            data: { email: loginId, name: '관리자', role: 'both' },
+            data: { email: loginId, name: '관리자', role: 'both', lastSeenAt: new Date() },
           });
         }
+        await ctx.db.user.update({ where: { id: adminUser.id }, data: { lastSeenAt: new Date() } });
         await ctx.db.admin.upsert({
           where: { userId: adminUser.id },
           create: { userId: adminUser.id },
@@ -112,6 +114,8 @@ export const authRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
       }
 
+      await ctx.db.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
+
       // ADMIN_EMAILS에 등록된 이메일이면 Admin 테이블에 자동 추가 (부트스트랩)
       if (user.email && adminEmails.includes(user.email.toLowerCase())) {
         await ctx.db.admin.upsert({
@@ -149,7 +153,7 @@ export const authRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true, consentAnalytics: true },
+      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true, consentAnalytics: true, lastSeenAt: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;

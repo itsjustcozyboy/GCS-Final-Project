@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS "User" (
     "passwordHash"     TEXT,
     "consentAnalytics" BOOLEAN NOT NULL DEFAULT false,
     "consentAt"        TIMESTAMP(3),
+    "lastSeenAt"       TIMESTAMP(3),
     "createdAt"        TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt"        TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -65,6 +66,28 @@ CREATE TABLE IF NOT EXISTS "Connection" (
 CREATE UNIQUE INDEX IF NOT EXISTS "Connection_inviteCode_key" ON "Connection"("inviteCode");
 CREATE INDEX IF NOT EXISTS "Connection_fromUserId_idx" ON "Connection"("fromUserId");
 CREATE INDEX IF NOT EXISTS "Connection_toUserId_idx" ON "Connection"("toUserId");
+
+-- ConnectionInvite
+CREATE TABLE IF NOT EXISTS "ConnectionInvite" (
+    "id"              TEXT NOT NULL,
+    "code"            TEXT NOT NULL,
+    "childId"         TEXT NOT NULL,
+    "acceptedById"    TEXT,
+    "connectionId"    TEXT,
+    "tone"            "Tone" NOT NULL DEFAULT 'light',
+    "intimacy"        INTEGER NOT NULL DEFAULT 3,
+    "cohabiting"      BOOLEAN NOT NULL DEFAULT false,
+    "responseChannel" TEXT NOT NULL DEFAULT 'app',
+    "createdAt"       TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "acceptedAt"      TIMESTAMP(3),
+    "expiresAt"       TIMESTAMP(3),
+    CONSTRAINT "ConnectionInvite_pkey" PRIMARY KEY ("id")
+);
+CREATE UNIQUE INDEX IF NOT EXISTS "ConnectionInvite_code_key" ON "ConnectionInvite"("code");
+CREATE UNIQUE INDEX IF NOT EXISTS "ConnectionInvite_connectionId_key" ON "ConnectionInvite"("connectionId");
+CREATE INDEX IF NOT EXISTS "ConnectionInvite_childId_idx" ON "ConnectionInvite"("childId");
+CREATE INDEX IF NOT EXISTS "ConnectionInvite_acceptedById_idx" ON "ConnectionInvite"("acceptedById");
+CREATE INDEX IF NOT EXISTS "ConnectionInvite_createdAt_idx" ON "ConnectionInvite"("createdAt");
 
 -- Question
 CREATE TABLE IF NOT EXISTS "Question" (
@@ -200,6 +223,12 @@ ALTER TABLE "Connection"  ADD CONSTRAINT "Connection_fromUserId_fkey"
     FOREIGN KEY ("fromUserId") REFERENCES "User"("id") ON UPDATE CASCADE;
 ALTER TABLE "Connection"  ADD CONSTRAINT "Connection_toUserId_fkey"
     FOREIGN KEY ("toUserId") REFERENCES "User"("id") ON UPDATE CASCADE;
+ALTER TABLE "ConnectionInvite" ADD CONSTRAINT "ConnectionInvite_childId_fkey"
+    FOREIGN KEY ("childId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ConnectionInvite" ADD CONSTRAINT "ConnectionInvite_acceptedById_fkey"
+    FOREIGN KEY ("acceptedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ConnectionInvite" ADD CONSTRAINT "ConnectionInvite_connectionId_fkey"
+    FOREIGN KEY ("connectionId") REFERENCES "Connection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE "Question"    ADD CONSTRAINT "Question_connectionId_fkey"
     FOREIGN KEY ("connectionId") REFERENCES "Connection"("id") ON UPDATE CASCADE;
 ALTER TABLE "Answer"      ADD CONSTRAINT "Answer_questionId_fkey"

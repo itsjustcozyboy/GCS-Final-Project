@@ -14,21 +14,30 @@ export default function OnboardingPage() {
   const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
   const [error, setError] = useState('');
-  const [sessionToken, setSessionToken] = useState('');
+
+  const createInvite = trpc.connection.createInvite.useMutation({
+    onSuccess(data) {
+      setInviteCode(data.code);
+      setError('');
+    },
+    onError(err) { setError(err.message); },
+  });
+
+  const acceptInvite = trpc.connection.acceptInvite.useMutation({
+    onSuccess() {
+      setError('');
+      setStep('done');
+    },
+    onError(err) { setError(err.message); },
+  });
 
   const register = trpc.auth.register.useMutation({
     onSuccess(data) {
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('userId', data.user.id);
-      setSessionToken(data.sessionToken);
-      if (role === 'child') setStep('connect');
-      else setStep('done');
+      setStep('connect');
+      if (role === 'child') createInvite.mutate({ tone });
     },
-    onError(err) { setError(err.message); },
-  });
-
-  const createConn = trpc.connection.create.useMutation({
-    onSuccess() { setStep('done'); },
     onError(err) { setError(err.message); },
   });
 
@@ -152,47 +161,78 @@ export default function OnboardingPage() {
   }
 
   if (step === 'connect') {
+    const normalizedInviteCode = inviteCode.replace(/[\s-]/g, '').toUpperCase();
+
     return (
       <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-6">
           <div className="text-center space-y-2">
             <div className="text-4xl">🔗</div>
-            <h2 className="text-xl font-bold text-gray-900">부모님을 연결해요</h2>
-            <p className="text-sm text-gray-500">초대 코드가 있으면 입력하고,<br />없으면 나중에 연결해도 돼요</p>
+            <h2 className="text-xl font-bold text-gray-900">
+              {role === 'child' ? '초대 코드를 보내주세요' : '자녀의 초대 코드를 입력해주세요'}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {role === 'child'
+                ? '부모님이 이 코드를 입력하면 서로 연결돼요.'
+                : '자녀가 만든 초대 코드를 입력하면 연결돼요.'}
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">초대 코드 (선택)</label>
-            <input
-              value={inviteCode}
-              onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base font-mono tracking-widest text-center"
-              placeholder="XXXXXXXX"
-              maxLength={8}
-            />
-          </div>
+          {role === 'child' ? (
+            <div className="rounded-2xl bg-white border border-gray-100 p-5 text-center space-y-4">
+              <p className="text-sm text-gray-500">부모님께 전달할 코드</p>
+              <div className="text-3xl font-bold tracking-[0.25em] text-gray-900 font-mono">
+                {createInvite.isPending ? '생성 중' : inviteCode || '--------'}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => createInvite.mutate({ tone, regenerate: true })}
+                  disabled={createInvite.isPending}
+                  className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 disabled:opacity-50"
+                >
+                  다시 생성
+                </button>
+                <button
+                  onClick={() => inviteCode && navigator.clipboard?.writeText(inviteCode)}
+                  disabled={!inviteCode}
+                  className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  복사하기
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">초대 코드</label>
+              <input
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base font-mono tracking-widest text-center"
+                placeholder="XXXXXXXX"
+                maxLength={12}
+              />
+            </div>
+          )}
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <div className="space-y-3">
-            {inviteCode.length === 8 && (
+            {role === 'parent' && (
               <button
-                onClick={() => createConn.mutate({
-                  fromUserId: localStorage.getItem('userId') ?? '',
-                  tone,
-                })}
-                disabled={createConn.isPending}
+                onClick={() => acceptInvite.mutate({ inviteCode: normalizedInviteCode })}
+                disabled={acceptInvite.isPending || normalizedInviteCode.length < 4}
                 className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
-                연결하기
+                {acceptInvite.isPending ? '연결 중...' : '연결하기'}
               </button>
             )}
             <button
               onClick={() => setStep('done')}
               className="w-full py-3 rounded-2xl text-gray-500 font-medium"
             >
-              나중에 연결할게요
+              {role === 'child' ? '코드를 보냈어요' : '나중에 연결할게요'}
             </button>
           </div>
         </div>
@@ -207,7 +247,11 @@ export default function OnboardingPage() {
         <div className="text-6xl animate-bounce">🎉</div>
         <div className="space-y-2">
           <h2 className="text-2xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>준비됐어요!</h2>
-          <p className="text-gray-500">이제 매일 질문이 시작됩니다.<br />소중한 이야기가 쌓여갈 거예요.</p>
+          <p className="text-gray-500">
+            {role === 'child'
+              ? '부모님이 코드를 입력하면 연결 소식이 피드에 표시돼요.'
+              : '연결되면 피드에서 서로의 상태를 볼 수 있어요.'}
+          </p>
         </div>
         <button
           onClick={() => router.push('/feed')}

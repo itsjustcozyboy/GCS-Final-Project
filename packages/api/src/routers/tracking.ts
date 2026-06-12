@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 
 export const trackingRouter = router({
   // 방문 기록 — 로그인 여부와 무관하게 접속 경로/IP/리퍼러/기기 정보를 수집한다.
@@ -22,6 +22,10 @@ export const trackingRouter = router({
           email = user.email ?? null;
           name = user.name;
         }
+        await ctx.db.user.update({
+          where: { id: ctx.userId },
+          data: { lastSeenAt: new Date() },
+        });
       }
 
       await ctx.db.accessLog.create({
@@ -38,4 +42,13 @@ export const trackingRouter = router({
 
       return { ok: true };
     }),
+
+  heartbeat: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.user.update({
+      where: { id: ctx.userId },
+      data: { lastSeenAt: new Date() },
+    });
+
+    return { ok: true };
+  }),
 });

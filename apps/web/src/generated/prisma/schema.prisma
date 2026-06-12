@@ -62,11 +62,14 @@ model User {
   passwordHash     String?
   consentAnalytics Boolean   @default(false)
   consentAt        DateTime?
+  lastSeenAt       DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  sentConnections     Connection[] @relation("fromUser")
-  receivedConnections Connection[] @relation("toUser")
+  sentConnections     Connection[]       @relation("fromUser")
+  receivedConnections Connection[]       @relation("toUser")
+  childInvites        ConnectionInvite[] @relation("childConnectionInvites")
+  acceptedInvites     ConnectionInvite[] @relation("acceptedConnectionInvites")
   sessions            Session[]
   reactions           Reaction[]
   accessLogs          AccessLog[]
@@ -106,9 +109,32 @@ model Connection {
 
   questions    Question[]
   bookEditions BookEdition[]
+  invite       ConnectionInvite?
 
   @@index([fromUserId])
   @@index([toUserId])
+}
+
+model ConnectionInvite {
+  id              String      @id @default(cuid())
+  code            String      @unique
+  childId         String
+  child           User        @relation("childConnectionInvites", fields: [childId], references: [id], onDelete: Cascade)
+  acceptedById    String?
+  acceptedBy      User?       @relation("acceptedConnectionInvites", fields: [acceptedById], references: [id], onDelete: SetNull)
+  connectionId    String?     @unique
+  connection      Connection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+  tone            Tone        @default(light)
+  intimacy        Int         @default(3)
+  cohabiting      Boolean     @default(false)
+  responseChannel String      @default("app")
+  createdAt       DateTime    @default(now())
+  acceptedAt      DateTime?
+  expiresAt       DateTime?
+
+  @@index([childId])
+  @@index([acceptedById])
+  @@index([createdAt])
 }
 
 model Question {

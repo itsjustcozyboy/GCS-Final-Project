@@ -131,6 +131,7 @@ exports.Prisma.UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   consentAnalytics: 'consentAnalytics',
   consentAt: 'consentAt',
+  lastSeenAt: 'lastSeenAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -159,6 +160,21 @@ exports.Prisma.ConnectionScalarFieldEnum = {
   inviteCode: 'inviteCode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConnectionInviteScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  childId: 'childId',
+  acceptedById: 'acceptedById',
+  connectionId: 'connectionId',
+  tone: 'tone',
+  intimacy: 'intimacy',
+  cohabiting: 'cohabiting',
+  responseChannel: 'responseChannel',
+  createdAt: 'createdAt',
+  acceptedAt: 'acceptedAt',
+  expiresAt: 'expiresAt'
 };
 
 exports.Prisma.QuestionScalarFieldEnum = {
@@ -317,6 +333,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Connection: 'Connection',
+  ConnectionInvite: 'ConnectionInvite',
   Question: 'Question',
   Answer: 'Answer',
   Reaction: 'Reaction',
