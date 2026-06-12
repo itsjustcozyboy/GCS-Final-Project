@@ -18,6 +18,7 @@ export function createStorageAdapter(): StorageAdapter {
   }
   return new LocalStorageAdapter(
     process.env.UPLOADS_DIR ?? './uploads',
-    process.env.UPLOADS_URL ?? 'http://localhost:3001/uploads',
+    // 웹앱의 /uploads/[...path] 라우트가 이 URL로 파일을 서빙한다
+    process.env.UPLOADS_URL ?? `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/uploads`,
   );
 }
