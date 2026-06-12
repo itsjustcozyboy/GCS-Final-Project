@@ -37,18 +37,18 @@ export default function AdminPage() {
     }
   }, [router]);
 
-  const { data: adminCheck, isLoading, error } = trpc.admin.isAdmin.useQuery(undefined, {
+  const { data: adminCheck, isLoading: adminLoading, error: adminError } = trpc.admin.isAdmin.useQuery(undefined, {
     enabled: hasToken === true,
     retry: false,
   });
-  const checkingAdmin = hasToken === null || (hasToken && isLoading);
+  const checkingAdmin = hasToken === null || (hasToken === true && adminLoading);
 
   useEffect(() => {
     // 로그인은 했지만 관리자가 아닌 경우 피드로
-    if (hasToken && !isLoading && (error || (adminCheck && !adminCheck.isAdmin))) {
+    if (hasToken && !adminLoading && (adminError || (adminCheck && !adminCheck.isAdmin))) {
       router.replace('/feed');
     }
-  }, [adminCheck, isLoading, error, hasToken, router]);
+  }, [adminCheck, adminLoading, adminError, hasToken, router]);
 
   const { data, isLoading, refetch } = trpc.admin.getLogs.useQuery(
     { search: debouncedSearch || undefined, orderBy, limit: 100 },
