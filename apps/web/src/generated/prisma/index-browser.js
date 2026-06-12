@@ -199,6 +199,9 @@ exports.Prisma.AnswerScalarFieldEnum = {
   transcript: 'transcript',
   skipped: 'skipped',
   receivedVia: 'receivedVia',
+  isPrivate: 'isPrivate',
+  keywords: 'keywords',
+  aiComposed: 'aiComposed',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -308,7 +311,8 @@ exports.SensitiveStatus = exports.$Enums.SensitiveStatus = {
 exports.QuestionSource = exports.$Enums.QuestionSource = {
   ai: 'ai',
   curated: 'curated',
-  followup: 'followup'
+  followup: 'followup',
+  custom: 'custom'
 };
 
 exports.AnswerFormat = exports.$Enums.AnswerFormat = {

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "User" (
     "role"             "Role" NOT NULL,
     "avatarUrl"        TEXT,
     "passwordHash"     TEXT,
+    
     "consentAnalytics" BOOLEAN NOT NULL DEFAULT false,
     "consentAt"        TIMESTAMP(3),
     "lastSeenAt"       TIMESTAMP(3),

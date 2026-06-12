@@ -135,7 +135,8 @@ export type BookEditionType = (typeof BookEditionType)[keyof typeof BookEditionT
 export const QuestionSource: {
   ai: 'ai',
   curated: 'curated',
-  followup: 'followup'
+  followup: 'followup',
+  custom: 'custom'
 };
 
 export type QuestionSource = (typeof QuestionSource)[keyof typeof QuestionSource]
@@ -8282,6 +8283,8 @@ export namespace Prisma {
     transcript: string | null
     skipped: boolean | null
     receivedVia: string | null
+    isPrivate: boolean | null
+    aiComposed: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8295,6 +8298,8 @@ export namespace Prisma {
     transcript: string | null
     skipped: boolean | null
     receivedVia: string | null
+    isPrivate: boolean | null
+    aiComposed: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8308,6 +8313,9 @@ export namespace Prisma {
     transcript: number
     skipped: number
     receivedVia: number
+    isPrivate: number
+    keywords: number
+    aiComposed: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8323,6 +8331,8 @@ export namespace Prisma {
     transcript?: true
     skipped?: true
     receivedVia?: true
+    isPrivate?: true
+    aiComposed?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8336,6 +8346,8 @@ export namespace Prisma {
     transcript?: true
     skipped?: true
     receivedVia?: true
+    isPrivate?: true
+    aiComposed?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8349,6 +8361,9 @@ export namespace Prisma {
     transcript?: true
     skipped?: true
     receivedVia?: true
+    isPrivate?: true
+    keywords?: true
+    aiComposed?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8435,6 +8450,9 @@ export namespace Prisma {
     transcript: string | null
     skipped: boolean
     receivedVia: string
+    isPrivate: boolean
+    keywords: string[]
+    aiComposed: boolean
     createdAt: Date
     updatedAt: Date
     _count: AnswerCountAggregateOutputType | null
@@ -8465,6 +8483,9 @@ export namespace Prisma {
     transcript?: boolean
     skipped?: boolean
     receivedVia?: boolean
+    isPrivate?: boolean
+    keywords?: boolean
+    aiComposed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     question?: boolean | QuestionDefaultArgs<ExtArgs>
@@ -8481,6 +8502,9 @@ export namespace Prisma {
     transcript?: boolean
     skipped?: boolean
     receivedVia?: boolean
+    isPrivate?: boolean
+    keywords?: boolean
+    aiComposed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     question?: boolean | QuestionDefaultArgs<ExtArgs>
@@ -8495,6 +8519,9 @@ export namespace Prisma {
     transcript?: boolean
     skipped?: boolean
     receivedVia?: boolean
+    isPrivate?: boolean
+    keywords?: boolean
+    aiComposed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     question?: boolean | QuestionDefaultArgs<ExtArgs>
@@ -8509,11 +8536,14 @@ export namespace Prisma {
     transcript?: boolean
     skipped?: boolean
     receivedVia?: boolean
+    isPrivate?: boolean
+    keywords?: boolean
+    aiComposed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "questionId" | "format" | "body" | "mediaUrl" | "transcript" | "skipped" | "receivedVia" | "createdAt" | "updatedAt", ExtArgs["result"]["answer"]>
+  export type AnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "questionId" | "format" | "body" | "mediaUrl" | "transcript" | "skipped" | "receivedVia" | "isPrivate" | "keywords" | "aiComposed" | "createdAt" | "updatedAt", ExtArgs["result"]["answer"]>
   export type AnswerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     question?: boolean | QuestionDefaultArgs<ExtArgs>
     reactions?: boolean | Answer$reactionsArgs<ExtArgs>
@@ -8541,6 +8571,9 @@ export namespace Prisma {
       transcript: string | null
       skipped: boolean
       receivedVia: string
+      isPrivate: boolean
+      keywords: string[]
+      aiComposed: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["answer"]>
@@ -8976,6 +9009,9 @@ export namespace Prisma {
     readonly transcript: FieldRef<"Answer", 'String'>
     readonly skipped: FieldRef<"Answer", 'Boolean'>
     readonly receivedVia: FieldRef<"Answer", 'String'>
+    readonly isPrivate: FieldRef<"Answer", 'Boolean'>
+    readonly keywords: FieldRef<"Answer", 'String[]'>
+    readonly aiComposed: FieldRef<"Answer", 'Boolean'>
     readonly createdAt: FieldRef<"Answer", 'DateTime'>
     readonly updatedAt: FieldRef<"Answer", 'DateTime'>
   }
@@ -15941,6 +15977,9 @@ export namespace Prisma {
     transcript: 'transcript',
     skipped: 'skipped',
     receivedVia: 'receivedVia',
+    isPrivate: 'isPrivate',
+    keywords: 'keywords',
+    aiComposed: 'aiComposed',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16729,6 +16768,9 @@ export namespace Prisma {
     transcript?: StringNullableFilter<"Answer"> | string | null
     skipped?: BoolFilter<"Answer"> | boolean
     receivedVia?: StringFilter<"Answer"> | string
+    isPrivate?: BoolFilter<"Answer"> | boolean
+    keywords?: StringNullableListFilter<"Answer">
+    aiComposed?: BoolFilter<"Answer"> | boolean
     createdAt?: DateTimeFilter<"Answer"> | Date | string
     updatedAt?: DateTimeFilter<"Answer"> | Date | string
     question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
@@ -16744,6 +16786,9 @@ export namespace Prisma {
     transcript?: SortOrderInput | SortOrder
     skipped?: SortOrder
     receivedVia?: SortOrder
+    isPrivate?: SortOrder
+    keywords?: SortOrder
+    aiComposed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     question?: QuestionOrderByWithRelationInput
@@ -16762,6 +16807,9 @@ export namespace Prisma {
     transcript?: StringNullableFilter<"Answer"> | string | null
     skipped?: BoolFilter<"Answer"> | boolean
     receivedVia?: StringFilter<"Answer"> | string
+    isPrivate?: BoolFilter<"Answer"> | boolean
+    keywords?: StringNullableListFilter<"Answer">
+    aiComposed?: BoolFilter<"Answer"> | boolean
     createdAt?: DateTimeFilter<"Answer"> | Date | string
     updatedAt?: DateTimeFilter<"Answer"> | Date | string
     question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
@@ -16777,6 +16825,9 @@ export namespace Prisma {
     transcript?: SortOrderInput | SortOrder
     skipped?: SortOrder
     receivedVia?: SortOrder
+    isPrivate?: SortOrder
+    keywords?: SortOrder
+    aiComposed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AnswerCountOrderByAggregateInput
@@ -16796,6 +16847,9 @@ export namespace Prisma {
     transcript?: StringNullableWithAggregatesFilter<"Answer"> | string | null
     skipped?: BoolWithAggregatesFilter<"Answer"> | boolean
     receivedVia?: StringWithAggregatesFilter<"Answer"> | string
+    isPrivate?: BoolWithAggregatesFilter<"Answer"> | boolean
+    keywords?: StringNullableListFilter<"Answer">
+    aiComposed?: BoolWithAggregatesFilter<"Answer"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Answer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Answer"> | Date | string
   }
@@ -17716,6 +17770,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     question: QuestionCreateNestedOneWithoutAnswerInput
@@ -17731,6 +17788,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutAnswerInput
@@ -17744,6 +17804,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     question?: QuestionUpdateOneRequiredWithoutAnswerNestedInput
@@ -17759,6 +17822,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutAnswerNestedInput
@@ -17773,6 +17839,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17785,6 +17854,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17798,6 +17870,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18788,6 +18863,14 @@ export namespace Prisma {
     not?: NestedEnumAnswerFormatFilter<$PrismaModel> | $Enums.AnswerFormat
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type QuestionScalarRelationFilter = {
     is?: QuestionWhereInput
     isNot?: QuestionWhereInput
@@ -18802,6 +18885,9 @@ export namespace Prisma {
     transcript?: SortOrder
     skipped?: SortOrder
     receivedVia?: SortOrder
+    isPrivate?: SortOrder
+    keywords?: SortOrder
+    aiComposed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18815,6 +18901,8 @@ export namespace Prisma {
     transcript?: SortOrder
     skipped?: SortOrder
     receivedVia?: SortOrder
+    isPrivate?: SortOrder
+    aiComposed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18828,6 +18916,8 @@ export namespace Prisma {
     transcript?: SortOrder
     skipped?: SortOrder
     receivedVia?: SortOrder
+    isPrivate?: SortOrder
+    aiComposed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19087,14 +19177,6 @@ export namespace Prisma {
   export type AdminMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type AdminAuditCountOrderByAggregateInput = {
@@ -19739,6 +19821,10 @@ export namespace Prisma {
     update?: XOR<XOR<AnswerUpdateToOneWithWhereWithoutQuestionInput, AnswerUpdateWithoutQuestionInput>, AnswerUncheckedUpdateWithoutQuestionInput>
   }
 
+  export type AnswerCreatekeywordsInput = {
+    set: string[]
+  }
+
   export type QuestionCreateNestedOneWithoutAnswerInput = {
     create?: XOR<QuestionCreateWithoutAnswerInput, QuestionUncheckedCreateWithoutAnswerInput>
     connectOrCreate?: QuestionCreateOrConnectWithoutAnswerInput
@@ -19761,6 +19847,11 @@ export namespace Prisma {
 
   export type EnumAnswerFormatFieldUpdateOperationsInput = {
     set?: $Enums.AnswerFormat
+  }
+
+  export type AnswerUpdatekeywordsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type QuestionUpdateOneRequiredWithoutAnswerNestedInput = {
@@ -21564,6 +21655,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reactions?: ReactionCreateNestedManyWithoutAnswerInput
@@ -21577,6 +21671,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutAnswerInput
@@ -21657,6 +21754,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUpdateManyWithoutAnswerNestedInput
@@ -21670,6 +21770,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutAnswerNestedInput
@@ -21797,6 +21900,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     question: QuestionCreateNestedOneWithoutAnswerInput
@@ -21811,6 +21917,9 @@ export namespace Prisma {
     transcript?: string | null
     skipped?: boolean
     receivedVia?: string
+    isPrivate?: boolean
+    keywords?: AnswerCreatekeywordsInput | string[]
+    aiComposed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21888,6 +21997,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     question?: QuestionUpdateOneRequiredWithoutAnswerNestedInput
@@ -21902,6 +22014,9 @@ export namespace Prisma {
     transcript?: NullableStringFieldUpdateOperationsInput | string | null
     skipped?: BoolFieldUpdateOperationsInput | boolean
     receivedVia?: StringFieldUpdateOperationsInput | string
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    keywords?: AnswerUpdatekeywordsInput | string[]
+    aiComposed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
