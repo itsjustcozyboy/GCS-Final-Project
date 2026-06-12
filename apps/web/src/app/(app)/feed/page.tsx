@@ -316,7 +316,7 @@ export default function FeedPage() {
             {otherUser?.isOnline ? '접속중' : '미접속중'}
           </div>
         </div>
-        {!isParentView && (
+        {!isParentView ? (
           <button
             onClick={() => setShowComposer(true)}
             className="text-xs font-medium px-3 py-1.5 rounded-full text-white"
@@ -324,8 +324,26 @@ export default function FeedPage() {
           >
             + 질문 보내기
           </button>
+        ) : (
+          <button
+            onClick={() => setShowMessage(true)}
+            className="text-sm font-semibold px-4 py-2.5 rounded-full text-white"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+            aria-label="먼저 마음 전하기"
+          >
+            💝 먼저 마음 전하기
+          </button>
         )}
       </div>
+
+      {showMessage && (
+        <ParentMessageComposer
+          connectionId={firstConn.id}
+          childName={firstConn.toUser?.name ?? '자녀'}
+          onClose={() => setShowMessage(false)}
+          onSent={() => void utils.question.list.invalidate({ connectionId: firstConn.id })}
+        />
+      )}
 
       {showComposer && (
         <QuestionComposer
