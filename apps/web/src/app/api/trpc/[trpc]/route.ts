@@ -18,7 +18,13 @@ async function createContext(req: NextRequest): Promise<Context> {
     }
   }
 
-  return { db: prisma, userId, sessionToken };
+  const clientIp =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    undefined;
+  const clientUserAgent = req.headers.get('user-agent') ?? undefined;
+
+  return { db: prisma, userId, sessionToken, clientIp, clientUserAgent };
 }
 
 function handler(req: NextRequest) {
