@@ -167,46 +167,16 @@ export async function sendDailyQuestion(db: DB, connectionId: string) {
     return { sent: false, reason: result.reason };
   }
 
-  const connection = await db.connection.findUniqueOrThrow({
-    where: { id: connectionId },
-    include: { fromUser: true },
-  });
-
-  // 질문 DB 저장
-  const question = await db.question.create({
-    data: {
-      connectionId,
-      body: result.question!.body,
-      depth: result.question!.depth,
-      chapterTag: result.question!.chapterTag,
-      personTag: result.question!.personTag,
-      eraTag: result.question!.eraTag,
-      source: result.question!.source,
-      sentAt: new Date(),
-    },
-  });
-
-  // 채널 발송
-  const channel = createChannelAdapter(connection.responseChannel as 'app' | 'kakao' | 'sms');
-  const target = connection.fromUser.phone ?? connection.fromUser.email ?? 'unknown';
-
-  await channel.send({
-    to: target,
-    templateId: 'daily_question',
-    channel: connection.responseChannel as 'app' | 'kakao' | 'sms',
-    variables: {
-      name: connection.fromUser.name,
-      question: question.body,
-      questionId: question.id,
-    },
-  });
+  const delivered = await deliverQuestion(db, connectionId, result.question!);
+  if (!delivered.sent) return delivered;
 
   // 깊이 업데이트
+  const connection = await db.connection.findUniqueOrThrow({ where: { id: connectionId } });
   const newDepth = calcNextDepth(connection.currentDepth, connection.skipCount, connection.answerCount);
   await db.connection.update({
     where: { id: connectionId },
     data: { currentDepth: newDepth },
   });
 
-  return { sent: true, questionId: question.id };
+  return { sent: true, questionId: delivered.questionId };
 }
