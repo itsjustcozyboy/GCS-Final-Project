@@ -3,6 +3,35 @@ import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { QuestionComposer } from '@/components/QuestionComposer';
 import { AnswerComposer } from '@/components/AnswerComposer';
+import { ParentMessageComposer } from '@/components/ParentMessageComposer';
+
+// 부모 전용 — "먼저 마음 전하기" 큰 진입 버튼 + 작성 모달
+function ParentMessageEntry({ connectionId, childName, onSent }: { connectionId: string; childName: string; onSent: () => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="w-full py-5 rounded-2xl border-2 text-lg font-semibold transition-all hover:shadow-md"
+        style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary-dark)', backgroundColor: '#EFF7F2' }}
+        aria-label="먼저 마음 전하기"
+      >
+        💝 먼저 마음 전하기
+        <span className="block text-sm font-normal text-gray-500 mt-1">
+          질문을 기다리지 않고, 지금 떠오르는 마음을 {childName}님에게 남겨보세요
+        </span>
+      </button>
+      {open && (
+        <ParentMessageComposer
+          connectionId={connectionId}
+          childName={childName}
+          onClose={() => setOpen(false)}
+          onSent={onSent}
+        />
+      )}
+    </>
+  );
+}
 
 export default function TodayPage() {
   const me = trpc.auth.me.useQuery();
