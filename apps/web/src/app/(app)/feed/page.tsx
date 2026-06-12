@@ -255,6 +255,7 @@ export default function FeedPage() {
   const utils = trpc.useUtils();
   const [showStart, setShowStart] = useState(false);
   const [showComposer, setShowComposer] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
   const questions = trpc.question.list.useQuery(
     { connectionId: firstConn?.id ?? '', limit: 20 },
