@@ -11,31 +11,32 @@ export const authRouter = router({
         phone: z.string().regex(/^010\d{8}$/).optional(),
         role: z.enum(['child', 'parent', 'both']),
         password: z.string().min(6),
+        consentAnalytics: z.boolean().default(false),
       }).refine((d) => d.email || d.phone, { message: '이메일 또는 전화번호가 필요합니다.' }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { password, ...userData } = input;
+      const { password, consentAnalytics, ...userData } = input;
 
-      // 중복 체크
       if (userData.email) {
         const existing = await ctx.db.user.findUnique({ where: { email: userData.email } });
         if (existing) throw new TRPCError({ code: 'CONFLICT', message: '이미 사용 중인 이메일입니다.' });
       }
 
-      // 비밀번호 해싱 (Node.js crypto, bcrypt 의존성 없이)
       const { createHash } = await import('crypto');
       const salt = process.env.PASSWORD_SALT ?? 'maeum-salt';
       const passwordHash = createHash('sha256').update(password + salt).digest('hex');
 
       const user = await ctx.db.user.create({
-        data: { ...userData, name: userData.name, passwordHash },
+        data: {
+          ...userData,
+          passwordHash,
+          consentAnalytics,
+          consentAt: consentAnalytics ? new Date() : null,
+        },
       });
 
-      // 세션 생성
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-      const session = await ctx.db.session.create({
-        data: { userId: user.id, expiresAt },
-      });
+      const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
 
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
@@ -61,7 +62,6 @@ export const authRouter = router({
       const salt = process.env.PASSWORD_SALT ?? 'maeum-salt';
       const inputHash = createHash('sha256').update(input.password + salt).digest('hex');
 
-      // 개발 환경: 비밀번호 "demo" 또는 저장된 해시와 일치하는 경우 허용
       const isDemoLogin = process.env.NODE_ENV !== 'production' && input.password === 'demo';
       const isValidPassword = user.passwordHash ? user.passwordHash === inputHash : isDemoLogin;
 
@@ -72,6 +72,19 @@ export const authRouter = router({
 
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
       const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
+
+      // 동의한 사용자만 식별 정보를 포함한 접속 로그 기록
+      await ctx.db.accessLog.create({
+        data: {
+          userId: user.id,
+          email: user.consentAnalytics ? user.email : null,
+          name: user.consentAnalytics ? user.name : null,
+          ipAddress: user.consentAnalytics ? (ctx.clientIp ?? null) : null,
+          userAgent: user.consentAnalytics ? (ctx.clientUserAgent ?? null) : null,
+          path: '/login',
+        },
+      });
+
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
 
@@ -85,7 +98,7 @@ export const authRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true },
+      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true, consentAnalytics: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
