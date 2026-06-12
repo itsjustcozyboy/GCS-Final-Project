@@ -39,8 +39,19 @@ export const authRouter = router({
           ...userData,
           passwordHash,
           consentAnalytics,
-          consentAt: consentAnalytics ? new Date() : null,
+          consentMarketing,
+          consentAt: new Date(),
           lastSeenAt: new Date(),
+          // 항목별 동의 기록 (동의여부 + 일시 + 약관 버전)
+          consents: {
+            create: [
+              { type: 'privacy_required', agreed: true, version: POLICY_VERSION },
+              { type: 'terms_required', agreed: true, version: POLICY_VERSION },
+              { type: 'age_over_14', agreed: true, version: POLICY_VERSION },
+              { type: 'analytics', agreed: consentAnalytics, version: POLICY_VERSION },
+              { type: 'marketing', agreed: consentMarketing, version: POLICY_VERSION },
+            ],
+          },
         },
       });
 
