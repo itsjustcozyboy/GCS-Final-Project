@@ -52,6 +52,16 @@ export default function Home() {
           </Link>
           <AdminLink />
         </div>
+
+        {/* 관리자 진입 경로 */}
+        <div className="pt-4 border-t border-gray-100">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            🔐 관리자 대시보드
+          </Link>
+        </div>
       </div>
     </main>
   );
