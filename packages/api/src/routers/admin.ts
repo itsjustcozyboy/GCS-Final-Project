@@ -2,11 +2,6 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 
-async function assertAdmin(ctx: { db: Parameters<typeof protectedProcedure.mutation>[0]['ctx'] extends { db: infer D } ? D : never; userId: string }) {
-  const admin = await (ctx.db as import('@maeum/db').PrismaClient).admin.findUnique({ where: { userId: ctx.userId } });
-  if (!admin) throw new TRPCError({ code: 'FORBIDDEN', message: '관리자 권한이 필요합니다.' });
-}
-
 // 관리자 전용 procedure (로그인 검증 + admins 테이블 검증)
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const admin = await ctx.db.admin.findUnique({ where: { userId: ctx.userId } });
