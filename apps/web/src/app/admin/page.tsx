@@ -659,8 +659,10 @@ export default function AdminPage() {
 
         {tab === 'visitors' ? (
           <VisitorsView search={debouncedSearch} />
-        ) : (
+        ) : tab === 'logs' ? (
           <LogsView search={debouncedSearch} />
+        ) : (
+          <InquiriesView search={debouncedSearch} />
         )}
       </main>
     </div>
