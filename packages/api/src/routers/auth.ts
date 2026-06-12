@@ -69,6 +69,10 @@ export const authRouter = router({
         console.error(`[auth.login] 비밀번호 불일치 userId=${user.id}`);
         throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
       }
+
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
+      return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
