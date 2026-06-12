@@ -6,6 +6,7 @@ export * from './routers/question';
 export * from './routers/answer';
 export * from './routers/reaction';
 export * from './routers/book';
+export * from './routers/tracking';
 export * from './services/question-engine';
 export * from './services/book-engine';
 
