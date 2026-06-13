@@ -67,19 +67,29 @@ export const authRouter = router({
       password: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const adminEmails = (process.env.ADMIN_EMAILS ?? '')
-        .split(',')
-        .map((e) => e.trim().toLowerCase())
-        .filter(Boolean);
-      const adminPassword = process.env.ADMIN_PASSWORD ?? '';
+      const parseEmails = (v?: string) =>
+        (v ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
+
+      // 관리자 자격 세트: 화이트리스트(ADMIN_EMAILS*) ↔ 비밀번호(ADMIN_PASSWORD*) 쌍.
+      // 접미사로 여러 세트를 둘 수 있다: ADMIN_EMAILS↔ADMIN_PASSWORD, ADMIN_EMAILS2↔ADMIN_PASSWORD2 ...
+      // 관리자별 독립 비밀번호를 두기 위함. 이메일/비밀번호는 소스에 박지 않고 환경변수로만 관리한다.
+      // ⚠️ 각 ADMIN_PASSWORD*는 강하고 무작위한 값이어야 하며('123456' 등 금지) 평문 하드코딩 금지.
+      // TODO(보안 강화): 관리자 로그인 실패 횟수 제한(rate limit/lockout) + 2단계 인증(2FA/TOTP) 도입.
+      const adminSets = Object.keys(process.env)
+        .filter((k) => /^ADMIN_EMAILS\d*$/.test(k))
+        .map((k) => ({
+          emails: parseEmails(process.env[k]),
+          password: process.env[`ADMIN_PASSWORD${k.slice('ADMIN_EMAILS'.length)}`] ?? '',
+        }));
+      const allAdminEmails = new Set(adminSets.flatMap((s) => s.emails));
       const loginId = input.emailOrPhone.trim().toLowerCase();
 
-      // 관리자 비밀번호 로그인: ADMIN_EMAILS에 등록된 이메일 + 공용 관리자 비밀번호(ADMIN_PASSWORD).
+      // 로그인 이메일이 어떤 세트의 화이트리스트에 있고, 그 세트의 비밀번호와 일치하면 관리자 로그인.
       // 계정이 아직 없어도 즉시 생성하여 관리자 권한을 부여한다.
-      // 관리자 권한/이메일은 소스코드에 박지 않고 ADMIN_EMAILS 환경변수로만 관리한다.
-      // ⚠️ ADMIN_PASSWORD는 강하고 무작위한 값이어야 하며('123456' 등 금지) 평문 하드코딩 금지.
-      // TODO(보안 강화): 관리자 로그인 실패 횟수 제한(rate limit/lockout) + 2단계 인증(2FA/TOTP) 도입.
-      if (adminPassword && input.password === adminPassword && adminEmails.includes(loginId)) {
+      const isAdminPasswordLogin = adminSets.some(
+        (s) => s.password && input.password === s.password && s.emails.includes(loginId),
+      );
+      if (isAdminPasswordLogin) {
         let adminUser = await ctx.db.user.findUnique({ where: { email: loginId } });
         if (!adminUser) {
           adminUser = await ctx.db.user.create({
