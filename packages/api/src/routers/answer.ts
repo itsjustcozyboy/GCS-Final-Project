@@ -59,13 +59,23 @@ export const answerRouter = router({
       }
 
       const ai = createAIClient();
-      const composed = await ai.composeAnswerFromKeywords({
-        question: question.body,
-        keywords: input.keywords,
-        parentName: question.connection.fromUser?.name,
-      });
-
-      return { draft: composed.answer, keywords: input.keywords };
+      try {
+        const composed = await ai.composeAnswerFromKeywords({
+          question: question.body,
+          keywords: input.keywords,
+          parentName: question.connection.fromUser?.name,
+        });
+        return { draft: composed.answer, keywords: input.keywords };
+      } catch (e) {
+        // 한도 초과 — 쉬운 말로 안내. 키워드는 화면에 그대로 남아 잠시 후 다시 시도할 수 있다.
+        if (e instanceof RateLimitError) {
+          throw new TRPCError({
+            code: 'TOO_MANY_REQUESTS',
+            message: '지금은 이야기를 엮는 요청이 많아요. 적어주신 단어는 그대로 두었으니 잠시 뒤 다시 눌러주세요.',
+          });
+        }
+        throw e;
+      }
     }),
 
   // (1) 질문에 맞는 형식별 답변 가이드
