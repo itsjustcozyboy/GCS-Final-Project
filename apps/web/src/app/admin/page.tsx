@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 
 type Log = {
   id: string;
@@ -40,6 +41,7 @@ function shortUA(ua: string | null) {
 
 // ─── 방문자 통합 뷰 ───────────────────────────────────────────
 function VisitorsView({ search }: { search: string }) {
+  const { t } = useTranslation('admin');
   const [orderBy, setOrderBy] = useState<'lastVisit_desc' | 'visitCount_desc'>('lastVisit_desc');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -88,8 +90,8 @@ function VisitorsView({ search }: { search: string }) {
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          방문자 <strong>{visitors.length}</strong>명 · 총 방문 <strong>{data?.totalLogs ?? 0}</strong>회
-          {selected.size > 0 && ` · ${selected.size}명 선택됨`}
+          {t('visitors.summaryPre')} <strong>{visitors.length}</strong>{t('visitors.summaryMid')} <strong>{data?.totalLogs ?? 0}</strong>{t('visitors.summaryPost')}
+          {selected.size > 0 && ` · ${t('visitors.selectedSuffix', { n: selected.size })}`}
         </p>
         <div className="flex items-center gap-2">
           <select
@@ -97,15 +99,15 @@ function VisitorsView({ search }: { search: string }) {
             onChange={(e) => setOrderBy(e.target.value as typeof orderBy)}
             className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
           >
-            <option value="lastVisit_desc">최근 방문순</option>
-            <option value="visitCount_desc">방문 횟수순</option>
+            <option value="lastVisit_desc">{t('visitors.orderRecent')}</option>
+            <option value="visitCount_desc">{t('visitors.orderCount')}</option>
           </select>
           {selected.size > 0 && (
             <button
               onClick={() => setShowDeleteModal(true)}
               className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-xl hover:bg-red-600 transition-colors"
             >
-              선택 삭제 ({selected.size})
+              {t('common.selectDelete')} ({selected.size})
             </button>
           )}
         </div>
@@ -113,9 +115,9 @@ function VisitorsView({ search }: { search: string }) {
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
         {isLoading ? (
-          <div className="py-16 text-center text-gray-400 text-sm">로딩 중...</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('common.loading')}</div>
         ) : visitors.length === 0 ? (
-          <div className="py-16 text-center text-gray-400 text-sm">방문자가 없습니다.</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('visitors.empty')}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -124,13 +126,13 @@ function VisitorsView({ search }: { search: string }) {
                   <th className="px-4 py-3 text-left">
                     <input type="checkbox" checked={allSelected} onChange={toggleAll} className="w-4 h-4" />
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">이름</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">이메일</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">IP</th>
-                  <th className="px-4 py-3 text-center font-medium text-gray-600">방문 횟수</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">최근 방문</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">첫 방문</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">기기</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thName')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thEmail')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thIp')}</th>
+                  <th className="px-4 py-3 text-center font-medium text-gray-600">{t('visitors.thVisitCount')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thLastVisit')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thFirstVisit')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thDevice')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,11 +154,11 @@ function VisitorsView({ search }: { search: string }) {
                         {v.userId && (
                           <span
                             className="w-2 h-2 rounded-full shrink-0"
-                            title={v.isOnline ? '접속중' : '미접속중'}
+                            title={v.isOnline ? t('visitors.online') : t('visitors.offline')}
                             style={{ backgroundColor: v.isOnline ? '#22C55E' : '#D1D5DB' }}
                           />
                         )}
-                        {v.name ?? <span className="text-gray-300">비로그인</span>}
+                        {v.name ?? <span className="text-gray-300">{t('common.notLoggedIn')}</span>}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-600">{v.email ?? <span className="text-gray-300">-</span>}</td>
@@ -185,10 +187,10 @@ function VisitorsView({ search }: { search: string }) {
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl">
-            <h2 className="text-lg font-bold text-gray-900">정말 삭제하시겠습니까?</h2>
+            <h2 className="text-lg font-bold text-gray-900">{t('common.confirmTitle')}</h2>
             <p className="text-sm text-gray-500">
-              선택한 <strong>{selected.size}명</strong>의 접속 기록 총{' '}
-              <strong>{selectedVisitCount}건</strong>이 영구 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+              {t('visitors.deleteDescPre')} <strong>{selected.size}</strong>{t('visitors.deleteDescMid')}{' '}
+              <strong>{selectedVisitCount}</strong>{t('visitors.deleteDescPost')}
             </p>
             {deleteMutation.isError && (
               <p className="text-sm text-red-500">{deleteMutation.error.message}</p>
@@ -198,14 +200,14 @@ function VisitorsView({ search }: { search: string }) {
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
-                취소
+                {t('common.cancel')}
               </button>
               <button
                 onClick={confirmDelete}
                 disabled={deleteMutation.isPending}
                 className="flex-1 py-3 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
               >
-                {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+                {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
               </button>
             </div>
           </div>
@@ -217,6 +219,7 @@ function VisitorsView({ search }: { search: string }) {
 
 // ─── 전체 기록 뷰 ─────────────────────────────────────────────
 function LogsView({ search }: { search: string }) {
+  const { t } = useTranslation('admin');
   const [orderBy, setOrderBy] = useState<'createdAt_desc' | 'createdAt_asc'>('createdAt_desc');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -254,7 +257,7 @@ function LogsView({ search }: { search: string }) {
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          총 <strong>{logs.length}</strong>건{selected.size > 0 && ` · ${selected.size}개 선택됨`}
+          {t('logs.countPre')} <strong>{logs.length}</strong>{t('logs.countPost')}{selected.size > 0 && ` · ${t('logs.selectedSuffix', { n: selected.size })}`}
         </p>
         <div className="flex items-center gap-2">
           <select
@@ -262,15 +265,15 @@ function LogsView({ search }: { search: string }) {
             onChange={(e) => setOrderBy(e.target.value as typeof orderBy)}
             className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
           >
-            <option value="createdAt_desc">최신순</option>
-            <option value="createdAt_asc">오래된순</option>
+            <option value="createdAt_desc">{t('logs.orderNewest')}</option>
+            <option value="createdAt_asc">{t('logs.orderOldest')}</option>
           </select>
           {selected.size > 0 && (
             <button
               onClick={() => setShowDeleteModal(true)}
               className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-xl hover:bg-red-600 transition-colors"
             >
-              선택 삭제 ({selected.size})
+              {t('common.selectDelete')} ({selected.size})
             </button>
           )}
         </div>
@@ -278,9 +281,9 @@ function LogsView({ search }: { search: string }) {
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
         {isLoading ? (
-          <div className="py-16 text-center text-gray-400 text-sm">로딩 중...</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('common.loading')}</div>
         ) : logs.length === 0 ? (
-          <div className="py-16 text-center text-gray-400 text-sm">기록이 없습니다.</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('logs.empty')}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -289,13 +292,13 @@ function LogsView({ search }: { search: string }) {
                   <th className="px-4 py-3 text-left">
                     <input type="checkbox" checked={allSelected} onChange={toggleAll} className="w-4 h-4" />
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">이름</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">이메일</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">IP</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">접속 경로</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">유입 경로</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">기기</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">접속 일시</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thName')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thEmail')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thIp')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('logs.thPath')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('logs.thReferrer')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('visitors.thDevice')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('logs.thAccessedAt')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -312,12 +315,12 @@ function LogsView({ search }: { search: string }) {
                         className="w-4 h-4"
                       />
                     </td>
-                    <td className="px-4 py-3 text-gray-800">{log.name ?? <span className="text-gray-300">미동의</span>}</td>
-                    <td className="px-4 py-3 text-gray-600">{log.email ?? <span className="text-gray-300">미동의</span>}</td>
+                    <td className="px-4 py-3 text-gray-800">{log.name ?? <span className="text-gray-300">{t('logs.consentNone')}</span>}</td>
+                    <td className="px-4 py-3 text-gray-600">{log.email ?? <span className="text-gray-300">{t('logs.consentNone')}</span>}</td>
                     <td className="px-4 py-3 font-mono text-gray-600 text-xs">{log.ipAddress ?? <span className="text-gray-300">-</span>}</td>
                     <td className="px-4 py-3 text-gray-600">{log.path ?? '-'}</td>
                     <td className="px-4 py-3 text-gray-500 text-xs max-w-[160px] truncate" title={log.referrer ?? ''}>
-                      {log.referrer ? log.referrer : <span className="text-gray-300">직접 방문</span>}
+                      {log.referrer ? log.referrer : <span className="text-gray-300">{t('logs.directVisit')}</span>}
                     </td>
                     <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate" title={log.userAgent ?? ''}>
                       {shortUA(log.userAgent)}
@@ -334,10 +337,9 @@ function LogsView({ search }: { search: string }) {
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl">
-            <h2 className="text-lg font-bold text-gray-900">정말 삭제하시겠습니까?</h2>
+            <h2 className="text-lg font-bold text-gray-900">{t('common.confirmTitle')}</h2>
             <p className="text-sm text-gray-500">
-              선택한 <strong>{selected.size}개</strong>의 접속 로그가 영구 삭제됩니다.
-              이 작업은 되돌릴 수 없습니다.
+              {t('logs.deleteDescPre')} <strong>{selected.size}</strong>{t('logs.deleteDescPost')}
             </p>
             {deleteMutation.isError && (
               <p className="text-sm text-red-500">{deleteMutation.error.message}</p>
@@ -347,14 +349,14 @@ function LogsView({ search }: { search: string }) {
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
-                취소
+                {t('common.cancel')}
               </button>
               <button
                 onClick={() => deleteMutation.mutate({ ids: Array.from(selected) })}
                 disabled={deleteMutation.isPending}
                 className="flex-1 py-3 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
               >
-                {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+                {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
               </button>
             </div>
           </div>
@@ -376,12 +378,6 @@ type Inquiry = {
   createdAt: string | Date;
 };
 
-const INQUIRY_CATEGORY_LABEL: Record<string, string> = {
-  bug: '버그/오류', feature: '기능 제안', payment: '결제', privacy: '개인정보', etc: '기타',
-};
-const INQUIRY_STATUS_LABEL: Record<string, string> = {
-  new: '신규', in_progress: '처리 중', resolved: '완료',
-};
 const INQUIRY_STATUS_COLOR: Record<string, { bg: string; fg: string }> = {
   new: { bg: '#FEE2E2', fg: '#DC2626' },
   in_progress: { bg: '#FEF3C7', fg: '#B45309' },
@@ -389,6 +385,13 @@ const INQUIRY_STATUS_COLOR: Record<string, { bg: string; fg: string }> = {
 };
 
 function InquiriesView({ search }: { search: string }) {
+  const { t } = useTranslation('admin');
+  const INQUIRY_CATEGORY_LABEL: Record<string, string> = {
+    bug: t('inquiries.category.bug'), feature: t('inquiries.category.feature'), payment: t('inquiries.category.payment'), privacy: t('inquiries.category.privacy'), etc: t('inquiries.category.etc'),
+  };
+  const INQUIRY_STATUS_LABEL: Record<string, string> = {
+    new: t('inquiries.status.new'), in_progress: t('inquiries.status.in_progress'), resolved: t('inquiries.status.resolved'),
+  };
   const [category, setCategory] = useState<'' | 'bug' | 'feature' | 'payment' | 'privacy' | 'etc'>('');
   const [status, setStatus] = useState<'' | 'new' | 'in_progress' | 'resolved'>('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -427,26 +430,26 @@ function InquiriesView({ search }: { search: string }) {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500">
-          신규 <strong>{statusCounts.new ?? 0}</strong> · 처리 중 <strong>{statusCounts.in_progress ?? 0}</strong> · 완료 <strong>{statusCounts.resolved ?? 0}</strong>
-          {selected.size > 0 && ` · ${selected.size}건 선택됨`}
+          {t('inquiries.summaryNew')} <strong>{statusCounts.new ?? 0}</strong> · {t('inquiries.summaryProgress')} <strong>{statusCounts.in_progress ?? 0}</strong> · {t('inquiries.summaryResolved')} <strong>{statusCounts.resolved ?? 0}</strong>
+          {selected.size > 0 && ` · ${t('inquiries.selectedSuffix', { n: selected.size })}`}
         </p>
         <div className="flex items-center gap-2">
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as typeof category)}
             className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
-            aria-label="유형 필터"
+            aria-label={t('inquiries.categoryFilterAria')}
           >
-            <option value="">전체 유형</option>
+            <option value="">{t('inquiries.allCategories')}</option>
             {Object.entries(INQUIRY_CATEGORY_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
             className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none"
-            aria-label="상태 필터"
+            aria-label={t('inquiries.statusFilterAria')}
           >
-            <option value="">전체 상태</option>
+            <option value="">{t('inquiries.allStatus')}</option>
             {Object.entries(INQUIRY_STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
           {selected.size > 0 && (
@@ -454,7 +457,7 @@ function InquiriesView({ search }: { search: string }) {
               onClick={() => setShowDeleteModal(true)}
               className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-xl hover:bg-red-600 transition-colors"
             >
-              선택 삭제 ({selected.size})
+              {t('common.selectDelete')} ({selected.size})
             </button>
           )}
         </div>
@@ -462,9 +465,9 @@ function InquiriesView({ search }: { search: string }) {
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
         {isLoading ? (
-          <div className="py-16 text-center text-gray-400 text-sm">로딩 중...</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('common.loading')}</div>
         ) : inquiries.length === 0 ? (
-          <div className="py-16 text-center text-gray-400 text-sm">접수된 문의가 없습니다.</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t('inquiries.empty')}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -476,15 +479,15 @@ function InquiriesView({ search }: { search: string }) {
                       checked={allSelected}
                       onChange={() => setSelected(allSelected ? new Set() : new Set(allIds))}
                       className="w-4 h-4"
-                      aria-label="전체 선택"
+                      aria-label={t('inquiries.selectAllAria')}
                     />
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">접수일</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">유형</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">이메일</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">내용</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">알림</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">상태</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thReceivedAt')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thCategory')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thEmail')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thContent')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thNotify')}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('inquiries.thStatus')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -507,7 +510,7 @@ function InquiriesView({ search }: { search: string }) {
                       <button
                         onClick={() => setExpanded(expanded === q.id ? null : q.id)}
                         className="text-left w-full"
-                        title="눌러서 전문 보기"
+                        title={t('inquiries.expandTitle')}
                       >
                         {expanded === q.id ? (
                           <span className="whitespace-pre-wrap">{q.message}</span>
@@ -516,8 +519,8 @@ function InquiriesView({ search }: { search: string }) {
                         )}
                       </button>
                     </td>
-                    <td className="px-4 py-3" title={q.emailSent ? '관리자 메일 발송됨' : '메일 발송 실패 — DB에는 저장됨'}>
-                      {q.emailSent ? '📧' : <span className="text-red-400 text-xs font-medium">실패</span>}
+                    <td className="px-4 py-3" title={q.emailSent ? t('inquiries.emailSentTitle') : t('inquiries.emailFailTitle')}>
+                      {q.emailSent ? '📧' : <span className="text-red-400 text-xs font-medium">{t('inquiries.fail')}</span>}
                     </td>
                     <td className="px-4 py-3">
                       <select
@@ -526,7 +529,7 @@ function InquiriesView({ search }: { search: string }) {
                         disabled={setStatusMutation.isPending}
                         className="px-2 py-1 rounded-lg text-xs font-medium border-0 focus:outline-none"
                         style={{ backgroundColor: INQUIRY_STATUS_COLOR[q.status].bg, color: INQUIRY_STATUS_COLOR[q.status].fg }}
-                        aria-label="상태 변경"
+                        aria-label={t('inquiries.statusChangeAria')}
                       >
                         {Object.entries(INQUIRY_STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
@@ -542,9 +545,9 @@ function InquiriesView({ search }: { search: string }) {
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl">
-            <h2 className="text-lg font-bold text-gray-900">정말 삭제하시겠습니까?</h2>
+            <h2 className="text-lg font-bold text-gray-900">{t('common.confirmTitle')}</h2>
             <p className="text-sm text-gray-500">
-              선택한 <strong>{selected.size}건</strong>의 문의가 영구 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+              {t('inquiries.deleteDescPre')} <strong>{selected.size}</strong>{t('inquiries.deleteDescPost')}
             </p>
             {deleteMutation.isError && <p className="text-sm text-red-500">{deleteMutation.error.message}</p>}
             <div className="flex gap-3">
@@ -552,14 +555,14 @@ function InquiriesView({ search }: { search: string }) {
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
-                취소
+                {t('common.cancel')}
               </button>
               <button
                 onClick={() => deleteMutation.mutate({ ids: Array.from(selected) })}
                 disabled={deleteMutation.isPending}
                 className="flex-1 py-3 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
               >
-                {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+                {deleteMutation.isPending ? t('common.deleting') : t('common.delete')}
               </button>
             </div>
           </div>
@@ -570,17 +573,17 @@ function InquiriesView({ search }: { search: string }) {
 }
 
 // ─── 방문자 분석(퍼널) 뷰 ─────────────────────────────────────
-const PERIODS = [
-  { value: 1, label: '오늘' },
-  { value: 7, label: '7일' },
-  { value: 30, label: '30일' },
-] as const;
-
 function pct(n: number) {
   return `${(n * 100).toFixed(1)}%`;
 }
 
 function FunnelView({ search }: { search: string }) {
+  const { t } = useTranslation('admin');
+  const PERIODS = [
+    { value: 1, label: t('funnel.today') },
+    { value: 7, label: t('funnel.d7') },
+    { value: 30, label: t('funnel.d30') },
+  ];
   const [days, setDays] = useState<number>(7);
   const [seg, setSeg] = useState<'anon' | 'converted'>('anon');
 
@@ -612,9 +615,9 @@ function FunnelView({ search }: { search: string }) {
       {/* 요약 카드 */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: '총 방문자', value: s ? s.totalVisitors.toLocaleString() : '—', hint: '고유 익명 방문자' },
-          { label: '전환 수', value: s ? s.conversions.toLocaleString() : '—', hint: '가입/로그인 도달' },
-          { label: '전환율', value: s ? pct(s.conversionRate) : '—', hint: '전환 / 방문자' },
+          { label: t('funnel.cardVisitors'), value: s ? s.totalVisitors.toLocaleString() : '—', hint: t('funnel.cardVisitorsHint') },
+          { label: t('funnel.cardConversions'), value: s ? s.conversions.toLocaleString() : '—', hint: t('funnel.cardConversionsHint') },
+          { label: t('funnel.cardRate'), value: s ? pct(s.conversionRate) : '—', hint: t('funnel.cardRateHint') },
         ].map((c) => (
           <div key={c.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
             <p className="text-xs text-gray-400">{c.label}</p>
@@ -626,20 +629,20 @@ function FunnelView({ search }: { search: string }) {
 
       {/* 채널별 표 */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-800">채널별 전환 (first-touch)</div>
+        <div className="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-800">{t('funnel.channelTitle')}</div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
-                <th className="px-4 py-2 text-left font-medium text-gray-600">출처</th>
-                <th className="px-4 py-2 text-right font-medium text-gray-600">방문</th>
-                <th className="px-4 py-2 text-right font-medium text-gray-600">전환</th>
-                <th className="px-4 py-2 text-right font-medium text-gray-600">전환율</th>
+                <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.thSource')}</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">{t('funnel.thVisits')}</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">{t('funnel.thConversions')}</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">{t('funnel.thRate')}</th>
               </tr>
             </thead>
             <tbody>
               {(channels.data ?? []).length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">데이터가 없습니다.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('funnel.noData')}</td></tr>
               ) : (channels.data ?? []).map((c) => (
                 <tr key={c.source} className="border-b border-gray-50">
                   <td className="px-4 py-2 text-gray-800">{c.source}</td>
@@ -656,7 +659,7 @@ function FunnelView({ search }: { search: string }) {
       {/* 일자별 추이 */}
       {(trend.data ?? []).length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <p className="text-sm font-semibold text-gray-800 mb-3">일자별 방문 / 전환</p>
+          <p className="text-sm font-semibold text-gray-800 mb-3">{t('funnel.trendTitle')}</p>
           <div className="space-y-1.5">
             {(trend.data ?? []).map((d) => (
               <div key={d.date} className="flex items-center gap-2 text-xs">
@@ -664,7 +667,7 @@ function FunnelView({ search }: { search: string }) {
                 <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
                   <div className="h-full rounded-full" style={{ width: `${(d.visitors / maxTrend) * 100}%`, backgroundColor: 'var(--color-primary-light)' }} />
                 </div>
-                <span className="w-24 text-right text-gray-500 shrink-0">{d.visitors}명 · {d.conversions}전환</span>
+                <span className="w-24 text-right text-gray-500 shrink-0">{d.visitors}{t('funnel.trendVisitors')} · {d.conversions}{t('funnel.trendConversions')}</span>
               </div>
             ))}
           </div>
@@ -674,16 +677,16 @@ function FunnelView({ search }: { search: string }) {
       {/* 세그먼트 토글 */}
       <div className="flex rounded-xl border border-gray-200 bg-white p-1 text-sm font-medium w-fit">
         {[
-          { value: 'anon', label: '비로그인 방문자' },
-          { value: 'converted', label: '전환 사용자' },
-        ].map((t) => (
+          { value: 'anon', label: t('funnel.segAnon') },
+          { value: 'converted', label: t('funnel.segConverted') },
+        ].map((segOpt) => (
           <button
-            key={t.value}
-            onClick={() => setSeg(t.value as typeof seg)}
+            key={segOpt.value}
+            onClick={() => setSeg(segOpt.value as typeof seg)}
             className="px-4 py-1.5 rounded-lg transition-colors"
-            style={seg === t.value ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: '#6B7280' }}
+            style={seg === segOpt.value ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: '#6B7280' }}
           >
-            {t.label}
+            {segOpt.label}
           </button>
         ))}
       </div>
@@ -694,19 +697,19 @@ function FunnelView({ search }: { search: string }) {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">방문자(익명)</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">출처</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">진입 경로</th>
-                  <th className="px-4 py-2 text-center font-medium text-gray-600">방문</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">기기</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">첫 방문</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.anonThVisitor')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.anonThSource')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.anonThEntry')}</th>
+                  <th className="px-4 py-2 text-center font-medium text-gray-600">{t('funnel.anonThVisits')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.anonThDevice')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.anonThFirst')}</th>
                 </tr>
               </thead>
               <tbody>
                 {anon.isLoading ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">로딩 중...</td></tr>
+                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">{t('common.loading')}</td></tr>
                 ) : (anon.data ?? []).length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">아직 전환되지 않은 방문자가 없습니다.</td></tr>
+                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">{t('funnel.anonEmpty')}</td></tr>
                 ) : (anon.data ?? []).map((v) => (
                   <tr key={v.anonymousId} className="border-b border-gray-50">
                     <td className="px-4 py-2 font-mono text-xs text-gray-400">{v.anonymousId.slice(0, 8)}…</td>
@@ -727,17 +730,17 @@ function FunnelView({ search }: { search: string }) {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">이름</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">이메일</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">유입 출처</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">전환 시각</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThName')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThEmail')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThSource')}</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThAt')}</th>
                 </tr>
               </thead>
               <tbody>
                 {converted.isLoading ? (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">로딩 중...</td></tr>
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('common.loading')}</td></tr>
                 ) : (converted.data ?? []).length === 0 ? (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">전환된 사용자가 없습니다.</td></tr>
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('funnel.convEmpty')}</td></tr>
                 ) : (converted.data ?? []).map((v) => (
                   <tr key={v.anonymousId} className="border-b border-gray-50">
                     <td className="px-4 py-2 text-gray-800">{v.name ?? <span className="text-gray-300">-</span>}</td>
@@ -753,7 +756,7 @@ function FunnelView({ search }: { search: string }) {
       )}
 
       <p className="text-xs text-gray-400">
-        익명 방문자는 개인 식별 정보 없이 무작위 ID로만 집계됩니다. IP 원문은 저장하지 않아요(해시만).
+        {t('funnel.privacyNote')}
       </p>
     </div>
   );
@@ -761,6 +764,7 @@ function FunnelView({ search }: { search: string }) {
 
 // ─── 페이지 ──────────────────────────────────────────────────
 export default function AdminPage() {
+  const { t } = useTranslation('admin');
   const router = useRouter();
   const [tab, setTab] = useState<'funnel' | 'visitors' | 'logs' | 'inquiries'>('funnel');
   const [search, setSearch] = useState('');
@@ -798,7 +802,7 @@ export default function AdminPage() {
   if (checkingAdmin) {
     return (
       <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
-        <p className="text-gray-400">권한 확인 중...</p>
+        <p className="text-gray-400">{t('checkingAuth')}</p>
       </div>
     );
   }
@@ -809,8 +813,8 @@ export default function AdminPage() {
     <div className="min-h-dvh" style={{ background: 'var(--color-background)' }}>
       <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <button onClick={() => router.push('/feed')} className="text-gray-400 hover:text-gray-600 text-sm">← 피드</button>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>관리자 대시보드</h1>
+          <button onClick={() => router.push('/feed')} className="text-gray-400 hover:text-gray-600 text-sm">{t('header.back')}</button>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>{t('header.title')}</h1>
         </div>
         <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">ADMIN</span>
       </header>
@@ -820,22 +824,22 @@ export default function AdminPage() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex rounded-xl border border-gray-200 bg-white p-1 text-sm font-medium">
             {[
-              { value: 'funnel', label: '📈 방문자 분석' },
-              { value: 'visitors', label: '👥 방문자별' },
-              { value: 'logs', label: '📋 전체 기록' },
-              { value: 'inquiries', label: '💬 문의 관리' },
-            ].map((t) => (
+              { value: 'funnel', label: t('tabs.funnel') },
+              { value: 'visitors', label: t('tabs.visitors') },
+              { value: 'logs', label: t('tabs.logs') },
+              { value: 'inquiries', label: t('tabs.inquiries') },
+            ].map((tabOpt) => (
               <button
-                key={t.value}
-                onClick={() => setTab(t.value as typeof tab)}
+                key={tabOpt.value}
+                onClick={() => setTab(tabOpt.value as typeof tab)}
                 className="px-4 py-1.5 rounded-lg transition-colors"
                 style={
-                  tab === t.value
+                  tab === tabOpt.value
                     ? { backgroundColor: 'var(--color-primary)', color: 'white' }
                     : { color: '#6B7280' }
                 }
               >
-                {t.label}
+                {tabOpt.label}
               </button>
             ))}
           </div>
@@ -844,10 +848,10 @@ export default function AdminPage() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder={
               tab === 'inquiries'
-                ? '이메일 또는 문의 내용 검색...'
+                ? t('search.inquiries')
                 : tab === 'funnel'
-                  ? '출처(utm_source) 또는 방문자 ID 검색...'
-                  : '이름, 이메일 또는 IP 검색...'
+                  ? t('search.funnel')
+                  : t('search.default')
             }
             className="flex-1 px-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2"
             style={{ '--tw-ring-color': 'var(--color-primary)' } as React.CSSProperties}
