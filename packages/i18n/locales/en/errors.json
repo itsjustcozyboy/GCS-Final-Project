@@ -4,5 +4,15 @@
   "emailInUse": "That email is already in use.",
   "emailOrPhoneRequired": "An email or phone number is required.",
   "generic": "Something went wrong. Please try again in a moment.",
-  "notFound": "Not found."
+  "notFound": "Not found.",
+  "sessionExpired": "Your session has expired. Please sign in again.",
+  "uploadRead": "Couldn't read the file. Please try again.",
+  "uploadInvalid": "That's not a valid file. Please choose again.",
+  "uploadBadFormat": "This format can't be uploaded. Only {{label}} is allowed.",
+  "uploadTooBig": "That file is too large. Only {{label}} can be uploaded.",
+  "uploadEmpty": "That file is empty. Please choose again.",
+  "uploadSaveFail": "Something went wrong saving the file. Please try again shortly.",
+  "uploadLabelPhoto": "photos up to 10MB (JPG, PNG, WEBP, HEIC)",
+  "uploadLabelVideo": "videos up to 100MB (MP4, MOV, WEBM)",
+  "uploadLabelAudio": "recordings up to 25MB"
 }

@@ -4,5 +4,15 @@
   "emailInUse": "이미 사용 중인 이메일입니다.",
   "emailOrPhoneRequired": "이메일 또는 전화번호가 필요합니다.",
   "generic": "문제가 발생했어요. 잠시 후 다시 시도해주세요.",
-  "notFound": "찾을 수 없습니다."
+  "notFound": "찾을 수 없습니다.",
+  "sessionExpired": "로그인이 만료됐어요. 다시 로그인해주세요.",
+  "uploadRead": "파일을 읽지 못했어요. 다시 시도해주세요.",
+  "uploadInvalid": "올바른 파일이 아니에요. 다시 선택해주세요.",
+  "uploadBadFormat": "이 형식은 올릴 수 없어요. {{label}}만 가능해요.",
+  "uploadTooBig": "파일이 너무 커요. {{label}}만 올릴 수 있어요.",
+  "uploadEmpty": "빈 파일이에요. 다시 선택해주세요.",
+  "uploadSaveFail": "저장 중 문제가 생겼어요. 잠시 후 다시 시도해주세요.",
+  "uploadLabelPhoto": "사진은 10MB 이하의 JPG·PNG·WEBP·HEIC 파일",
+  "uploadLabelVideo": "영상은 100MB 이하의 MP4·MOV·WEBM 파일",
+  "uploadLabelAudio": "음성은 25MB 이하의 녹음 파일"
 }
