@@ -36,6 +36,7 @@ const CONSENT_ITEMS: Array<{ key: ConsentKey; required: boolean; label: string; 
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<Step>('role');
   const [role, setRole] = useState<'child' | 'parent'>('child');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
