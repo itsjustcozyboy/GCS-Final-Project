@@ -243,23 +243,48 @@ function InlineAnswer({ questionId, connectionId }: { questionId: string; connec
 }
 
 // 부모용 — 자기 답변의 공개/비공개 전환
-function VisibilityToggle({ answerId, isPrivate, connectionId }: { answerId: string; isPrivate: boolean; connectionId: string }) {
+// 단일 출처: react-query 캐시. 탭 즉시 캐시를 낙관적으로 뒤집어 한 번에 전환되게 하고,
+// 서버 저장 실패 시 원복 + 안내한다.
+type ListInput = { connectionId: string; limit: number };
+
+function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string; isPrivate: boolean; listInput: ListInput }) {
   const utils = trpc.useUtils();
   const toggle = trpc.answer.setVisibility.useMutation({
-    onSuccess: () => void utils.question.list.invalidate({ connectionId }),
+    onMutate: async ({ isPrivate: next }) => {
+      await utils.question.list.cancel(listInput);
+      const prev = utils.question.list.getData(listInput);
+      utils.question.list.setData(listInput, (old) =>
+        old
+          ? {
+              ...old,
+              questions: old.questions.map((q) =>
+                q.answer && q.answer.id === answerId
+                  ? { ...q, answer: { ...q.answer, isPrivate: next } }
+                  : q,
+              ),
+            }
+          : old,
+      );
+      return { prev };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) utils.question.list.setData(listInput, context.prev);
+      alert('공개 설정을 바꾸지 못했어요. 잠시 후 다시 시도해주세요.');
+    },
+    onSettled: () => void utils.question.list.invalidate(listInput),
   });
 
   return (
     <button
       onClick={() => toggle.mutate({ answerId, isPrivate: !isPrivate })}
-      disabled={toggle.isPending}
-      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-colors disabled:opacity-50"
+      aria-pressed={!isPrivate}
+      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-colors"
       style={isPrivate
         ? { borderColor: '#D1D5DB', color: '#6B7280', backgroundColor: '#F9FAFB' }
         : { borderColor: 'var(--color-primary)', color: 'var(--color-primary)', backgroundColor: '#EFF7F2' }}
       title="눌러서 공개 설정 변경"
     >
-      {toggle.isPending ? '변경 중...' : isPrivate ? '🔒 비공개 (눌러서 공개)' : '💌 공개됨 (눌러서 비공개)'}
+      {isPrivate ? '🔒 비공개 (눌러서 공개)' : '💌 공개됨 (눌러서 비공개)'}
     </button>
   );
 }
