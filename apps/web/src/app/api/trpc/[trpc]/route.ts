@@ -24,7 +24,10 @@ async function createContext(req: NextRequest): Promise<Context> {
     undefined;
   const clientUserAgent = req.headers.get('user-agent') ?? undefined;
 
-  return { db: prisma, userId, sessionToken, clientIp, clientUserAgent };
+  // 미들웨어가 발급한 익명 방문자 쿠키 (httpOnly이라 클라이언트는 못 읽지만 요청에 자동 포함됨)
+  const anonymousId = req.cookies.get('maeum_aid')?.value;
+
+  return { db: prisma, userId, sessionToken, clientIp, clientUserAgent, anonymousId };
 }
 
 function handler(req: NextRequest) {
