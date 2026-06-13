@@ -854,7 +854,9 @@ export default function AdminPage() {
           />
         </div>
 
-        {tab === 'visitors' ? (
+        {tab === 'funnel' ? (
+          <FunnelView search={debouncedSearch} />
+        ) : tab === 'visitors' ? (
           <VisitorsView search={debouncedSearch} />
         ) : tab === 'logs' ? (
           <LogsView search={debouncedSearch} />
