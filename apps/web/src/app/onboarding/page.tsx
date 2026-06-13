@@ -74,6 +74,8 @@ export default function OnboardingPage() {
     onSuccess(data) {
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('userId', data.user.id);
+      // 이전 세션 캐시가 남아있을 수 있으니 새 계정 기준으로 비운다.
+      queryClient.clear();
       setStep('connect');
       if (role === 'child') createInvite.mutate({ tone });
     },
