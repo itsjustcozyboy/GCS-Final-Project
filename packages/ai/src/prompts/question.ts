@@ -1,6 +1,20 @@
-import type { QuestionContext } from '../client';
+import type { QuestionContext, Language } from '../client';
 
-export function buildQuestionSystemPrompt(): string {
+// 언어 지시 — 규칙은 동일, 출력 언어만 바꾼다. JSON 키는 항상 영어.
+function langDirective(language: Language): string {
+  if (language === 'en') {
+    return `\n\n[LANGUAGE]
+Write ALL output text (questions, answers, tips, chapter names) in natural, warm English suited to an older parent: simple, conversational, never stiff. Never use words about death, dying, "last words", or "before passing". JSON keys must stay in English.`;
+  }
+  return `\n\n[언어] 모든 출력 텍스트는 한국어로 작성한다. JSON 키는 영어 그대로 둔다.`;
+}
+
+const CHAPTERS = {
+  ko: '유년기|부모의 부모|연애·결혼|자식을 키우며|일과 삶|지금의 나|너에게',
+  en: 'Childhood|Your parents|Love & marriage|Raising children|Work & life|Who you are now|To you',
+} as const;
+
+export function buildQuestionSystemPrompt(language: Language = 'ko'): string {
   return `당신은 부모와 자식이 평생 나누지 못한 대화를 잇는 따뜻한 인터뷰어다.
 매일 부모에게 보낼 질문 1개를 생성한다.
 
@@ -19,11 +33,11 @@ export function buildQuestionSystemPrompt(): string {
   "suggestedFormat": "text|photo|video",
   "depth": 1,
   "tags": { "chapter": "챕터명", "person": "인물(선택)", "era": "시기(선택)" }
-}`;
+}${langDirective(language)}`;
 }
 
 // 자녀가 입력한 키워드 → 부모에게 보낼 질문 생성
-export function buildKeywordQuestionPrompt(keywords: string[], parentName: string, tone: 'light' | 'deep'): string {
+export function buildKeywordQuestionPrompt(keywords: string[], parentName: string, tone: 'light' | 'deep', language: Language = 'ko'): string {
   return `자녀가 부모(${parentName})에게 묻고 싶은 주제 키워드: ${keywords.join(', ')}
 대화 톤: ${tone === 'light' ? '가벼운 추억' : '깊은 인생 이야기'}
 
@@ -33,11 +47,23 @@ export function buildKeywordQuestionPrompt(keywords: string[], parentName: strin
 - 장면과 이야기를 끌어내는 열린 질문으로
 
 [출력 형식] 반드시 유효한 JSON만:
-{"question":"...","suggestedFormat":"text|photo|video","depth":2,"tags":{"chapter":"유년기|부모의 부모|연애·결혼|자식을 키우며|일과 삶|지금의 나|너에게"}}`;
+{"question":"...","suggestedFormat":"text|photo|video","depth":2,"tags":{"chapter":"${CHAPTERS[language]}"}}${langDirective(language)}`;
 }
 
 // 부모가 입력한 키워드 → 자연스러운 답변 합성 (핵심 기능)
-export function buildAnswerComposeSystemPrompt(): string {
+export function buildAnswerComposeSystemPrompt(language: Language = 'ko'): string {
+  if (language === 'en') {
+    return `You are a ghostwriter who weaves a parent's scattered memory keywords into a natural, heartfelt recollection.
+
+[Rules]
+1. Write in warm first person, as a parent speaking casually and directly to their grown child.
+2. Reflect every keyword given, but weave them into one story rather than listing them.
+3. Do not invent specific facts (names, dates, places) not in the keywords; evoke only the feeling and mood they suggest.
+4. 4–7 sentences, plain and unexaggerated.
+5. It's nice to end with a short line addressed to the child.
+
+[Output] Return only valid JSON: {"answer":"..."}`;
+  }
   return `당신은 부모의 흩어진 기억 키워드를 자연스러운 회고담으로 엮어주는 대필 작가다.
 
 [규칙]
@@ -60,8 +86,27 @@ ${keywords.join(', ')}
 위 키워드를 엮어 질문에 대한 부모의 답변을 작성하라.`;
 }
 
+export function buildAnswerGuideSystemPrompt(language: Language = 'ko'): string {
+  if (language === 'en') {
+    return "You help older parents answer their child's questions with ease. Return only valid JSON.";
+  }
+  return '당신은 부모 세대가 자녀의 질문에 부담 없이 답하도록 돕는 안내자다. 반드시 유효한 JSON만 출력한다.';
+}
+
 // 질문에 맞는 형식별 답변 가이드
-export function buildAnswerGuidePrompt(question: string): string {
+export function buildAnswerGuidePrompt(question: string, language: Language = 'ko'): string {
+  if (language === 'en') {
+    return `[Question the child sent to the parent]
+${question}
+
+Create a per-format guide so the parent can answer this question with ease.
+- For each of text, photo, audio, video
+- tip: a concrete suggestion for answering this question in that format (1–2 sentences, at an older parent's eye level)
+- include a starter (example first sentence) for text
+
+[Output] Return only valid JSON:
+{"guides":[{"format":"text","title":"✍️ Answer in writing","tip":"...","starter":"..."},{"format":"photo","title":"📸 Answer with a photo","tip":"..."},{"format":"audio","title":"🎤 Answer by voice","tip":"..."},{"format":"video","title":"🎥 Answer with a video","tip":"..."}]}`;
+  }
   return `[자녀가 부모에게 보낸 질문]
 ${question}
 

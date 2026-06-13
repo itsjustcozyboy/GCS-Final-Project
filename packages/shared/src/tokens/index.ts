@@ -44,3 +44,18 @@ export const CHAPTERS = [
 ] as const;
 
 export type Chapter = (typeof CHAPTERS)[number];
+
+export const EN_CHAPTERS = [
+  'Childhood',
+  'Your parents',
+  'Love & marriage',
+  'Raising children',
+  'Work & life',
+  'Who you are now',
+  'To you',
+] as const;
+
+export const CHAPTERS_BY_LOCALE = {
+  ko: CHAPTERS,
+  en: EN_CHAPTERS,
+} as const;

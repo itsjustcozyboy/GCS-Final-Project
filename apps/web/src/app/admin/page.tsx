@@ -45,6 +45,7 @@ function VisitorsView({ search }: { search: string }) {
   const [orderBy, setOrderBy] = useState<'lastVisit_desc' | 'visitCount_desc'>('lastVisit_desc');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const utils = trpc.useUtils();
 
   const { data, isLoading, refetch } = trpc.admin.getVisitors.useQuery({
     search: search || undefined,
@@ -55,7 +56,14 @@ function VisitorsView({ search }: { search: string }) {
     onSuccess: () => {
       setSelected(new Set());
       setShowDeleteModal(false);
-      void refetch();
+      void Promise.all([
+        refetch(),
+        utils.admin.funnelSummary.invalidate(),
+        utils.admin.channelStats.invalidate(),
+        utils.admin.anonymousVisitors.invalidate(),
+        utils.admin.convertedVisitors.invalidate(),
+        utils.admin.visitorTrend.invalidate(),
+      ]);
     },
   });
 

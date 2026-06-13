@@ -27,7 +27,7 @@ async function main() {
   await expectThrow('내용 10자 미만 거부', () => anon.inquiry.submit({ email: 'a@b.kr', message: '짧음' }));
   await expectThrow('이메일 형식 검증', () => anon.inquiry.submit({ email: 'not-an-email', message: '충분히 긴 문의 내용입니다.' }));
   await expectThrow('honeypot 채우면 거부', () =>
-    // @ts-expect-error honeypot은 max(0)이므로 의도적 위반
+    // honeypot은 max(0)이므로 의도적 위반
     anon.inquiry.submit({ email: 'a@b.kr', message: '충분히 긴 문의 내용입니다.', website: 'spam.com' }));
 
   const anonResult = await anon.inquiry.submit({ email: 'guest@test.kr', category: 'bug', message: '비로그인 상태에서 보내는 문의입니다.' });

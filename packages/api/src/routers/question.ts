@@ -3,6 +3,7 @@ import { router, protectedProcedure, type Context } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendDailyQuestion, deliverQuestion, calcNextDepth } from '../services/question-engine';
 import { createAIClient } from '@maeum/ai';
+import type { Language } from '@maeum/ai';
 
 type AnswerWithRelations = {
   id: string;
@@ -40,10 +41,14 @@ function maskAnswer<T extends AnswerWithRelations>(
   };
 }
 
+function languageFromLocale(locale?: string | null): Language {
+  return locale === 'en' ? 'en' : 'ko';
+}
+
 async function getOwnedConnection(db: Context['db'], connectionId: string, userId: string) {
   const conn = await db.connection.findUnique({
     where: { id: connectionId },
-    include: { fromUser: { select: { id: true, name: true } } },
+    include: { fromUser: { select: { id: true, name: true, locale: true } } },
   });
   if (!conn) throw new TRPCError({ code: 'NOT_FOUND' });
   if (conn.fromUserId !== userId && conn.toUserId !== userId) {
@@ -115,6 +120,7 @@ export const questionRouter = router({
     .input(z.object({ connectionId: z.string() }))
     .query(async ({ ctx, input }) => {
       const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
+      const language = languageFromLocale(conn.fromUser.locale);
 
       const depth = calcNextDepth(conn.currentDepth, conn.skipCount, conn.answerCount);
       const sent = await ctx.db.question.findMany({
@@ -126,6 +132,7 @@ export const questionRouter = router({
       // 큐레이션 풀에서 현재 깊이 ±1 범위의 미사용 질문
       const curated = await ctx.db.curatedQuestion.findMany({
         where: {
+          language,
           depth: { gte: Math.max(1, depth - 1), lte: Math.min(5, depth + 1) },
           body: { notIn: usedBodies },
         },
@@ -149,6 +156,7 @@ export const questionRouter = router({
         tone: conn.tone,
         currentDepth: depth,
         recentAnswerSummary: recentAnswers.map((a) => a.body).filter(Boolean).join('. ') || undefined,
+        language,
       });
 
       const suggestions = [
@@ -183,12 +191,14 @@ export const questionRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
+      const language = languageFromLocale(conn.fromUser.locale);
 
       const ai = createAIClient();
       const generated = await ai.generateQuestionFromKeywords({
         keywords: input.keywords,
         parentName: conn.fromUser?.name ?? '부모님',
         tone: conn.tone,
+        language,
       });
 
       return {
@@ -209,11 +219,12 @@ export const questionRouter = router({
       source: z.enum(['ai', 'curated', 'custom']).default('custom'),
     }))
     .mutation(async ({ ctx, input }) => {
-      await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
+      const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
+      const language = languageFromLocale(conn.fromUser.locale);
       return deliverQuestion(ctx.db, input.connectionId, {
         body: input.body,
         depth: input.depth,
-        chapterTag: input.chapterTag ?? '지금의 나',
+        chapterTag: input.chapterTag ?? (language === 'en' ? 'Who you are now' : '지금의 나'),
         source: input.source,
       });
     }),

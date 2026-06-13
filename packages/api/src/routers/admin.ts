@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { hashIp } from '../services/funnel';
 
 // 관리자 전용 procedure (로그인 검증 + admins 테이블 검증)
 export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
@@ -169,26 +170,86 @@ export const adminRouter = router({
       message: '삭제할 대상을 선택해주세요.',
     }))
     .mutation(async ({ ctx, input }) => {
-      const { count } = await ctx.db.accessLog.deleteMany({
-        where: {
+      const ipHashes = input.ipAddresses.map((ip) => hashIp(ip)).filter((v): v is string => !!v);
+
+      const result = await ctx.db.$transaction(async (tx) => {
+        const convertedVisitors = input.userIds.length
+          ? await tx.visitor.findMany({
+              where: { convertedUserId: { in: input.userIds } },
+              select: { anonymousId: true },
+            })
+          : [];
+        const ipEvents = ipHashes.length
+          ? await tx.visitorEvent.findMany({
+              where: { ipHash: { in: ipHashes } },
+              distinct: ['anonymousId'],
+              select: { anonymousId: true },
+            })
+          : [];
+
+        const anonymousIds = [
+          ...new Set([...convertedVisitors, ...ipEvents].map((v) => v.anonymousId)),
+        ];
+
+        const accessLogWhere = {
           OR: [
             ...(input.userIds.length ? [{ userId: { in: input.userIds } }] : []),
             ...(input.ipAddresses.length
               ? [{ userId: null, ipAddress: { in: input.ipAddresses } }]
               : []),
           ],
-        },
+        };
+
+        const accessLogs = await tx.accessLog.deleteMany({ where: accessLogWhere });
+
+        const conversionEvents =
+          input.userIds.length || anonymousIds.length
+            ? await tx.conversionEvent.deleteMany({
+                where: {
+                  OR: [
+                    ...(input.userIds.length ? [{ userId: { in: input.userIds } }] : []),
+                    ...(anonymousIds.length ? [{ anonymousId: { in: anonymousIds } }] : []),
+                  ],
+                },
+              })
+            : { count: 0 };
+
+        const visitorEvents = anonymousIds.length
+          ? await tx.visitorEvent.deleteMany({ where: { anonymousId: { in: anonymousIds } } })
+          : { count: 0 };
+
+        const visitors =
+          anonymousIds.length || input.userIds.length
+            ? await tx.visitor.deleteMany({
+                where: {
+                  OR: [
+                    ...(anonymousIds.length ? [{ anonymousId: { in: anonymousIds } }] : []),
+                    ...(input.userIds.length ? [{ convertedUserId: { in: input.userIds } }] : []),
+                  ],
+                },
+              })
+            : { count: 0 };
+
+        await tx.adminAudit.create({
+          data: {
+            adminId: ctx.userId,
+            action: 'delete_visitors',
+            targetIds: [...input.userIds.map((id) => `user:${id}`), ...input.ipAddresses.map((ip) => `ip:${ip}`)],
+          },
+        });
+
+        return {
+          accessLogs: accessLogs.count,
+          visitors: visitors.count,
+          visitorEvents: visitorEvents.count,
+          conversionEvents: conversionEvents.count,
+        };
       });
 
-      await ctx.db.adminAudit.create({
-        data: {
-          adminId: ctx.userId,
-          action: 'delete_visitors',
-          targetIds: [...input.userIds.map((id) => `user:${id}`), ...input.ipAddresses.map((ip) => `ip:${ip}`)],
-        },
-      });
-
-      return { deletedCount: count };
+      return {
+        deletedCount: result.accessLogs + result.visitors + result.visitorEvents + result.conversionEvents,
+        ...result,
+      };
     }),
 
   deleteLogs: adminProcedure

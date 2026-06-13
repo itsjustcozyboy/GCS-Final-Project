@@ -1,5 +1,8 @@
 import type { QuestionDepth, QuestionTags } from '@maeum/shared';
 
+// AI 생성 콘텐츠의 출력 언어 — UI 언어와 별개로 '그 사용자(주로 부모/응답자)의 언어'를 따른다.
+export type Language = 'ko' | 'en';
+
 export interface QuestionContext {
   parentName: string;
   parentAge?: number;
@@ -12,6 +15,7 @@ export interface QuestionContext {
   recentWellAnsweredTopics?: string[];
   dayOfWeek?: string;
   season?: string;
+  language?: Language; // 질문 출력 언어 (대상=부모의 언어). 기본 ko.
 }
 
 export interface QuestionOutput {
@@ -25,6 +29,7 @@ export interface BookChapterInput {
   chapterName: string;
   answers: Array<{ question: string; answer: string; format: string }>;
   styleSample?: string;
+  language?: Language;
 }
 
 export interface BookChapterOutput {
@@ -37,6 +42,7 @@ export interface QuestionFromKeywordsInput {
   keywords: string[];
   parentName: string;
   tone: 'light' | 'deep';
+  language?: Language;
 }
 
 // 부모: 키워드 → 답변 합성 (핵심 훅 — 낯간지러운 이야기를 키워드만으로)
@@ -44,6 +50,7 @@ export interface AnswerFromKeywordsInput {
   question: string;
   keywords: string[];
   parentName?: string;
+  language?: Language;
 }
 
 export interface AnswerFromKeywordsOutput {
@@ -53,6 +60,7 @@ export interface AnswerFromKeywordsOutput {
 // 부모: 형식별 답변 가이드 (글/사진/영상/음성)
 export interface AnswerGuideInput {
   question: string;
+  language?: Language;
 }
 
 export interface AnswerGuideOutput {

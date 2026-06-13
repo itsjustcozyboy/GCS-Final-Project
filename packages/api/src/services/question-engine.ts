@@ -1,5 +1,6 @@
 import type { prisma as PrismaType } from '@maeum/db';
 import { createAIClient } from '@maeum/ai';
+import type { Language } from '@maeum/ai';
 import { createChannelAdapter } from '@maeum/channel';
 import type { QuestionDepth } from '@maeum/shared';
 
@@ -8,6 +9,10 @@ type DB = typeof PrismaType;
 // M6: 발송 게이트 — SensitiveStatus 체크
 function isSendBlocked(status: string): boolean {
   return status === 'paused_health' || status === 'deceased' || status === 'memorial';
+}
+
+function languageFromLocale(locale?: string | null): Language {
+  return locale === 'en' ? 'en' : 'ko';
 }
 
 // M2: 적응형 깊이 조정
@@ -45,6 +50,7 @@ export async function selectQuestion(db: DB, connectionId: string) {
     return { blocked: true, reason: connection.sensitiveStatus };
   }
 
+  const language = languageFromLocale(connection.fromUser.locale);
   const depth = calcNextDepth(
     connection.currentDepth,
     connection.skipCount,
@@ -57,6 +63,7 @@ export async function selectQuestion(db: DB, connectionId: string) {
   // 큐레이션 풀에서 미사용 질문 선택
   const candidate = await db.curatedQuestion.findFirst({
     where: {
+      language,
       depth,
       body: { notIn: usedBodies },
     },
@@ -99,6 +106,7 @@ export async function selectQuestion(db: DB, connectionId: string) {
     currentDepth: depth,
     recentAnswerSummary: recentAnswers || undefined,
     recentSkippedTopics: skippedTopics.length ? skippedTopics : undefined,
+    language,
   });
 
   return {

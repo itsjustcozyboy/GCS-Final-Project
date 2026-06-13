@@ -2,6 +2,30 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { createAIClient, RateLimitError } from '@maeum/ai';
+import type { Language } from '@maeum/ai';
+
+function languageFromLocale(locale?: string | null): Language {
+  return locale === 'en' ? 'en' : 'ko';
+}
+
+function actorLanguage(
+  connection: {
+    fromUserId: string;
+    toUserId: string;
+    fromUser?: { locale: string | null } | null;
+    toUser?: { locale: string | null } | null;
+  },
+  userId: string,
+  requestLocale?: string | null,
+): Language {
+  const profileLocale =
+    connection.fromUserId === userId
+      ? connection.fromUser?.locale
+      : connection.toUserId === userId
+        ? connection.toUser?.locale
+        : null;
+  return languageFromLocale(profileLocale ?? requestLocale);
+}
 
 export const answerRouter = router({
   // 답변 제출 — 공개/비공개는 부모(작성자)가 선택
@@ -51,7 +75,14 @@ export const answerRouter = router({
     .mutation(async ({ ctx, input }) => {
       const question = await ctx.db.question.findUnique({
         where: { id: input.questionId },
-        include: { connection: { include: { fromUser: { select: { name: true } } } } },
+        include: {
+          connection: {
+            include: {
+              fromUser: { select: { name: true, locale: true } },
+              toUser: { select: { locale: true } },
+            },
+          },
+        },
       });
       if (!question) throw new TRPCError({ code: 'NOT_FOUND' });
       if (question.connection.fromUserId !== ctx.userId && question.connection.toUserId !== ctx.userId) {
@@ -60,10 +91,12 @@ export const answerRouter = router({
 
       const ai = createAIClient();
       try {
+        const language = actorLanguage(question.connection, ctx.userId, ctx.locale);
         const composed = await ai.composeAnswerFromKeywords({
           question: question.body,
           keywords: input.keywords,
           parentName: question.connection.fromUser?.name,
+          language,
         });
         return { draft: composed.answer, keywords: input.keywords };
       } catch (e) {
@@ -84,7 +117,14 @@ export const answerRouter = router({
     .query(async ({ ctx, input }) => {
       const question = await ctx.db.question.findUnique({
         where: { id: input.questionId },
-        include: { connection: true },
+        include: {
+          connection: {
+            include: {
+              fromUser: { select: { locale: true } },
+              toUser: { select: { locale: true } },
+            },
+          },
+        },
       });
       if (!question) throw new TRPCError({ code: 'NOT_FOUND' });
       if (question.connection.fromUserId !== ctx.userId && question.connection.toUserId !== ctx.userId) {
@@ -92,7 +132,10 @@ export const answerRouter = router({
       }
 
       const ai = createAIClient();
-      return ai.suggestAnswerGuide({ question: question.body });
+      return ai.suggestAnswerGuide({
+        question: question.body,
+        language: actorLanguage(question.connection, ctx.userId, ctx.locale),
+      });
     }),
 
   // 공개/비공개 전환 — 작성자(부모)만 가능

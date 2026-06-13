@@ -16,6 +16,7 @@ import {
   buildKeywordQuestionPrompt,
   buildAnswerComposeSystemPrompt,
   buildAnswerComposePrompt,
+  buildAnswerGuideSystemPrompt,
   buildAnswerGuidePrompt,
 } from './prompts/question';
 import { buildBookSystemPrompt, buildBookUserPrompt } from './prompts/book';
@@ -106,7 +107,7 @@ export class GeminiAIClient implements AIClient {
   async generateQuestion(ctx: QuestionContext): Promise<QuestionOutput> {
     try {
       return await this.jsonRequest<QuestionOutput>(
-        buildQuestionSystemPrompt(),
+        buildQuestionSystemPrompt(ctx.language ?? 'ko'),
         buildQuestionUserPrompt(ctx),
         512,
       );
@@ -119,8 +120,8 @@ export class GeminiAIClient implements AIClient {
   async generateQuestionFromKeywords(input: QuestionFromKeywordsInput): Promise<QuestionOutput> {
     try {
       return await this.jsonRequest<QuestionOutput>(
-        buildQuestionSystemPrompt(),
-        buildKeywordQuestionPrompt(input.keywords, input.parentName, input.tone),
+        buildQuestionSystemPrompt(input.language ?? 'ko'),
+        buildKeywordQuestionPrompt(input.keywords, input.parentName, input.tone, input.language ?? 'ko'),
         512,
       );
     } catch (e) {
@@ -132,7 +133,7 @@ export class GeminiAIClient implements AIClient {
   async composeAnswerFromKeywords(input: AnswerFromKeywordsInput): Promise<AnswerFromKeywordsOutput> {
     try {
       return await this.jsonRequest<AnswerFromKeywordsOutput>(
-        buildAnswerComposeSystemPrompt(),
+        buildAnswerComposeSystemPrompt(input.language ?? 'ko'),
         buildAnswerComposePrompt(input.question, input.keywords),
         1024,
       );
@@ -146,9 +147,10 @@ export class GeminiAIClient implements AIClient {
 
   async suggestAnswerGuide(input: AnswerGuideInput): Promise<AnswerGuideOutput> {
     try {
+      const language = input.language ?? 'ko';
       return await this.jsonRequest<AnswerGuideOutput>(
-        '당신은 부모 세대가 자녀의 질문에 부담 없이 답하도록 돕는 안내자다. 반드시 유효한 JSON만 출력한다.',
-        buildAnswerGuidePrompt(input.question),
+        buildAnswerGuideSystemPrompt(language),
+        buildAnswerGuidePrompt(input.question, language),
         1024,
       );
     } catch (e) {
@@ -160,7 +162,7 @@ export class GeminiAIClient implements AIClient {
   async editBookChapter(input: BookChapterInput): Promise<BookChapterOutput> {
     try {
       return await this.jsonRequest<BookChapterOutput>(
-        buildBookSystemPrompt(),
+        buildBookSystemPrompt(input.language ?? 'ko'),
         buildBookUserPrompt(input),
         4096,
       );
