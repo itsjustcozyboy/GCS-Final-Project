@@ -797,7 +797,7 @@ export default function AdminPage() {
 
   if (checkingAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+      <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
         <p className="text-gray-400">권한 확인 중...</p>
       </div>
     );
@@ -806,8 +806,8 @@ export default function AdminPage() {
   if (!adminCheck?.isAdmin) return null;
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
-      <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+    <div className="min-h-dvh" style={{ background: 'var(--color-background)' }}>
+      <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => router.push('/feed')} className="text-gray-400 hover:text-gray-600 text-sm">← 피드</button>
           <h1 className="text-xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>관리자 대시보드</h1>

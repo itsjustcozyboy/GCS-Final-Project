@@ -8,8 +8,8 @@ export const metadata: Metadata = { title: '개인정보 처리방침 — 마음
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen px-6 py-12 max-w-2xl mx-auto" style={{ background: 'var(--color-background)' }}>
-      <Link href="/profile" className="text-sm text-gray-400 hover:text-gray-600">← 돌아가기</Link>
+    <main className="min-h-dvh px-4 py-10 sm:px-6 sm:py-12 max-w-2xl mx-auto break-keep" style={{ background: 'var(--color-background)' }}>
+      <Link href="/profile" className="inline-flex items-center min-h-11 text-sm text-gray-400 hover:text-gray-600">← 돌아가기</Link>
 
       <h1 className="text-2xl font-bold mt-6 mb-2" style={{ color: 'var(--color-primary-dark)' }}>
         개인정보 처리방침

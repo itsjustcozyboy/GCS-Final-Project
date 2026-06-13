@@ -28,8 +28,8 @@ const FAQS: Array<{ q: string; a: string }> = [
 
 export default function FaqPage() {
   return (
-    <main className="min-h-screen px-6 py-12 max-w-2xl mx-auto" style={{ background: 'var(--color-background)' }}>
-      <Link href="/profile" className="text-sm text-gray-400 hover:text-gray-600">← 돌아가기</Link>
+    <main className="min-h-dvh px-4 py-10 sm:px-6 sm:py-12 max-w-2xl mx-auto break-keep" style={{ background: 'var(--color-background)' }}>
+      <Link href="/profile" className="inline-flex items-center min-h-11 text-sm text-gray-400 hover:text-gray-600">← 돌아가기</Link>
 
       <h1 className="text-2xl font-bold mt-6 mb-8" style={{ color: 'var(--color-primary-dark)' }}>
         자주 묻는 질문
@@ -56,7 +56,7 @@ export default function FaqPage() {
         <p className="text-sm text-gray-500">직접 물어봐 주세요. 빠르게 확인해 답변드릴게요.</p>
         <Link
           href="/profile/inquiry"
-          className="inline-block px-6 py-3 rounded-2xl text-white text-base font-semibold"
+          className="inline-flex min-h-12 items-center justify-center px-6 py-3 rounded-2xl text-white text-base font-semibold"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
           💬 서비스 문의하기
