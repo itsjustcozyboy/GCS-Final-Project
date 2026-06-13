@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { InquiryForm } from '@/components/InquiryForm';
 
 export const metadata: Metadata = { title: '자주 묻는 질문 — 마음 잇기' };
 
