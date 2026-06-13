@@ -3,6 +3,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { POLICY_VERSION } from '@maeum/shared';
 import { recordConversion } from '../services/funnel';
+import { tErr } from '../trpc';
 
 export const authRouter = router({
   register: publicProcedure
@@ -28,7 +29,7 @@ export const authRouter = router({
 
       if (userData.email) {
         const existing = await ctx.db.user.findUnique({ where: { email: userData.email } });
-        if (existing) throw new TRPCError({ code: 'CONFLICT', message: '이미 사용 중인 이메일입니다.' });
+        if (existing) throw new TRPCError({ code: 'CONFLICT', message: tErr(ctx, 'emailInUse') });
       }
 
       const { createHash } = await import('crypto');
@@ -138,7 +139,7 @@ export const authRouter = router({
         },
       });
 
-      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
+      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: tErr(ctx, 'invalidCredentials') });
 
       const { createHash } = await import('crypto');
       const salt = process.env.PASSWORD_SALT ?? 'maeum-salt';
@@ -149,7 +150,7 @@ export const authRouter = router({
 
       if (!isValidPassword) {
         console.error(`[auth.login] 비밀번호 불일치 userId=${user.id}`);
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: tErr(ctx, 'invalidCredentials') });
       }
 
       await ctx.db.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });

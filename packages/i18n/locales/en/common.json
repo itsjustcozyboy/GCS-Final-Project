@@ -27,5 +27,59 @@
   "meta": {
     "title": "Maeum Itgi — letters between generations",
     "description": "One question a day brings parents and children closer, gathered into a book."
+  },
+  "legalLinks": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "faq": "FAQ",
+    "inquiry": "Contact us"
+  },
+  "landing": {
+    "hero": {
+      "title": "One question a day turns your parent's stories into a book.",
+      "subtitle": "When your parent answers the questions you send, those stories come together as a single book.",
+      "start": "Get started",
+      "haveAccount": "I already have an account →"
+    },
+    "how": {
+      "heading": "How it works",
+      "1": {
+        "title": "Send a question",
+        "desc": "Send today's question — or let your parent share a thought with you first."
+      },
+      "2": {
+        "title": "Answer with ease",
+        "desc": "Your parent can reply however feels easiest: in writing, photos, video, or voice."
+      },
+      "3": {
+        "title": "It becomes a book",
+        "desc": "Every story you share is gathered, page by page, into one book."
+      }
+    },
+    "values": {
+      "heading": "Why Maeum Itgi",
+      "1": {
+        "title": "One easy question a day",
+        "desc": "Just one question a day, starting with the easy ones, at a gentle pace."
+      },
+      "2": {
+        "title": "Your parent's voice, as it is",
+        "desc": "We keep their words just the way they say them — genuine and unpolished."
+      },
+      "3": {
+        "title": "A book you can hold any time",
+        "desc": "Once enough stories gather, you can receive them as a book whenever you like."
+      }
+    },
+    "channel": {
+      "heading": "📱 For now, answer in the app or on the web",
+      "body": "Parents can answer right in the app or on the web. Large text and simple buttons keep it easy.",
+      "comingSoon": "🔜 Coming soon: reply via KakaoTalk / SMS.",
+      "comingSoonBadge": "(in preparation)"
+    },
+    "footer": {
+      "contact": "Contact:",
+      "admin": "🔐 Admin"
+    }
   }
 }

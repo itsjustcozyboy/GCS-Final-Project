@@ -1,1 +1,8 @@
-{}
+{
+  "loginRequired": "Please sign in to continue.",
+  "invalidCredentials": "That email or password doesn't match.",
+  "emailInUse": "That email is already in use.",
+  "emailOrPhoneRequired": "An email or phone number is required.",
+  "generic": "Something went wrong. Please try again in a moment.",
+  "notFound": "Not found."
+}

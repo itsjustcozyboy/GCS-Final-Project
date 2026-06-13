@@ -1,21 +1,25 @@
 import { LanguageToggle } from '@/components/LanguageToggle';
 import Link from 'next/link';
 import { AdminLink } from '@/components/AdminLink';
+import { getServerT } from '@/lib/i18n-server';
 
 // TODO: 회사/서비스명 확정 시 푸터 카피 갱신 (현재 서비스명: 마음 잇기)
-const HOW_IT_WORKS = [
-  { step: '1', icon: '✉️', title: '질문을 보내요', desc: '자녀가 오늘의 질문을 보내거나, 부모님이 먼저 마음을 전해요.' },
-  { step: '2', icon: '🗣️', title: '편하게 답해요', desc: '부모님이 글·사진·영상·음성, 편한 방식으로 답하면 돼요.' },
-  { step: '3', icon: '📖', title: '책으로 모여요', desc: '주고받은 이야기가 차곡차곡 쌓여 한 권의 책이 됩니다.' },
-];
+const HOW_ICONS = ['✉️', '🗣️', '📖'];
+const VALUE_ICONS = ['🌱', '💬', '📚'];
 
-const VALUES = [
-  { icon: '🌱', title: '매일 부담 없이 하나씩', desc: '하루 한 질문, 답하기 쉬운 것부터 천천히.' },
-  { icon: '💬', title: '부모님의 진짜 말투 그대로', desc: '꾸미지 않은 그분의 목소리를 그대로 담아요.' },
-  { icon: '📚', title: '생전에도 중간 책으로', desc: '이야기가 모이면 언제든 한 권으로 받아볼 수 있어요.' },
-];
+export default async function Home() {
+  const t = await getServerT('common');
+  const how = ['1', '2', '3'].map((n, i) => ({
+    icon: HOW_ICONS[i],
+    title: t(`landing.how.${n}.title`),
+    desc: t(`landing.how.${n}.desc`),
+  }));
+  const values = ['1', '2', '3'].map((n, i) => ({
+    icon: VALUE_ICONS[i],
+    title: t(`landing.values.${n}.title`),
+    desc: t(`landing.values.${n}.desc`),
+  }));
 
-export default function Home() {
   return (
     <main className="min-h-dvh" style={{ background: 'var(--color-background)' }}>
       <div className="w-full max-w-5xl mx-auto px-4 py-10 sm:px-6 sm:py-14 lg:py-20 space-y-12 sm:space-y-16">
@@ -24,10 +28,10 @@ export default function Home() {
         <section className="max-w-2xl mx-auto text-center space-y-5 break-keep">
           <div className="text-4xl sm:text-5xl" aria-hidden>💌</div>
           <h1 className="text-[26px] sm:text-[32px] md:text-4xl leading-snug font-bold text-balance" style={{ color: 'var(--color-primary-dark)' }}>
-            매일 질문 하나로,<br />부모님의 이야기를 책으로 남겨요
+            {t('landing.hero.title')}
           </h1>
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-balance">
-            자녀가 보낸 질문에 부모님이 답하면,<br />그 이야기가 한 권의 책으로 모입니다.
+            {t('landing.hero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row sm:justify-center gap-3 pt-2">
             <Link
@@ -35,14 +39,14 @@ export default function Home() {
               className="flex min-h-12 w-full sm:w-auto items-center justify-center px-6 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold transition-opacity hover:opacity-90"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              시작하기
+              {t('landing.hero.start')}
             </Link>
             <Link
               href="/login"
               className="flex min-h-12 w-full sm:w-auto items-center justify-center px-6 py-3 rounded-2xl font-medium"
               style={{ color: 'var(--color-primary)' }}
             >
-              이미 계정이 있어요 →
+              {t('landing.hero.haveAccount')}
             </Link>
           </div>
           <AdminLink />
@@ -50,16 +54,16 @@ export default function Home() {
 
         {/* 2. 작동 방식 (3단계) */}
         <section className="space-y-6 break-keep">
-          <h2 className="text-center text-xl font-bold text-gray-900">이렇게 이어져요</h2>
+          <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.how.heading')}</h2>
           <ol className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {HOW_IT_WORKS.map((s) => (
-              <li key={s.step} className="flex items-start gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+            {how.map((s, i) => (
+              <li key={i} className="flex items-start gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
                 <span
                   className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                   aria-hidden
                 >
-                  {s.step}
+                  {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-base font-semibold text-gray-900">
@@ -74,10 +78,10 @@ export default function Home() {
 
         {/* 3. 핵심 가치 */}
         <section className="space-y-6 break-keep">
-          <h2 className="text-center text-xl font-bold text-gray-900">왜 마음 잇기인가요</h2>
+          <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.values.heading')}</h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {VALUES.map((v) => (
-              <div key={v.title} className="flex gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+            {values.map((v, i) => (
+              <div key={i} className="flex gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
                 <span className="shrink-0 text-2xl mt-0.5" aria-hidden>{v.icon}</span>
                 <div className="min-w-0">
                   <p className="text-base font-semibold text-gray-900">{v.title}</p>
@@ -94,28 +98,28 @@ export default function Home() {
           style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }}
         >
           <p className="text-base font-semibold" style={{ color: 'var(--color-primary-dark)' }}>
-            📱 지금은 앱·웹에서 답해요
+            {t('landing.channel.heading')}
           </p>
           <p className="text-[15px] text-gray-600 leading-relaxed">
-            부모님은 앱이나 웹에서 질문에 답하실 수 있어요. 큰 글씨와 간단한 버튼으로 어렵지 않아요.
+            {t('landing.channel.body')}
           </p>
           <p className="text-[15px] text-gray-500 leading-relaxed">
-            🔜 곧 <strong>카카오톡·문자</strong>로도 답하실 수 있어요. <span className="text-gray-400">(준비 중)</span>
+            {t('landing.channel.comingSoon')} <span className="text-gray-400">{t('landing.channel.comingSoonBadge')}</span>
           </p>
         </section>
 
         {/* 5. 푸터 */}
         <footer className="pt-8 border-t border-gray-100 space-y-4 text-center">
           <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-500">
-            <Link href="/terms" className="hover:text-gray-800">이용약관</Link>
-            <Link href="/privacy" className="hover:text-gray-800">개인정보 처리방침</Link>
-            <Link href="/faq" className="hover:text-gray-800">자주 묻는 질문</Link>
-            <Link href="/profile/inquiry" className="hover:text-gray-800">서비스 문의</Link>
+            <Link href="/terms" className="hover:text-gray-800">{t('legalLinks.terms')}</Link>
+            <Link href="/privacy" className="hover:text-gray-800">{t('legalLinks.privacy')}</Link>
+            <Link href="/faq" className="hover:text-gray-800">{t('legalLinks.faq')}</Link>
+            <Link href="/profile/inquiry" className="hover:text-gray-800">{t('legalLinks.inquiry')}</Link>
           </nav>
           <p className="text-xs text-gray-400">
-            문의: <a href="mailto:leokor1214@gachon.ac.kr" className="underline">leokor1214@gachon.ac.kr</a>
+            {t('landing.footer.contact')} <a href="mailto:leokor1214@gachon.ac.kr" className="underline">leokor1214@gachon.ac.kr</a>
           </p>
-          <Link href="/admin" className="inline-block text-xs text-gray-300 hover:text-gray-500">🔐 관리자</Link>
+          <Link href="/admin" className="inline-block text-xs text-gray-300 hover:text-gray-500">{t('landing.footer.admin')}</Link>
         </footer>
       </div>
     </main>

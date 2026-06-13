@@ -1,1 +1,92 @@
-{}
+{
+  "role": {
+    "title": "Welcome to Maeum Itgi",
+    "subtitle": "How will you use this app?",
+    "child": {
+      "title": "Child · the one who receives the stories",
+      "desc": "Send questions to your parent and receive their answers"
+    },
+    "parent": {
+      "title": "Parent · the one who shares the stories",
+      "desc": "Answer your child's questions and share your memories"
+    }
+  },
+  "info": {
+    "title": "Tell us a little about you",
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter your name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Email address"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "At least 6 characters"
+    },
+    "tone": {
+      "label": "Tone of conversation with your parent",
+      "light": {
+        "label": "🌸 Light memories",
+        "desc": "Start with everyday stories"
+      },
+      "deep": {
+        "label": "🌊 Deeper life stories",
+        "desc": "Meaning and values in life"
+      }
+    },
+    "submitting": "Signing up...",
+    "continue": "Continue",
+    "needConsent": "Please agree to the required items"
+  },
+  "consent": {
+    "all": "Agree to all",
+    "required": "Required",
+    "optional": "Optional",
+    "viewFull": "Read full text",
+    "requiredNotice": "You must agree to all required items to sign up. Declining the optional items has no effect on your use of the service.",
+    "privacy": {
+      "label": "Consent to collection and use of personal information",
+      "desc": "Items: email, name, password, role, answer content / Purpose: account identification, delivering questions and answers, creating the book / Retention: deleted when you leave"
+    },
+    "terms": {
+      "label": "Agreement to the Terms of Service"
+    },
+    "age14": {
+      "label": "I am 14 years of age or older",
+      "desc": "Those under 14 need a legal guardian's consent and cannot sign up at this time."
+    },
+    "analytics": {
+      "label": "Consent to collecting access info (IP, device) for service improvement and analytics",
+      "desc": "Declining has no effect on signing up or using the service; if you decline, we don't collect identifying analytics data. Retention: until you leave or 12 months."
+    },
+    "marketing": {
+      "label": "Consent to receive marketing and news notifications"
+    }
+  },
+  "connect": {
+    "child": {
+      "title": "Send your invite code",
+      "subtitle": "When your parent enters this code, you'll be connected.",
+      "codeLabel": "Code to share with your parent",
+      "sent": "I've shared the code"
+    },
+    "parent": {
+      "title": "Enter your child's invite code",
+      "subtitle": "Enter the invite code your child created to connect.",
+      "codeLabel": "Invite code",
+      "later": "I'll connect later"
+    },
+    "generating": "Generating",
+    "regenerate": "Regenerate",
+    "connecting": "Connecting...",
+    "connect": "Connect"
+  },
+  "done": {
+    "title": "You're all set!",
+    "child": "When your parent enters the code, you'll see the news in your feed.",
+    "parent": "Once connected, you'll see each other's updates in your feed.",
+    "goFeed": "Go to your feed"
+  }
+}

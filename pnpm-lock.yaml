@@ -180,6 +180,9 @@ importers:
       '@maeum/db':
         specifier: workspace:*
         version: link:../db
+      '@maeum/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@maeum/shared':
         specifier: workspace:*
         version: link:../shared

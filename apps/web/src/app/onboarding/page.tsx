@@ -2,51 +2,31 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/lib/trpc';
 import { trackCompleteRegistration } from '@/components/MarketingPixels';
 
 type Step = 'role' | 'info' | 'connect' | 'done';
-
 type ConsentKey = 'privacy' | 'terms' | 'age14' | 'analytics' | 'marketing';
 
-const CONSENT_ITEMS: Array<{ key: ConsentKey; required: boolean; label: string; link?: string; desc?: string }> = [
-  {
-    key: 'privacy',
-    required: true,
-    label: '서비스 이용을 위한 개인정보 수집·이용 동의',
-    link: '/privacy',
-    desc: '항목: 이메일·이름·비밀번호·역할·답변 콘텐츠 / 목적: 회원 식별, 질문·답변 전달, 책 제작 / 보유: 탈퇴 시 파기',
-  },
-  { key: 'terms', required: true, label: '이용약관 동의', link: '/terms' },
-  {
-    key: 'age14',
-    required: true,
-    label: '만 14세 이상입니다',
-    // TODO: 만 14세 미만 법정대리인 동의 절차(보호자 이메일 동의) 도입 전까지는 만 14세 이상만 가입 가능
-    desc: '만 14세 미만은 법정대리인 동의가 필요하여 현재 가입할 수 없어요.',
-  },
-  {
-    key: 'analytics',
-    required: false,
-    label: '서비스 개선·분석을 위한 접속정보(IP·기기정보) 수집 동의',
-    link: '/privacy',
-    desc: '동의하지 않아도 가입과 이용에 불이익이 없으며, 미동의 시 분석용 식별정보를 수집하지 않아요. 보유: 탈퇴 또는 12개월',
-  },
-  { key: 'marketing', required: false, label: '마케팅·소식 알림 수신 동의' },
+const CONSENT_META: Array<{ key: ConsentKey; required: boolean; link?: string; hasDesc: boolean }> = [
+  { key: 'privacy', required: true, link: '/privacy', hasDesc: true },
+  { key: 'terms', required: true, link: '/terms', hasDesc: false },
+  { key: 'age14', required: true, hasDesc: true },
+  { key: 'analytics', required: false, link: '/privacy', hasDesc: true },
+  { key: 'marketing', required: false, hasDesc: false },
 ];
 
 export default function OnboardingPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { t } = useTranslation('onboarding');
+  const { t: tc } = useTranslation('common');
   const [step, setStep] = useState<Step>('role');
   const [role, setRole] = useState<'child' | 'parent'>('child');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [consents, setConsents] = useState({
-    privacy: false, // [필수] 개인정보 수집·이용
-    terms: false, // [필수] 이용약관
-    age14: false, // [필수] 만 14세 이상
-    analytics: false, // [선택] 접속정보 수집
-    marketing: false, // [선택] 마케팅·알림
+    privacy: false, terms: false, age14: false, analytics: false, marketing: false,
   });
   const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
@@ -56,28 +36,18 @@ export default function OnboardingPage() {
   const allConsented = requiredConsented && consents.analytics && consents.marketing;
 
   const createInvite = trpc.connection.createInvite.useMutation({
-    onSuccess(data) {
-      setInviteCode(data.code);
-      setError('');
-    },
+    onSuccess(data) { setInviteCode(data.code); setError(''); },
     onError(err) { setError(err.message); },
   });
-
   const acceptInvite = trpc.connection.acceptInvite.useMutation({
-    onSuccess() {
-      setError('');
-      setStep('done');
-    },
+    onSuccess() { setError(''); setStep('done'); },
     onError(err) { setError(err.message); },
   });
-
   const register = trpc.auth.register.useMutation({
     onSuccess(data) {
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('userId', data.user.id);
-      // 이전 세션 캐시가 남아있을 수 있으니 새 계정 기준으로 비운다.
       queryClient.clear();
-      // 광고 픽셀 표준 전환 이벤트 (동의한 경우에만 발화)
       trackCompleteRegistration();
       setStep('connect');
       if (role === 'child') createInvite.mutate({ tone });
@@ -89,17 +59,16 @@ export default function OnboardingPage() {
     return (
       <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-8">
-          <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
+          <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">{tc('actions.back')}</button>
           <div className="text-center space-y-2 break-keep">
             <div className="text-4xl sm:text-5xl">💌</div>
-            <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>마음 잇기 시작하기</h1>
-            <p className="text-gray-500 text-sm leading-relaxed">저는 이 앱을 어떻게 사용할 건가요?</p>
+            <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>{t('role.title')}</h1>
+            <p className="text-gray-500 text-sm leading-relaxed">{t('role.subtitle')}</p>
           </div>
-
           <div className="space-y-3">
             {[
-              { value: 'child', icon: '👶', title: '자식 / 이야기를 받는 사람', desc: '부모님께 질문을 보내고, 답변을 받아요' },
-              { value: 'parent', icon: '👴', title: '부모 / 이야기를 나누는 사람', desc: '자식의 질문에 답하며 기억을 나눠요' },
+              { value: 'child', icon: '👶', title: t('role.child.title'), desc: t('role.child.desc') },
+              { value: 'parent', icon: '👴', title: t('role.parent.title'), desc: t('role.parent.desc') },
             ].map((opt) => (
               <button
                 key={opt.value}
@@ -124,34 +93,34 @@ export default function OnboardingPage() {
     return (
       <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-6">
-          <button onClick={() => setStep('role')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
-          <h2 className="text-xl font-bold text-gray-900 leading-snug break-keep">기본 정보를 알려주세요</h2>
+          <button onClick={() => setStep('role')} className="min-h-11 text-gray-400 text-sm">{tc('actions.back')}</button>
+          <h2 className="text-xl font-bold text-gray-900 leading-snug break-keep">{t('info.title')}</h2>
 
           <div className="space-y-4">
             {[
-              { label: '이름', key: 'name', type: 'text', placeholder: '이름을 입력해주세요' },
-              { label: '이메일', key: 'email', type: 'email', placeholder: '이메일 주소' },
-              { label: '비밀번호', key: 'password', type: 'password', placeholder: '6자리 이상' },
+              { key: 'name', type: 'text' },
+              { key: 'email', type: 'email' },
+              { key: 'password', type: 'password' },
             ].map((f) => (
               <div key={f.key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t(`info.${f.key}.label`)}</label>
                 <input
                   type={f.type}
                   value={form[f.key as keyof typeof form]}
                   onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
                   className="w-full min-h-12 px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none"
-                  placeholder={f.placeholder}
+                  placeholder={t(`info.${f.key}.placeholder`)}
                 />
               </div>
             ))}
 
             {role === 'child' && (
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">부모님과의 대화 톤</p>
+                <p className="text-sm font-medium text-gray-700 mb-2">{t('info.tone.label')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
-                    { value: 'light', label: '🌸 가벼운 추억', desc: '일상적인 이야기부터' },
-                    { value: 'deep', label: '🌊 깊은 인생 이야기', desc: '삶의 의미와 가치관' },
+                    { value: 'light', label: t('info.tone.light.label'), desc: t('info.tone.light.desc') },
+                    { value: 'deep', label: t('info.tone.deep.label'), desc: t('info.tone.deep.desc') },
                   ].map((opt) => (
                     <button
                       key={opt.value}
@@ -178,12 +147,12 @@ export default function OnboardingPage() {
                     setConsents({ privacy: v, terms: v, age14: v, analytics: v, marketing: v });
                   }}
                   className="w-4 h-4 accent-[var(--color-primary)]"
-                  aria-label="전체 동의"
+                  aria-label={t('consent.all')}
                 />
-                <span className="text-sm font-semibold text-gray-800 break-keep">전체 동의</span>
+                <span className="text-sm font-semibold text-gray-800 break-keep">{t('consent.all')}</span>
               </label>
 
-              {CONSENT_ITEMS.map((item) => (
+              {CONSENT_META.map((item) => (
                 <div key={item.key}>
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
@@ -191,30 +160,30 @@ export default function OnboardingPage() {
                       checked={consents[item.key]}
                       onChange={(e) => setConsents((p) => ({ ...p, [item.key]: e.target.checked }))}
                       className="mt-0.5 w-4 h-4 accent-[var(--color-primary)]"
-                      aria-label={item.label}
+                      aria-label={t(`consent.${item.key}.label`)}
                     />
                     <span className="min-w-0 text-sm text-gray-700 flex-1 leading-relaxed break-keep">
                       <strong className={item.required ? 'text-red-500' : 'text-gray-400'}>
-                        [{item.required ? '필수' : '선택'}]
+                        [{item.required ? t('consent.required') : t('consent.optional')}]
                       </strong>{' '}
-                      {item.label}
+                      {t(`consent.${item.key}.label`)}
                       {item.link && (
                         <>
                           {' '}
                           <a href={item.link} target="_blank" className="underline" style={{ color: 'var(--color-primary)' }}>
-                            전문 보기
+                            {t('consent.viewFull')}
                           </a>
                         </>
                       )}
                     </span>
                   </label>
-                  {item.desc && <p className="text-xs text-gray-400 pl-7 mt-0.5 leading-relaxed break-keep">{item.desc}</p>}
+                  {item.hasDesc && <p className="text-xs text-gray-400 pl-7 mt-0.5 leading-relaxed break-keep">{t(`consent.${item.key}.desc`)}</p>}
                 </div>
               ))}
             </div>
 
             {!requiredConsented && (
-              <p className="text-xs text-gray-400 leading-relaxed break-keep">필수 항목에 모두 동의해야 가입할 수 있어요. 선택 항목은 동의하지 않아도 이용에 불이익이 없습니다.</p>
+              <p className="text-xs text-gray-400 leading-relaxed break-keep">{t('consent.requiredNotice')}</p>
             )}
 
             {error && <p className="text-sm text-red-500 leading-relaxed break-keep">{error}</p>}
@@ -235,7 +204,7 @@ export default function OnboardingPage() {
               className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg transition-opacity hover:opacity-90 disabled:opacity-50 break-keep"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {register.isPending ? '가입 중...' : requiredConsented ? '계속하기' : '필수 항목에 동의해주세요'}
+              {register.isPending ? t('info.submitting') : requiredConsented ? t('info.continue') : t('info.needConsent')}
             </button>
           </div>
         </div>
@@ -245,27 +214,24 @@ export default function OnboardingPage() {
 
   if (step === 'connect') {
     const normalizedInviteCode = inviteCode.replace(/[\s-]/g, '').toUpperCase();
-
     return (
       <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-6">
           <div className="text-center space-y-2 break-keep">
             <div className="text-4xl">🔗</div>
             <h2 className="text-xl font-bold text-gray-900 leading-snug">
-              {role === 'child' ? '초대 코드를 보내주세요' : '자녀의 초대 코드를 입력해주세요'}
+              {role === 'child' ? t('connect.child.title') : t('connect.parent.title')}
             </h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              {role === 'child'
-                ? '부모님이 이 코드를 입력하면 서로 연결돼요.'
-                : '자녀가 만든 초대 코드를 입력하면 연결돼요.'}
+              {role === 'child' ? t('connect.child.subtitle') : t('connect.parent.subtitle')}
             </p>
           </div>
 
           {role === 'child' ? (
             <div className="rounded-2xl bg-white border border-gray-100 p-4 sm:p-5 text-center space-y-4">
-              <p className="text-sm text-gray-500">부모님께 전달할 코드</p>
+              <p className="text-sm text-gray-500">{t('connect.child.codeLabel')}</p>
               <div className="text-2xl sm:text-3xl font-bold tracking-[0.16em] sm:tracking-[0.25em] text-gray-900 font-mono break-all">
-                {createInvite.isPending ? '생성 중' : inviteCode || '--------'}
+                {createInvite.isPending ? t('connect.generating') : inviteCode || '--------'}
               </div>
               <div className="flex gap-2">
                 <button
@@ -273,7 +239,7 @@ export default function OnboardingPage() {
                   disabled={createInvite.isPending}
                   className="flex-1 min-h-11 px-3 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 disabled:opacity-50"
                 >
-                  다시 생성
+                  {t('connect.regenerate')}
                 </button>
                 <button
                   onClick={() => inviteCode && navigator.clipboard?.writeText(inviteCode)}
@@ -281,13 +247,13 @@ export default function OnboardingPage() {
                   className="flex-1 min-h-11 px-3 py-2 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
-                  복사하기
+                  {tc('actions.copy')}
                 </button>
               </div>
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">초대 코드</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('connect.parent.codeLabel')}</label>
               <input
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
@@ -308,14 +274,14 @@ export default function OnboardingPage() {
                 className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
-                {acceptInvite.isPending ? '연결 중...' : '연결하기'}
+                {acceptInvite.isPending ? t('connect.connecting') : t('connect.connect')}
               </button>
             )}
             <button
               onClick={() => setStep('done')}
               className="w-full min-h-12 px-4 py-3 rounded-2xl text-gray-500 font-medium break-keep"
             >
-              {role === 'child' ? '코드를 보냈어요' : '나중에 연결할게요'}
+              {role === 'child' ? t('connect.child.sent') : t('connect.parent.later')}
             </button>
           </div>
         </div>
@@ -329,11 +295,9 @@ export default function OnboardingPage() {
       <div className="max-w-sm w-full text-center space-y-8">
         <div className="text-5xl sm:text-6xl animate-bounce">🎉</div>
         <div className="space-y-2 break-keep">
-          <h2 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>준비됐어요!</h2>
+          <h2 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>{t('done.title')}</h2>
           <p className="text-gray-500 leading-relaxed">
-            {role === 'child'
-              ? '부모님이 코드를 입력하면 연결 소식이 피드에 표시돼요.'
-              : '연결되면 피드에서 서로의 상태를 볼 수 있어요.'}
+            {role === 'child' ? t('done.child') : t('done.parent')}
           </p>
         </div>
         <button
@@ -341,7 +305,7 @@ export default function OnboardingPage() {
           className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
-          피드 보러 가기
+          {t('done.goFeed')}
         </button>
       </div>
     </main>

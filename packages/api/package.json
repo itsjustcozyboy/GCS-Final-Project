@@ -15,6 +15,7 @@
     "@maeum/ai": "workspace:*",
     "@maeum/channel": "workspace:*",
     "@maeum/db": "workspace:*",
+    "@maeum/i18n": "workspace:*",
     "@maeum/shared": "workspace:*",
     "@maeum/storage": "workspace:*",
     "@trpc/server": "^11.0.0",

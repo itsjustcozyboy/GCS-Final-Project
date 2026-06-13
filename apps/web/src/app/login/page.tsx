@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/lib/trpc';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { t } = useTranslation('auth');
+  const { t: tc } = useTranslation('common');
   const next =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('next') || '/feed'
@@ -31,35 +34,35 @@ export default function LoginPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
       <div className="max-w-sm w-full space-y-6">
-        <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
+        <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">{tc('actions.back')}</button>
         <div className="text-center space-y-1 break-keep">
           <Link href="/" className="text-3xl">💌</Link>
-          <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>로그인</h1>
+          <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>{t('login.title')}</h1>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">이메일 또는 전화번호</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('login.idLabel')}</label>
             <input
               type="text"
               value={form.emailOrPhone}
               onChange={(e) => setForm((p) => ({ ...p, emailOrPhone: e.target.value }))}
               className="w-full min-h-12 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:border-transparent text-base"
               style={{ '--tw-ring-color': 'var(--color-primary)' } as React.CSSProperties}
-              placeholder="이메일 또는 010-xxxx-xxxx"
+              placeholder={t('login.idPlaceholder')}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('login.pwLabel')}</label>
             <input
               type="password"
               value={form.password}
               onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
               className="w-full min-h-12 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 text-base"
-              placeholder="비밀번호"
+              placeholder={t('login.pwPlaceholder')}
             />
             {process.env.NODE_ENV !== 'production' && (
-              <p className="text-xs text-gray-400 mt-1 leading-relaxed break-keep">개발 환경: 비밀번호 "demo" 입력</p>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed break-keep">{t('login.devHint')}</p>
             )}
           </div>
 
@@ -71,14 +74,14 @@ export default function LoginPage() {
             className="w-full min-h-12 px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            {login.isPending ? '로그인 중...' : '로그인'}
+            {login.isPending ? t('login.submitting') : t('login.submit')}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-500 leading-relaxed break-keep">
-          계정이 없으신가요?{' '}
+          {t('login.noAccount')}{' '}
           <Link href="/onboarding" className="font-medium" style={{ color: 'var(--color-primary)' }}>
-            가입하기
+            {t('login.signup')}
           </Link>
         </p>
       </div>
