@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { POLICY_VERSION } from '@maeum/shared';
+import { recordConversion } from '../services/funnel';
 
 export const authRouter = router({
   register: publicProcedure
