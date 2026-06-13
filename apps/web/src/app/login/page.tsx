@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { trpc } from '@/lib/trpc';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const next =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('next') || '/feed'
