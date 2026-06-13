@@ -4,7 +4,7 @@ import { trpc } from '@/lib/trpc';
 import { KeywordInput } from './QuestionComposer';
 import { MediaAttach, VoiceRecorder, type UploadedMedia } from './MediaAttach';
 
-type Method = 'voice' | 'keywords' | 'guide' | 'direct';
+type Method = 'keywords' | 'guide' | 'direct';
 type Format = 'text' | 'photo' | 'video' | 'audio';
 
 const PRIMARY = 'var(--color-primary)';
