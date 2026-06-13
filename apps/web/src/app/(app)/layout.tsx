@@ -2,17 +2,19 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { LocaleSync } from '@/components/LocaleSync';
 
 const NAV = [
-  { href: '/feed', icon: '📬', label: '피드' },
-  { href: '/today', icon: '❓', label: '오늘의 질문' },
-  { href: '/book', icon: '📖', label: '책' },
-];
+  { href: '/feed', icon: '📬', key: 'feed' },
+  { href: '/today', icon: '❓', key: 'today' },
+  { href: '/book', icon: '📖', key: 'book' },
+] as const;
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useTranslation('common');
   const { data: adminData } = trpc.admin.isAdmin.useQuery();
 
   return (
@@ -21,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* 헤더 */}
       <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <Link href="/feed" className="text-lg font-bold" style={{ color: 'var(--color-primary-dark)' }}>
-          💌 마음 잇기
+          💌 {t('appName')}
         </Link>
         <div className="flex items-center gap-2">
           <LanguageToggle />
@@ -31,7 +33,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               className="px-2.5 py-1 rounded-lg text-xs font-medium"
               style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}
             >
-              관리자
+              {t('adminBadge')}
             </Link>
           )}
           <Link href="/profile" className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm">
@@ -55,7 +57,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               style={{ color: active ? 'var(--color-primary)' : '#9B9B9B' }}
             >
               <span className="text-xl">{item.icon}</span>
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-xs font-medium">{t(`nav.${item.key}`)}</span>
             </Link>
           );
         })}

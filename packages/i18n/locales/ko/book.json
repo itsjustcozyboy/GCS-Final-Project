@@ -1,1 +1,22 @@
-{}
+{
+  "backList": "← 목록",
+  "interim": "중간판",
+  "final": "최종판",
+  "interimTitle": "📖 중간판",
+  "finalTitle": "📚 최종판",
+  "now": "현재",
+  "followupHeading": "💡 이런 이야기도 들어보면 어떨까요?",
+  "heading": "📖 이야기 책",
+  "generating": "생성 중...",
+  "newBook": "새 책 만들기",
+  "empty": {
+    "title": "아직 책이 없어요",
+    "subtitle": "답변이 쌓이면 책으로 엮을 수 있어요"
+  },
+  "noConnection": "연결된 관계가 없어요",
+  "status": {
+    "generated": "완성",
+    "delivered": "전달됨",
+    "draft": "초안"
+  }
+}

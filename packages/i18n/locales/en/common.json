@@ -1,8 +1,8 @@
 {
   "appName": "Maeum Itgi",
   "nav": {
-    "today": "Today",
     "feed": "Feed",
+    "today": "Today",
     "book": "Book",
     "profile": "Profile"
   },
@@ -81,5 +81,7 @@
       "contact": "Contact:",
       "admin": "🔐 Admin"
     }
-  }
+  },
+  "adminBadge": "Admin",
+  "contactLabel": "Contact:"
 }

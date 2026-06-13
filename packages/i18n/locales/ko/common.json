@@ -1,8 +1,8 @@
 {
   "appName": "마음 잇기",
   "nav": {
-    "today": "오늘",
     "feed": "피드",
+    "today": "오늘의 질문",
     "book": "책",
     "profile": "내정보"
   },
@@ -81,5 +81,7 @@
       "contact": "문의:",
       "admin": "🔐 관리자"
     }
-  }
+  },
+  "adminBadge": "관리자",
+  "contactLabel": "문의:"
 }

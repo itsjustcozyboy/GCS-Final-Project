@@ -1,1 +1,16 @@
-{}
+{
+  "heading": "My profile",
+  "role": {
+    "parent": "Parent · the one who shares stories",
+    "child": "Child · the one who receives stories",
+    "both": "Both"
+  },
+  "email": "Email",
+  "phone": "Phone",
+  "consentLabel": "Analytics consent",
+  "consentYes": "Agreed",
+  "consentNo": "Not agreed",
+  "adminDashboard": "🔐 Admin dashboard",
+  "loggingOut": "Signing out...",
+  "logout": "Sign out"
+}

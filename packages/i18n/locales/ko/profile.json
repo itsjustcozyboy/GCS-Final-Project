@@ -1,1 +1,16 @@
-{}
+{
+  "heading": "내 정보",
+  "role": {
+    "parent": "부모 · 이야기를 나누는 사람",
+    "child": "자식 · 이야기를 받는 사람",
+    "both": "함께"
+  },
+  "email": "이메일",
+  "phone": "전화번호",
+  "consentLabel": "개인정보 수집 동의",
+  "consentYes": "동의함",
+  "consentNo": "미동의",
+  "adminDashboard": "🔐 관리자 대시보드",
+  "loggingOut": "로그아웃 중...",
+  "logout": "로그아웃"
+}

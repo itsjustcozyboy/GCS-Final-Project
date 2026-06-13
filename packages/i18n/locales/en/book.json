@@ -1,1 +1,22 @@
-{}
+{
+  "backList": "← List",
+  "interim": "Interim edition",
+  "final": "Final edition",
+  "interimTitle": "📖 Interim edition",
+  "finalTitle": "📚 Final edition",
+  "now": "now",
+  "followupHeading": "💡 What about asking these too?",
+  "heading": "📖 Story book",
+  "generating": "Creating...",
+  "newBook": "Create a new book",
+  "empty": {
+    "title": "No book yet",
+    "subtitle": "Once answers gather, you can weave them into a book"
+  },
+  "noConnection": "No connection yet",
+  "status": {
+    "generated": "Done",
+    "delivered": "Delivered",
+    "draft": "Draft"
+  }
+}

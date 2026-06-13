@@ -1,12 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 import { QuestionComposer } from '@/components/QuestionComposer';
 import { AnswerComposer } from '@/components/AnswerComposer';
 import { ParentMessageComposer } from '@/components/ParentMessageComposer';
 
 // 부모 전용 — "먼저 마음 전하기" 큰 진입 버튼 + 작성 모달
 function ParentMessageEntry({ connectionId, childName, onSent }: { connectionId: string; childName: string; onSent: () => void }) {
+  const { t } = useTranslation('today');
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -14,11 +16,11 @@ function ParentMessageEntry({ connectionId, childName, onSent }: { connectionId:
         onClick={() => setOpen(true)}
         className="w-full py-5 rounded-2xl border-2 text-lg font-semibold transition-all hover:shadow-md"
         style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary-dark)', backgroundColor: '#EFF7F2' }}
-        aria-label="먼저 마음 전하기"
+        aria-label={t('parentEntry.aria')}
       >
-        💝 먼저 마음 전하기
+        {t('parentEntry.title')}
         <span className="block text-sm font-normal text-gray-500 mt-1">
-          질문을 기다리지 않고, 지금 떠오르는 마음을 {childName}님에게 남겨보세요
+          {t('parentEntry.subtitle', { name: childName })}
         </span>
       </button>
       {open && (
@@ -34,6 +36,7 @@ function ParentMessageEntry({ connectionId, childName, onSent }: { connectionId:
 }
 
 export default function TodayPage() {
+  const { t } = useTranslation('today');
   const me = trpc.auth.me.useQuery();
   const connections = trpc.connection.list.useQuery();
   const firstConn = connections.data?.[0];
@@ -59,15 +62,15 @@ export default function TodayPage() {
     return (
       <div className="text-center py-16 space-y-4">
         <div className="text-5xl">💌</div>
-        <p className="text-gray-500">먼저 연결을 시작해보세요</p>
+        <p className="text-gray-500">{t('noConnection')}</p>
       </div>
     );
   }
 
   const question = todayQ.data;
   const isParent = firstConn.fromUserId === me.data?.id;
-  const parentName = firstConn.fromUser?.name ?? '부모님';
-  const childName = firstConn.toUser?.name ?? '자녀';
+  const parentName = firstConn.fromUser?.name ?? t('defaultParent');
+  const childName = firstConn.toUser?.name ?? t('defaultChild');
 
   function refresh() {
     if (!firstConn) return;
@@ -82,8 +85,8 @@ export default function TodayPage() {
         <div className="space-y-6">
           <div className="text-center py-10 space-y-4">
             <div className="text-5xl">🌤️</div>
-            <p className="text-xl text-gray-700 font-medium">아직 오늘의 질문이 도착하지 않았어요</p>
-            <p className="text-base text-gray-400">자녀가 질문을 보내면 여기에 표시돼요</p>
+            <p className="text-xl text-gray-700 font-medium">{t('parentWaiting.title')}</p>
+            <p className="text-base text-gray-400">{t('parentWaiting.subtitle')}</p>
           </div>
           <ParentMessageEntry connectionId={firstConn.id} childName={childName} onSent={refresh} />
         </div>
@@ -91,19 +94,19 @@ export default function TodayPage() {
     }
     return (
       <div className="space-y-6">
-        <h2 className="text-lg font-bold text-gray-900">오늘의 질문</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t('heading')}</h2>
         <div className="text-center py-12 space-y-4">
           <div className="text-5xl">🌤️</div>
           <div>
-            <p className="text-gray-700 font-medium">아직 오늘의 질문이 없어요</p>
-            <p className="text-sm text-gray-400 mt-1">{parentName}님께 보낼 질문을 골라보세요</p>
+            <p className="text-gray-700 font-medium">{t('childNoQ.title')}</p>
+            <p className="text-sm text-gray-400 mt-1">{t('childNoQ.subtitle', { name: parentName })}</p>
           </div>
           <button
             onClick={() => setShowComposer(true)}
             className="px-8 py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            오늘의 질문 보내기
+            {t('childNoQ.cta')}
           </button>
         </div>
         {showComposer && (
@@ -125,8 +128,8 @@ export default function TodayPage() {
         <div className="space-y-6">
           <div className="text-center py-10 space-y-4">
             <div className="text-5xl">🙏</div>
-            <p className="text-2xl font-bold text-gray-900">고마워요!</p>
-            <p className="text-lg text-gray-500">소중한 이야기가 잘 전달됐어요</p>
+            <p className="text-2xl font-bold text-gray-900">{t('thanks.title')}</p>
+            <p className="text-lg text-gray-500">{t('thanks.subtitle')}</p>
           </div>
           <ParentMessageEntry connectionId={firstConn.id} childName={childName} onSent={refresh} />
         </div>
@@ -138,9 +141,9 @@ export default function TodayPage() {
         <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: 'var(--color-primary)' }}>
-              오늘의 질문
+              {t('badge.today')}
             </span>
-            <span className="text-xs text-gray-400">깊이 {question.depth}단계</span>
+            <span className="text-xs text-gray-400">{t('badge.depth', { n: question.depth })}</span>
           </div>
           <p className="text-2xl font-medium text-gray-900 leading-relaxed">{question.body}</p>
         </div>
@@ -165,33 +168,33 @@ export default function TodayPage() {
     const a = question.answer as typeof question.answer & { masked?: boolean };
     return (
       <div className="space-y-4">
-        <h2 className="text-lg font-bold text-gray-900">오늘의 질문</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t('heading')}</h2>
         <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
           <p className="text-lg font-medium text-gray-700">{question.body}</p>
           <div className="border-t border-gray-100 pt-4">
             {a.skipped ? (
-              <p className="text-gray-400 italic">건너뛰었어요</p>
+              <p className="text-gray-400 italic">{t('answered.skipped')}</p>
             ) : a.masked ? (
               <div className="flex items-center gap-2 text-gray-400">
                 <span className="text-xl">🔒</span>
-                <p className="text-sm">{parentName}님이 답변을 남기셨지만, 마음속에 간직하기로 했어요.</p>
+                <p className="text-sm">{t('answered.private', { name: parentName })}</p>
               </div>
             ) : (
               <>
                 {a.format === 'photo' && a.mediaUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={a.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover mb-2" />
+                  <img src={a.mediaUrl} alt={t('media.photo')} className="rounded-xl max-h-64 object-cover mb-2" />
                 )}
                 {a.format === 'video' && a.mediaUrl && (
-                  <video src={a.mediaUrl} controls className="rounded-xl max-h-64 w-full mb-2" aria-label="영상 답변" />
+                  <video src={a.mediaUrl} controls className="rounded-xl max-h-64 w-full mb-2" aria-label={t('media.video')} />
                 )}
                 {a.format === 'audio' && a.mediaUrl && (
-                  <audio src={a.mediaUrl} controls className="w-full mb-2" aria-label="음성 답변" />
+                  <audio src={a.mediaUrl} controls className="w-full mb-2" aria-label={t('media.audio')} />
                 )}
                 {a.transcript && <p className="text-sm text-gray-500 italic mb-1">📝 {a.transcript}</p>}
                 {a.body && <p className="text-base text-gray-900 whitespace-pre-wrap">{a.body}</p>}
                 <p className="text-xs text-green-600 mt-2">
-                  ✅ 답변 완료{a.isPrivate ? ' · 🔒 비공개' : ''}
+                  {t('answered.complete')}{a.isPrivate ? t('answered.privateTag') : ''}
                 </p>
               </>
             )}
@@ -207,10 +210,10 @@ export default function TodayPage() {
   // 자녀: 질문은 보냈지만 아직 답변 없음
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold text-gray-900">오늘의 질문</h2>
+      <h2 className="text-lg font-bold text-gray-900">{t('heading')}</h2>
       <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
         <p className="text-lg font-medium text-gray-700">{question.body}</p>
-        <p className="text-sm text-gray-400">⏳ {parentName}님의 답변을 기다리고 있어요...</p>
+        <p className="text-sm text-gray-400">{t('waiting', { name: parentName })}</p>
       </div>
     </div>
   );

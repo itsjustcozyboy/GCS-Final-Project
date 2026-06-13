@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import type { BookEdition } from '@maeum/db';
+import { useTranslation } from 'react-i18next';
 
 type ChapterEntry = { markdown?: string | null; followupQuestions?: string[] | null };
 type ChapterData = Record<string, ChapterEntry>;
 
 function BookPreview({ edition }: { edition: BookEdition & { chapterData: ChapterData | null } }) {
+  const { t } = useTranslation('book');
   const [activeChapter, setActiveChapter] = useState<string | null>(null);
   const chapters: [string, ChapterEntry][] = edition.chapterData
     ? (Object.entries(edition.chapterData) as [string, ChapterEntry][]).filter(([, v]) => v != null)
@@ -31,7 +33,7 @@ function BookPreview({ edition }: { edition: BookEdition & { chapterData: Chapte
               />
               {(data.followupQuestions?.length ?? 0) > 0 && (
                 <div className="mt-4 p-3 bg-amber-50 rounded-xl">
-                  <p className="text-xs font-medium text-amber-700 mb-2">💡 이런 이야기도 들어보면 어떨까요?</p>
+                  <p className="text-xs font-medium text-amber-700 mb-2">{t('followupHeading')}</p>
                   {(data.followupQuestions ?? []).map((q, i) => (
                     <p key={i} className="text-sm text-amber-600 mt-1">• {q}</p>
                   ))}
@@ -46,6 +48,7 @@ function BookPreview({ edition }: { edition: BookEdition & { chapterData: Chapte
 }
 
 export default function BookPage() {
+  const { t, i18n } = useTranslation('book');
   const connections = trpc.connection.list.useQuery();
   const firstConn = connections.data?.[0];
   const utils = trpc.useUtils();
@@ -69,7 +72,7 @@ export default function BookPage() {
     return (
       <div className="text-center py-16 text-gray-400 space-y-3">
         <div className="text-5xl">📖</div>
-        <p>연결된 관계가 없어요</p>
+        <p>{t('noConnection')}</p>
       </div>
     );
   }
@@ -80,14 +83,14 @@ export default function BookPage() {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => setSelectedBook(null)} className="text-gray-400">← 목록</button>
+          <button onClick={() => setSelectedBook(null)} className="text-gray-400">{t('backList')}</button>
           <h2 className="text-lg font-bold text-gray-900">
-            {edition.editionType === 'interim' ? '📖 중간판' : '📚 최종판'}
+            {edition.editionType === 'interim' ? t('interimTitle') : t('finalTitle')}
           </h2>
         </div>
         <p className="text-sm text-gray-500">
-          {new Date(edition.rangeFrom).toLocaleDateString('ko-KR')} ~{' '}
-          {edition.rangeTo ? new Date(edition.rangeTo).toLocaleDateString('ko-KR') : '현재'}
+          {new Date(edition.rangeFrom).toLocaleDateString(i18n.language)} ~{' '}
+          {edition.rangeTo ? new Date(edition.rangeTo).toLocaleDateString(i18n.language) : t('now')}
         </p>
         <BookPreview edition={edition} />
       </div>
@@ -97,14 +100,14 @@ export default function BookPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900">📖 이야기 책</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t('heading')}</h2>
         <button
           onClick={() => generateBook.mutate({ connectionId: firstConn.id, editionType: 'interim' })}
           disabled={generateBook.isPending}
           className="text-sm px-4 py-2 rounded-xl text-white font-medium disabled:opacity-50"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
-          {generateBook.isPending ? '생성 중...' : '새 책 만들기'}
+          {generateBook.isPending ? t('generating') : t('newBook')}
         </button>
       </div>
 
@@ -112,8 +115,8 @@ export default function BookPage() {
         <div className="text-center py-12 space-y-4">
           <div className="text-5xl">📝</div>
           <div>
-            <p className="text-gray-700 font-medium">아직 책이 없어요</p>
-            <p className="text-sm text-gray-400 mt-1">답변이 쌓이면 책으로 엮을 수 있어요</p>
+            <p className="text-gray-700 font-medium">{t('empty.title')}</p>
+            <p className="text-sm text-gray-400 mt-1">{t('empty.subtitle')}</p>
           </div>
         </div>
       )}
@@ -128,14 +131,14 @@ export default function BookPage() {
             <span className="text-3xl">{b.editionType === 'interim' ? '📖' : '📚'}</span>
             <div>
               <p className="font-semibold text-gray-900">
-                {b.editionType === 'interim' ? '중간판' : '최종판'}
+                {b.editionType === 'interim' ? t('interim') : t('final')}
               </p>
               <p className="text-sm text-gray-500">
-                {new Date(b.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                {new Date(b.createdAt).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
             </div>
             <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#EFF7F2', color: 'var(--color-primary)' }}>
-              {b.status === 'generated' ? '완성' : b.status === 'delivered' ? '전달됨' : '초안'}
+              {b.status === 'generated' ? t('status.generated') : b.status === 'delivered' ? t('status.delivered') : t('status.draft')}
             </span>
           </button>
         ))}

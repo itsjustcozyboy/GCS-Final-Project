@@ -1,1 +1,40 @@
-{}
+{
+  "parentEntry": {
+    "title": "💝 Share your heart first",
+    "subtitle": "Don't wait for a question — leave a thought for {{name}} right now",
+    "aria": "Share your heart first"
+  },
+  "noConnection": "Start by connecting first",
+  "heading": "Today's question",
+  "parentWaiting": {
+    "title": "Today's question hasn't arrived yet",
+    "subtitle": "When your child sends a question, it'll appear here"
+  },
+  "childNoQ": {
+    "title": "No question for today yet",
+    "subtitle": "Choose a question to send to {{name}}",
+    "cta": "Send today's question"
+  },
+  "thanks": {
+    "title": "Thank you!",
+    "subtitle": "Your story was delivered safely"
+  },
+  "badge": {
+    "today": "Today's question",
+    "depth": "Depth level {{n}}"
+  },
+  "answered": {
+    "skipped": "Skipped",
+    "private": "{{name}} left an answer but chose to keep it private.",
+    "complete": "✅ Answered",
+    "privateTag": " · 🔒 Private"
+  },
+  "waiting": "⏳ Waiting for {{name}}'s answer...",
+  "media": {
+    "photo": "Photo answer",
+    "video": "Video answer",
+    "audio": "Voice answer"
+  },
+  "defaultParent": "your parent",
+  "defaultChild": "your child"
+}

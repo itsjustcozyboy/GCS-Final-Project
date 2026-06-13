@@ -1,1 +1,40 @@
-{}
+{
+  "parentEntry": {
+    "title": "💝 먼저 마음 전하기",
+    "subtitle": "질문을 기다리지 않고, 지금 떠오르는 마음을 {{name}}님에게 남겨보세요",
+    "aria": "먼저 마음 전하기"
+  },
+  "noConnection": "먼저 연결을 시작해보세요",
+  "heading": "오늘의 질문",
+  "parentWaiting": {
+    "title": "아직 오늘의 질문이 도착하지 않았어요",
+    "subtitle": "자녀가 질문을 보내면 여기에 표시돼요"
+  },
+  "childNoQ": {
+    "title": "아직 오늘의 질문이 없어요",
+    "subtitle": "{{name}}님께 보낼 질문을 골라보세요",
+    "cta": "오늘의 질문 보내기"
+  },
+  "thanks": {
+    "title": "고마워요!",
+    "subtitle": "소중한 이야기가 잘 전달됐어요"
+  },
+  "badge": {
+    "today": "오늘의 질문",
+    "depth": "깊이 {{n}}단계"
+  },
+  "answered": {
+    "skipped": "건너뛰었어요",
+    "private": "{{name}}님이 답변을 남기셨지만, 마음속에 간직하기로 했어요.",
+    "complete": "✅ 답변 완료",
+    "privateTag": " · 🔒 비공개"
+  },
+  "waiting": "⏳ {{name}}님의 답변을 기다리고 있어요...",
+  "media": {
+    "photo": "사진 답변",
+    "video": "영상 답변",
+    "audio": "음성 답변"
+  },
+  "defaultParent": "부모님",
+  "defaultChild": "자녀"
+}
