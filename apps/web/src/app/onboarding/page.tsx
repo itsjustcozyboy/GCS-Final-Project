@@ -76,6 +76,8 @@ export default function OnboardingPage() {
       localStorage.setItem('userId', data.user.id);
       // 이전 세션 캐시가 남아있을 수 있으니 새 계정 기준으로 비운다.
       queryClient.clear();
+      // 광고 픽셀 표준 전환 이벤트 (동의한 경우에만 발화)
+      trackCompleteRegistration();
       setStep('connect');
       if (role === 'child') createInvite.mutate({ tone });
     },
