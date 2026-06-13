@@ -25,7 +25,7 @@ export function AnswerComposer({
   const [method, setMethod] = useState<Method>('guide');
   const [keywords, setKeywords] = useState<string[]>([]);
   const [text, setText] = useState('');
-  const [format, setFormat] = useState<Format>('text');
+  const [format, setFormat] = useState<Format>('audio'); // 가이드 진입 시 목소리부터
   const [media, setMedia] = useState<UploadedMedia | null>(null);
   const [isPrivate, setIsPrivate] = useState(true); // 기본 비공개 — 부모가 직접 공개를 선택
   const [aiComposed, setAiComposed] = useState(false);
