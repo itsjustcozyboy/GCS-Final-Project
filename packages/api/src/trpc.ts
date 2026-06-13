@@ -8,6 +8,7 @@ export interface Context {
   sessionToken?: string;
   clientIp?: string;
   clientUserAgent?: string;
+  anonymousId?: string; // 미들웨어가 발급한 익명 방문자 쿠키 (비식별)
 }
 
 const t = initTRPC.context<Context>().create({
