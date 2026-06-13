@@ -569,10 +569,200 @@ function InquiriesView({ search }: { search: string }) {
   );
 }
 
+// ─── 방문자 분석(퍼널) 뷰 ─────────────────────────────────────
+const PERIODS = [
+  { value: 1, label: '오늘' },
+  { value: 7, label: '7일' },
+  { value: 30, label: '30일' },
+] as const;
+
+function pct(n: number) {
+  return `${(n * 100).toFixed(1)}%`;
+}
+
+function FunnelView({ search }: { search: string }) {
+  const [days, setDays] = useState<number>(7);
+  const [seg, setSeg] = useState<'anon' | 'converted'>('anon');
+
+  const summary = trpc.admin.funnelSummary.useQuery({ days });
+  const channels = trpc.admin.channelStats.useQuery({ days });
+  const anon = trpc.admin.anonymousVisitors.useQuery({ days, search: search || undefined, limit: 100 });
+  const converted = trpc.admin.convertedVisitors.useQuery({ days, limit: 100 });
+  const trend = trpc.admin.visitorTrend.useQuery({ days: Math.min(days, 30) });
+
+  const s = summary.data;
+  const maxTrend = Math.max(1, ...(trend.data ?? []).map((d) => d.visitors));
+
+  return (
+    <div className="space-y-4">
+      {/* 기간 필터 */}
+      <div className="flex gap-2">
+        {PERIODS.map((p) => (
+          <button
+            key={p.value}
+            onClick={() => setDays(p.value)}
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+            style={days === p.value ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: '#6B7280', border: '1px solid #E5E7EB' }}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 요약 카드 */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: '총 방문자', value: s ? s.totalVisitors.toLocaleString() : '—', hint: '고유 익명 방문자' },
+          { label: '전환 수', value: s ? s.conversions.toLocaleString() : '—', hint: '가입/로그인 도달' },
+          { label: '전환율', value: s ? pct(s.conversionRate) : '—', hint: '전환 / 방문자' },
+        ].map((c) => (
+          <div key={c.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <p className="text-xs text-gray-400">{c.label}</p>
+            <p className="text-2xl font-bold text-gray-900 mt-1">{c.value}</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">{c.hint}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* 채널별 표 */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-800">채널별 전환 (first-touch)</div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left font-medium text-gray-600">출처</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">방문</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">전환</th>
+                <th className="px-4 py-2 text-right font-medium text-gray-600">전환율</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(channels.data ?? []).length === 0 ? (
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">데이터가 없습니다.</td></tr>
+              ) : (channels.data ?? []).map((c) => (
+                <tr key={c.source} className="border-b border-gray-50">
+                  <td className="px-4 py-2 text-gray-800">{c.source}</td>
+                  <td className="px-4 py-2 text-right text-gray-600">{c.visits.toLocaleString()}</td>
+                  <td className="px-4 py-2 text-right text-gray-600">{c.conversions.toLocaleString()}</td>
+                  <td className="px-4 py-2 text-right font-medium" style={{ color: 'var(--color-primary-dark)' }}>{pct(c.conversionRate)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 일자별 추이 */}
+      {(trend.data ?? []).length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <p className="text-sm font-semibold text-gray-800 mb-3">일자별 방문 / 전환</p>
+          <div className="space-y-1.5">
+            {(trend.data ?? []).map((d) => (
+              <div key={d.date} className="flex items-center gap-2 text-xs">
+                <span className="w-12 text-gray-400 shrink-0">{d.date.slice(5)}</span>
+                <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${(d.visitors / maxTrend) * 100}%`, backgroundColor: 'var(--color-primary-light)' }} />
+                </div>
+                <span className="w-24 text-right text-gray-500 shrink-0">{d.visitors}명 · {d.conversions}전환</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 세그먼트 토글 */}
+      <div className="flex rounded-xl border border-gray-200 bg-white p-1 text-sm font-medium w-fit">
+        {[
+          { value: 'anon', label: '비로그인 방문자' },
+          { value: 'converted', label: '전환 사용자' },
+        ].map((t) => (
+          <button
+            key={t.value}
+            onClick={() => setSeg(t.value as typeof seg)}
+            className="px-4 py-1.5 rounded-lg transition-colors"
+            style={seg === t.value ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: '#6B7280' }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {seg === 'anon' ? (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">방문자(익명)</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">출처</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">진입 경로</th>
+                  <th className="px-4 py-2 text-center font-medium text-gray-600">방문</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">기기</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">첫 방문</th>
+                </tr>
+              </thead>
+              <tbody>
+                {anon.isLoading ? (
+                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">로딩 중...</td></tr>
+                ) : (anon.data ?? []).length === 0 ? (
+                  <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">아직 전환되지 않은 방문자가 없습니다.</td></tr>
+                ) : (anon.data ?? []).map((v) => (
+                  <tr key={v.anonymousId} className="border-b border-gray-50">
+                    <td className="px-4 py-2 font-mono text-xs text-gray-400">{v.anonymousId.slice(0, 8)}…</td>
+                    <td className="px-4 py-2 text-gray-700">{v.source}</td>
+                    <td className="px-4 py-2 text-gray-500">{v.lastPath ?? '-'}</td>
+                    <td className="px-4 py-2 text-center text-gray-600">{v.visitCount}</td>
+                    <td className="px-4 py-2 text-gray-500">{v.deviceType ?? '-'}</td>
+                    <td className="px-4 py-2 text-gray-400 text-xs whitespace-nowrap">{formatDate(v.firstSeen)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">이름</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">이메일</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">유입 출처</th>
+                  <th className="px-4 py-2 text-left font-medium text-gray-600">전환 시각</th>
+                </tr>
+              </thead>
+              <tbody>
+                {converted.isLoading ? (
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">로딩 중...</td></tr>
+                ) : (converted.data ?? []).length === 0 ? (
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">전환된 사용자가 없습니다.</td></tr>
+                ) : (converted.data ?? []).map((v) => (
+                  <tr key={v.anonymousId} className="border-b border-gray-50">
+                    <td className="px-4 py-2 text-gray-800">{v.name ?? <span className="text-gray-300">-</span>}</td>
+                    <td className="px-4 py-2 text-gray-600">{v.email ?? <span className="text-gray-300">-</span>}</td>
+                    <td className="px-4 py-2 text-gray-700">{v.source}</td>
+                    <td className="px-4 py-2 text-gray-400 text-xs whitespace-nowrap">{v.convertedAt ? formatDate(v.convertedAt) : '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      <p className="text-xs text-gray-400">
+        익명 방문자는 개인 식별 정보 없이 무작위 ID로만 집계됩니다. IP 원문은 저장하지 않아요(해시만).
+      </p>
+    </div>
+  );
+}
+
 // ─── 페이지 ──────────────────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
-  const [tab, setTab] = useState<'visitors' | 'logs' | 'inquiries'>('visitors');
+  const [tab, setTab] = useState<'funnel' | 'visitors' | 'logs' | 'inquiries'>('funnel');
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
