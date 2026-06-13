@@ -1,10 +1,12 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: me, isLoading } = trpc.auth.me.useQuery();
   const { data: adminData } = trpc.admin.isAdmin.useQuery();
 
@@ -12,6 +14,8 @@ export default function ProfilePage() {
     onSettled: () => {
       localStorage.removeItem('sessionToken');
       localStorage.removeItem('userId');
+      // 사용자 종속 캐시를 모두 비운다 — 다음 로그인 계정이 이전 계정 데이터를 보지 않도록.
+      queryClient.clear();
       router.push('/');
     },
   });
