@@ -2,11 +2,15 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
+import { I18nextProvider } from 'react-i18next';
 import { trpc } from './trpc';
+import { createI18n } from './i18n';
+import { defaultLocale, type Locale } from '@maeum/i18n';
 import { VisitTracker } from '@/components/VisitTracker';
 import { MarketingPixels } from '@/components/MarketingPixels';
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, initialLocale = defaultLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const [i18nInstance] = useState(() => createI18n(initialLocale));
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: { queries: { staleTime: 60_000, retry: 1 } },
   }));
@@ -29,6 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
+    <I18nextProvider i18n={i18nInstance}>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <VisitTracker />
@@ -36,5 +41,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         {children}
       </QueryClientProvider>
     </trpc.Provider>
+    </I18nextProvider>
   );
 }

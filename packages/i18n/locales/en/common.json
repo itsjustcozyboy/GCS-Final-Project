@@ -1,0 +1,27 @@
+{
+  "appName": "Maeum Itgi",
+  "nav": {
+    "today": "Today",
+    "feed": "Feed",
+    "book": "Book",
+    "profile": "Profile"
+  },
+  "language": {
+    "label": "Language",
+    "ko": "한국어",
+    "en": "English",
+    "toggleAria": "Change language"
+  },
+  "actions": {
+    "next": "Continue",
+    "back": "← Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "OK",
+    "close": "Close",
+    "retry": "Try again",
+    "copy": "Copy"
+  },
+  "loading": "Loading...",
+  "comingSoon": "Coming soon"
+}

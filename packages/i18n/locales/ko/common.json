@@ -1,0 +1,27 @@
+{
+  "appName": "마음 잇기",
+  "nav": {
+    "today": "오늘",
+    "feed": "피드",
+    "book": "책",
+    "profile": "내정보"
+  },
+  "language": {
+    "label": "언어",
+    "ko": "한국어",
+    "en": "English",
+    "toggleAria": "언어 변경"
+  },
+  "actions": {
+    "next": "계속하기",
+    "back": "← 뒤로",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "close": "닫기",
+    "retry": "다시 시도",
+    "copy": "복사하기"
+  },
+  "loading": "불러오는 중...",
+  "comingSoon": "준비 중"
+}

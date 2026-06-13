@@ -2,7 +2,7 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const config = {
-  transpilePackages: ['@maeum/api', '@maeum/db', '@maeum/shared', '@maeum/ai', '@maeum/channel', '@maeum/storage'],
+  transpilePackages: ['@maeum/api', '@maeum/db', '@maeum/shared', '@maeum/ai', '@maeum/channel', '@maeum/storage', '@maeum/i18n'],
   outputFileTracingRoot: path.join(__dirname, '../../'),
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },

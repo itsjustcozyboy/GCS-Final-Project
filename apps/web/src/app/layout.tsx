@@ -1,15 +1,23 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { cookies, headers } from 'next/headers';
 import { Providers } from '@/lib/providers';
+import { resolveLocale, LOCALE_COOKIE } from '@maeum/i18n';
 
 export const metadata: Metadata = {
   title: '마음 잇기',
   description: '부모와 자식이 매일 질문 하나로 이어지는 공간',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const headerStore = await headers();
+  const locale = resolveLocale({
+    cookie: cookieStore.get(LOCALE_COOKIE)?.value,
+    acceptLanguage: headerStore.get('accept-language'),
+  });
   return (
-    <html lang="ko">
+    <html lang={locale}>
       <head>
         <link
           rel="stylesheet"
@@ -21,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers initialLocale={locale}>{children}</Providers>
       </body>
     </html>
   );
