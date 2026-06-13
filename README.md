@@ -17,18 +17,24 @@ pnpm dev                              # http://localhost:3000
 
 관리자는 **DB의 `Admin` 테이블**로 관리하며, 이메일 화이트리스트 환경변수로 부트스트랩한다. 소스코드에 이메일을 하드코딩하지 않는다.
 
-1. **화이트리스트에 이메일 추가** — `ADMIN_EMAILS`(쉼표 구분)에 관리자 이메일을 넣는다.
+관리자 자격은 **화이트리스트(`ADMIN_EMAILS*`) ↔ 비밀번호(`ADMIN_PASSWORD*`) 쌍("세트")** 으로 관리한다. 접미사로 세트를 여러 개 둘 수 있어, 관리자마다 **독립된 비밀번호**를 줄 수 있다.
+
+1. **화이트리스트에 이메일 추가** — 같은 세트의 `ADMIN_EMAILS*`(쉼표 구분)에 관리자 이메일을 넣는다.
    - 로컬: `apps/web/.env.local`
-   - 운영: Vercel 프로젝트 환경변수 (Production/Preview)
+   - 운영: Vercel 프로젝트 환경변수 (Production/Preview/Development)
    ```
-   ADMIN_EMAILS=leokor5069@gmail.com,taei518@gmail.com
+   # 세트 1
+   ADMIN_EMAILS=leokor5069@gmail.com
+   ADMIN_PASSWORD=<강한 무작위 비밀번호 1>
+   # 세트 2 (다른 관리자 — 독립 비밀번호)
+   ADMIN_EMAILS2=taei518@gmail.com
+   ADMIN_PASSWORD2=<강한 무작위 비밀번호 2>
    ```
-2. **강한 관리자 비밀번호 설정** — `ADMIN_PASSWORD`에 **길고 무작위한** 값을 넣는다.
+2. **강한 관리자 비밀번호 설정** — 각 `ADMIN_PASSWORD*`에 **길고 무작위한** 값을 넣는다.
    ```bash
-   # 예: 강한 임시 비밀번호 생성
-   openssl rand -base64 24
+   openssl rand -base64 24   # 강한 임시 비밀번호 생성
    ```
-   - 위 화이트리스트 이메일 + 이 비밀번호로 로그인하면 계정이 없어도 자동 생성되고 `Admin` 행이 등록된다(`packages/api/src/routers/auth.ts`).
+   - 어떤 세트든 그 세트의 이메일 + 그 세트의 비밀번호로 로그인하면 계정이 없어도 자동 생성되고 `Admin` 행이 등록된다(`packages/api/src/routers/auth.ts`). 즉 `taei518@gmail.com`은 `ADMIN_PASSWORD2`로 로그인한다.
 3. **로그인 확인** — 해당 계정으로 로그인 후 `/admin` 접근, 문의/방문 로그 관리가 되는지 확인한다. 일반 계정은 `/admin` 접근이 차단된다(`adminProcedure` → `Admin` 테이블 검증).
 
 ### ⚠️ 보안 주의 (반드시 준수)
