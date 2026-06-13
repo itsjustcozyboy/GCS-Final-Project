@@ -1,1 +1,30 @@
-{}
+{
+  "heading": "Frequently Asked Questions",
+  "back": "← Back",
+  "items": [
+    {
+      "q": "My parent isn't comfortable with apps — how do they answer?",
+      "a": "For now they can answer in the app or on the web. The screens use large text and simple buttons, and they can reply with text, photos, or video — or just speak, and we'll automatically turn it into text, so typing isn't required. Answering via KakaoTalk / SMS is coming soon (in preparation)."
+    },
+    {
+      "q": "Do I have to answer every day? What if I miss one?",
+      "a": "There's no pressure at all. You can put a hard question off for “later” or skip it, and we never send nagging reminders. Just one a day, whenever it's comfortable."
+    },
+    {
+      "q": "When and how do I get the “book” made from the answers?",
+      "a": "As answers gather, they're automatically organized into chapters. Once there's enough, you can receive an interim book even now, preview it on the web, or download a printable file. We edit it to preserve your parent's real voice and expressions as much as possible."
+    },
+    {
+      "q": "Who can see the photos, videos, and answers I upload? Is it safe?",
+      "a": "Content you register is visible only to connected family members and is not made public. Copyright stays with you, the author, and the company uses it only to provide the Service and create the book. Access and data are protected with encryption and access controls."
+    },
+    {
+      "q": "If I leave, what happens to my answers and the book?",
+      "a": "Upon withdrawal, your personal information and content are destroyed, except where retention is required by law. Before you leave, we let you choose whether to keep or delete any already-created book files. For details, see the Privacy Policy or contact us at leokor1214@gachon.ac.kr."
+    }
+  ],
+  "ctaTitle": "Didn't find your answer?",
+  "ctaSubtitle": "Just ask us directly — we'll check and reply quickly.",
+  "ctaButton": "💬 Contact us",
+  "emailHint": "You can also email us directly:"
+}

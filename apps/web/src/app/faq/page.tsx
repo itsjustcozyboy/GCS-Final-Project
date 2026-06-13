@@ -1,42 +1,23 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { getLocale } from '@/lib/i18n-server';
+import { resources } from '@maeum/i18n';
 
-export const metadata: Metadata = { title: '자주 묻는 질문 — 마음 잇기' };
+export const metadata: Metadata = { title: '자주 묻는 질문 — 마음 잇기 / FAQ — Maeum Itgi' };
 
-const FAQS: Array<{ q: string; a: string }> = [
-  {
-    q: '부모님이 앱 사용이 익숙하지 않은데 어떻게 답변하나요?',
-    a: '지금은 앱이나 웹에서 답하실 수 있어요. 화면이 큰 글씨와 간단한 버튼으로 되어 있고, 글·사진·영상은 물론 말로 답하면 자동으로 글로 정리돼서 타이핑이 익숙하지 않으셔도 괜찮습니다. 카카오톡·문자로 답하는 기능은 곧 추가될 예정이에요(준비 중).',
-  },
-  {
-    q: '매일 꼭 답해야 하나요? 답을 못 하면 어떻게 되나요?',
-    a: '전혀 부담 갖지 않으셔도 됩니다. 답하기 어려운 질문은 "다음에"로 넘기거나 건너뛸 수 있고, 독촉 알림은 보내지 않습니다. 하루에 하나씩, 편하실 때 답하시면 됩니다.',
-  },
-  {
-    q: "모은 답변으로 만드는 '책'은 언제, 어떻게 받나요?",
-    a: '답변이 쌓이면 챕터별 이야기로 자동 정리됩니다. 일정 분량이 모이면 생전에도 중간 책을 받아보실 수 있고, 웹에서 미리 보거나 인쇄용 파일로 내려받을 수 있습니다. 부모님의 실제 말투와 표현을 최대한 살려서 편집합니다.',
-  },
-  {
-    q: '제가 올린 사진·영상·답변은 누가 볼 수 있나요? 안전한가요?',
-    a: '등록하신 콘텐츠는 연결된 가족 구성원만 볼 수 있으며, 외부에 공개되지 않습니다. 콘텐츠의 저작권은 작성하신 본인에게 있고, 회사는 서비스 제공과 책 제작 목적 외에 사용하지 않습니다. 접근 권한과 데이터는 암호화·접근통제로 보호됩니다.',
-  },
-  {
-    q: '탈퇴하면 그동안의 답변과 책은 어떻게 되나요?',
-    a: '탈퇴 시 개인정보와 콘텐츠는 관련 법령에 따른 보존 의무가 있는 경우를 제외하고 파기됩니다. 이미 제작된 책 파일의 보관·삭제 여부는 탈퇴 전에 선택하실 수 있도록 안내합니다. 자세한 사항은 개인정보 처리방침을 참고하시거나 leokor1214@gachon.ac.kr로 문의해 주세요.',
-  },
-];
+export default async function FaqPage() {
+  const locale = await getLocale();
+  const f = resources[locale].faq;
+  const items = f.items as ReadonlyArray<{ q: string; a: string }>;
 
-export default function FaqPage() {
   return (
     <main className="min-h-dvh px-4 py-10 sm:px-6 sm:py-12 max-w-2xl mx-auto break-keep" style={{ background: 'var(--color-background)' }}>
-      <Link href="/profile" className="inline-flex items-center min-h-11 text-sm text-gray-400 hover:text-gray-600">← 돌아가기</Link>
+      <Link href="/profile" className="inline-flex items-center min-h-11 text-sm text-gray-400 hover:text-gray-600">{f.back}</Link>
 
-      <h1 className="text-2xl font-bold mt-6 mb-8" style={{ color: 'var(--color-primary-dark)' }}>
-        자주 묻는 질문
-      </h1>
+      <h1 className="text-2xl font-bold mt-6 mb-8" style={{ color: 'var(--color-primary-dark)' }}>{f.heading}</h1>
 
       <div className="space-y-3">
-        {FAQS.map((item, i) => (
+        {items.map((item, i) => (
           <details key={i} className="group bg-white rounded-2xl border border-gray-100 shadow-sm">
             <summary className="flex items-start gap-3 px-5 py-4 cursor-pointer list-none text-base font-medium text-gray-900">
               <span className="font-bold shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden>
@@ -50,21 +31,20 @@ export default function FaqPage() {
         ))}
       </div>
 
-      {/* 서비스 문의 — 별도 페이지로 분리. FAQ 하단에는 진입 경로만 둔다. */}
       <div className="mt-8 rounded-2xl bg-white border border-gray-100 shadow-sm p-6 text-center space-y-3">
-        <p className="text-base font-medium text-gray-900">답을 찾지 못하셨나요?</p>
-        <p className="text-sm text-gray-500">직접 물어봐 주세요. 빠르게 확인해 답변드릴게요.</p>
+        <p className="text-base font-medium text-gray-900">{f.ctaTitle}</p>
+        <p className="text-sm text-gray-500">{f.ctaSubtitle}</p>
         <Link
           href="/profile/inquiry"
           className="inline-flex min-h-12 items-center justify-center px-6 py-3 rounded-2xl text-white text-base font-semibold"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
-          💬 서비스 문의하기
+          {f.ctaButton}
         </Link>
       </div>
 
       <p className="mt-4 text-center text-xs text-gray-400">
-        이메일로 직접 문의하셔도 돼요:{' '}
+        {f.emailHint}{' '}
         <a href="mailto:leokor1214@gachon.ac.kr" className="underline">leokor1214@gachon.ac.kr</a>
       </p>
     </main>

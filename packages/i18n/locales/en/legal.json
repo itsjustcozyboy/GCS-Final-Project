@@ -1,1 +1,279 @@
-{}
+{
+  "backLink": "← Back",
+  "disclaimer": "This English version is a reference translation; the Korean original prevails. Users outside Korea may be subject to other requirements (e.g., GDPR, CCPA).",
+  "terms": {
+    "heading": "Terms of Service",
+    "sections": [
+      {
+        "title": "Article 1 (Purpose)",
+        "blocks": [
+          {
+            "p": "These Terms govern the conditions and procedures for using [Service: Maeum Itgi] (the “Service”), and the rights, obligations, and responsibilities between users and the operator ([Operator: ___])."
+          }
+        ]
+      },
+      {
+        "title": "Article 2 (Definitions)",
+        "blocks": [
+          {
+            "ul": [
+              "Service: the online service for exchanging questions and answers within a family and compiling them into a book.",
+              "User: anyone who uses the Service under these Terms.",
+              "Member: a user who has signed up and been granted an account.",
+              "Child: a member who sends questions and receives answers and the book.",
+              "Parent: a member (respondent) who answers questions and shares stories.",
+              "Content: any material registered or created within the Service, including questions, answers, photos, video, voice, and books."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 3 (Effect and Amendment of Terms)",
+        "blocks": [
+          {
+            "p": "These Terms take effect when posted within the Service. The operator may amend the Terms within the limits of applicable law, stating the effective date and reason at least 7 days in advance; changes unfavorable to users are announced at least 30 days in advance."
+          }
+        ]
+      },
+      {
+        "title": "Article 4 (Sign-up)",
+        "blocks": [
+          {
+            "ul": [
+              "Sign-up is established when a user agrees to the Terms and to the collection and use of personal information and completes the sign-up form.",
+              "Sign-up is restricted if the required consent items are not agreed to; use of the Service is not refused on the grounds of declining optional consent items.",
+              "Children under 14 require a legal guardian's consent; until a separate consent process is in place, only those aged 14 or older may sign up."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 5 (Service Content)",
+        "blocks": [
+          {
+            "ul": [
+              "Sending daily questions and collecting parents' answers (text, photo, video, voice)",
+              "Interactions among family members such as reactions and follow-ups",
+              "Delivering messages that parents share first",
+              "Organizing the gathered stories by chapter and creating and delivering a book (web and printable file)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 6 (User Obligations)",
+        "blocks": [
+          {
+            "ul": [
+              "Users must not misappropriate others' information or register false information.",
+              "Users must not register others' personal information without the consent of the data subject (e.g., a parent).",
+              "Users must not register content that is unlawful or infringes third-party rights (copyright, likeness, etc.)."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 7 (Ownership and Use of Content)",
+        "blocks": [
+          {
+            "ul": [
+              "Copyright in content such as answers, photos, video, and voice registered by a user belongs to the author (the user).",
+              "The operator uses content only for the purposes of providing the Service, creating the book, and backups.",
+              "Content is not provided to third parties or used for marketing without the data subject's separate consent."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 8 (Responsibility When Registering Family / Third-Party Information)",
+        "blocks": [
+          {
+            "p": "When a user registers content that includes another person's photos or information (such as a parent), the responsibility to obtain that person's consent lies with the registering user. Because sensitive details (family history, health, etc.) may be included, please confirm the person's wishes before registering."
+          }
+        ]
+      },
+      {
+        "title": "Article 9 (Changes and Suspension of the Service)",
+        "blocks": [
+          {
+            "p": "The operator may change or suspend all or part of the Service for substantial operational or technical reasons, in principle with prior notice. In urgent cases, notice may be given afterward."
+          }
+        ]
+      },
+      {
+        "title": "Article 10 (Termination and Data Handling)",
+        "blocks": [
+          {
+            "ul": [
+              "Members may request to withdraw at any time, and the operator will process it without delay.",
+              "Upon withdrawal, the member's personal information and content are destroyed, except where retention is required by law.",
+              "Whether to keep or delete an already-created book output (file) is offered as a choice to the member before withdrawal."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Article 11 (Disclaimer and Limitation of Liability)",
+        "blocks": [
+          {
+            "p": "The operator is not liable for service disruptions caused by force majeure, acts of God, or reasons attributable to the user. However, the operator is not exempted from liability for damages caused by the operator's intent or gross negligence."
+          }
+        ]
+      },
+      {
+        "title": "Article 12 (Dispute Resolution and Governing Law)",
+        "blocks": [
+          {
+            "p": "These Terms are interpreted under the laws of the Republic of Korea, and any dispute arising from use of the Service is brought before the court of jurisdiction under the Civil Procedure Act."
+          }
+        ]
+      },
+      {
+        "title": "Article 13 (Contact)",
+        "blocks": [
+          {
+            "p": "Inquiries about the Service and these Terms: leokor1214@gachon.ac.kr"
+          }
+        ]
+      },
+      {
+        "title": "Addendum",
+        "blocks": [
+          {
+            "p": "These Terms (v1.0) take effect on June 12, 2026."
+          }
+        ]
+      }
+    ],
+    "crossLinkPre": "For details on how personal information is handled, please see the ",
+    "crossLinkPost": "."
+  },
+  "privacy": {
+    "heading": "Privacy Policy",
+    "intro": "[Service: Maeum Itgi] complies with the Personal Information Protection Act and other applicable laws, and handles users' personal information as described below.",
+    "sections": [
+      {
+        "title": "1. Personal Information We Collect",
+        "blocks": [
+          {
+            "ul": [
+              "[Required] Email, name (nickname), password, role (child/parent), family relationship info (connection, conversation tone, etc.)",
+              "[Answer content] Text answers, photos, video, and voice (and auto-transcribed text) that users register",
+              "[Optional — only with consent] Access IP address, device/browser info (User-Agent), access timestamp"
+            ]
+          },
+          {
+            "p": "Declining the optional items has no adverse effect on signing up or using the Service; if not consented, that information is not collected."
+          }
+        ]
+      },
+      {
+        "title": "2. Purpose of Collection and Use",
+        "blocks": [
+          {
+            "ul": [
+              "Member identification and authentication, managing family connections",
+              "Sending questions, collecting and delivering answers, and providing interactions such as reactions and notifications",
+              "Creating and delivering a book woven from the gathered stories",
+              "(With consent) Improving the Service and analyzing usage"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Retention and Use Period",
+        "blocks": [
+          {
+            "ul": [
+              "In principle, information is destroyed without delay upon withdrawal.",
+              "Items subject to a legal retention obligation are kept for the period set by that law and then destroyed.",
+              "Analytics logs such as access information are destroyed 12 months from collection or upon withdrawal, whichever comes first."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "4. Destruction Procedure and Method",
+        "blocks": [
+          {
+            "p": "Personal information is destroyed without delay once its purpose is achieved or its retention period expires. Electronic files are deleted by technical means that prevent recovery, and printouts are shredded or incinerated."
+          }
+        ]
+      },
+      {
+        "title": "5. Provision to Third Parties",
+        "blocks": [
+          {
+            "p": "As a rule, we do not provide users' personal information externally. We provide it only where there is a legal basis or the data subject's separate consent."
+          }
+        ]
+      },
+      {
+        "title": "6. Outsourcing of Processing",
+        "blocks": [
+          {
+            "p": "We may outsource the following tasks to operate the Service."
+          },
+          {
+            "ul": [
+              "Cloud data storage: Supabase (database and storage hosting)",
+              "AI processing (question generation, answer composition, book editing): Anthropic API",
+              "Message delivery: when outsourced in the future, the processor will be disclosed and necessary consent obtained."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "7. Rights of the Data Subject",
+        "blocks": [
+          {
+            "p": "Users may, at any time, request access to, correction of, deletion of, or suspension of processing of their personal information, or withdraw consent. These can be exercised via the in-service settings menu or the contact below, and the operator will act without delay."
+          }
+        ]
+      },
+      {
+        "title": "8. Personal Information of Children Under 14",
+        "blocks": [
+          {
+            "p": "Collecting the personal information of children under 14 requires a legal guardian's consent. Until a separate guardian-consent process is in place, sign-up by children under 14 is restricted."
+          }
+        ]
+      },
+      {
+        "title": "9. Security Measures",
+        "blocks": [
+          {
+            "ul": [
+              "Access control: content is viewable only by connected family members, with server-side authorization checks.",
+              "Admin functions undergo separate authorization, and admins' data-processing actions are recorded in an audit log.",
+              "Passwords are stored hashed; the originals are not kept.",
+              "Data in transit is encrypted with HTTPS."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "10. Privacy Officer and Contact",
+        "blocks": [
+          {
+            "ul": [
+              "Privacy Officer: [Name: ___ / Title: ___]",
+              "Contact: leokor1214@gachon.ac.kr"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "11. Changes to This Policy",
+        "blocks": [
+          {
+            "p": "If the content of this Policy is added to, removed, or modified, we will give notice within the Service at least 7 days before it takes effect."
+          }
+        ]
+      }
+    ],
+    "version": "Version: v1.0 · Effective: June 12, 2026",
+    "crossLinkPre": "For the conditions of using the Service, please see the ",
+    "crossLinkPost": "."
+  }
+}
