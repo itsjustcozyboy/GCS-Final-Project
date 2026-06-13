@@ -10,9 +10,19 @@ export function VisitTracker() {
   const heartbeat = trpc.tracking.heartbeat.useMutation();
 
   useEffect(() => {
+    // UTM·클릭ID는 진입 URL의 쿼리에서 파싱 (first-touch 저장은 서버가 처리)
+    const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const get = (k: string) => params.get(k) || undefined;
     log.mutate({
       path: pathname,
       referrer: typeof document !== 'undefined' ? document.referrer || undefined : undefined,
+      utmSource: get('utm_source'),
+      utmMedium: get('utm_medium'),
+      utmCampaign: get('utm_campaign'),
+      utmContent: get('utm_content'),
+      utmTerm: get('utm_term'),
+      fbclid: get('fbclid'),
+      gclid: get('gclid'),
     });
     // pathname이 바뀔 때마다 1회만 기록
     // eslint-disable-next-line react-hooks/exhaustive-deps
