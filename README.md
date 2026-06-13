@@ -44,6 +44,36 @@ pnpm dev                              # http://localhost:3000
 - 초기 비밀번호는 강한 임시값으로 설정하고, 운영 시작 시점에 교체한다.
 - TODO(보안 강화): 관리자 로그인 실패 제한(lockout) + 2단계 인증(2FA/TOTP) 도입 — `auth.ts` 참고.
 
+## 방문자 전환율(퍼널) 추적
+
+익명 방문자 → 가입/로그인 전환을 **직접 구축 DB로 1차 측정**한다(광고 픽셀은 보조).
+
+- **익명 식별:** 미들웨어(`apps/web/src/middleware.ts`)가 첫 방문에 `maeum_aid`(httpOnly) 쿠키로 무작위 anonymousId를 발급. 방문은 서버에서 `VisitorEvent`/`Visitor`에 적재(UTM·기기·referrer·ipHash). **IP 원문은 저장하지 않고 해시만**, 이름/이메일/원문 IP는 로그인+분석동의 후 `AccessLog`에만.
+- **전환:** 가입(`signup_completed`)·로그인(`first_login`) 시 anonymousId ↔ user_id를 연결(`Visitor.convertedUserId`, `ConversionEvent`).
+- **대시보드:** `/admin` → "📈 방문자 분석" — 총 방문자/전환/전환율, 채널별(first-touch) 표, 일자별 추이, 비로그인/전환 목록.
+
+### 링크 배포 시 UTM 규칙 (운영자 필수)
+
+채널마다 **일관된 UTM**을 붙여야 채널별 전환율이 정확하다. URL 뒤에 쿼리로 추가:
+
+| 채널 | 예시 |
+|---|---|
+| Meta 광고 | `?utm_source=meta&utm_medium=cpc&utm_campaign=launch_2026_06` |
+| 커뮤니티 A 게시글 | `?utm_source=community_a&utm_medium=post&utm_campaign=launch` |
+| 인스타 프로필 링크 | `?utm_source=instagram&utm_medium=bio&utm_campaign=launch` |
+| 카카오 채널 | `?utm_source=kakao&utm_medium=message&utm_campaign=launch` |
+
+- `utm_source`(필수): 채널명 — 채널별 표의 집계 기준.
+- `utm_medium`: 매체 유형(cpc/post/bio/message 등). `utm_campaign`: 캠페인 식별.
+- UTM이 없으면 `direct`로 분류. Meta는 `fbclid`, Google은 `gclid`도 자동 캡처(→ meta/google로 귀속).
+- 첫 진입 출처는 **first-touch**로 고정(덮어쓰지 않음), 최근 출처는 last-touch로 갱신.
+
+### 광고 픽셀 (Meta / GA4) — 동의 기반 보조
+
+- `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_GA_ID` 설정 시에만 활성. 미설정이면 동의 배너·픽셀 모두 비활성(앱 정상).
+- **쿠키·광고 추적 동의 배너**(`MarketingPixels`)에서 "동의" 전에는 픽셀을 로드하지 않고 이벤트도 보내지 않는다. 표준 이벤트는 PageView, CompleteRegistration(가입완료)만.
+- 픽셀은 광고 최적화용 보조 지표일 뿐, 정확한 수치는 위 대시보드(우리 DB)를 기준으로 본다.
+
 ## 배포 (Vercel)
 
 - git 커밋 푸시 시 자동 배포된다(프로덕션 도메인: https://maeum-itgi.vercel.app).
