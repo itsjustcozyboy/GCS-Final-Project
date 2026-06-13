@@ -16,7 +16,7 @@ export function AdminLink() {
   return (
     <Link
       href="/admin"
-      className="block w-full py-3 rounded-2xl text-center text-sm font-medium border-2 transition-colors hover:bg-opacity-10"
+      className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center px-6 py-3 rounded-2xl text-center text-sm font-medium border-2 transition-colors hover:bg-opacity-10"
       style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
     >
       🔐 관리자 대시보드

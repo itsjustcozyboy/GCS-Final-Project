@@ -87,12 +87,12 @@ export default function OnboardingPage() {
 
   if (step === 'role') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: 'var(--color-background)' }}>
+      <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-8">
-          <div className="text-center space-y-2">
-            <div className="text-5xl">💌</div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>마음 잇기 시작하기</h1>
-            <p className="text-gray-500 text-sm">저는 이 앱을 어떻게 사용할 건가요?</p>
+          <div className="text-center space-y-2 break-keep">
+            <div className="text-4xl sm:text-5xl">💌</div>
+            <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>마음 잇기 시작하기</h1>
+            <p className="text-gray-500 text-sm leading-relaxed">저는 이 앱을 어떻게 사용할 건가요?</p>
           </div>
 
           <div className="space-y-3">
@@ -103,13 +103,13 @@ export default function OnboardingPage() {
               <button
                 key={opt.value}
                 onClick={() => { setRole(opt.value as 'child' | 'parent'); setStep('info'); }}
-                className="w-full flex gap-4 p-4 rounded-2xl bg-white border-2 text-left transition-all hover:shadow-md"
+                className="w-full min-h-16 flex items-start gap-3 sm:gap-4 p-4 rounded-2xl bg-white border-2 text-left transition-all hover:shadow-md"
                 style={{ borderColor: 'var(--color-border)' }}
               >
-                <span className="text-3xl">{opt.icon}</span>
-                <div>
-                  <p className="font-semibold text-gray-900">{opt.title}</p>
-                  <p className="text-sm text-gray-500">{opt.desc}</p>
+                <span className="shrink-0 text-2xl sm:text-3xl">{opt.icon}</span>
+                <div className="min-w-0 break-keep">
+                  <p className="font-semibold text-gray-900 leading-snug">{opt.title}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{opt.desc}</p>
                 </div>
               </button>
             ))}
@@ -121,10 +121,10 @@ export default function OnboardingPage() {
 
   if (step === 'info') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: 'var(--color-background)' }}>
+      <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-6">
-          <button onClick={() => setStep('role')} className="text-gray-400 text-sm">← 뒤로</button>
-          <h2 className="text-xl font-bold text-gray-900">기본 정보를 알려주세요</h2>
+          <button onClick={() => setStep('role')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
+          <h2 className="text-xl font-bold text-gray-900 leading-snug break-keep">기본 정보를 알려주세요</h2>
 
           <div className="space-y-4">
             {[
@@ -138,7 +138,7 @@ export default function OnboardingPage() {
                   type={f.type}
                   value={form[f.key as keyof typeof form]}
                   onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none"
+                  className="w-full min-h-12 px-4 py-3 rounded-xl border border-gray-200 text-base focus:outline-none"
                   placeholder={f.placeholder}
                 />
               </div>
@@ -147,7 +147,7 @@ export default function OnboardingPage() {
             {role === 'child' && (
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-2">부모님과의 대화 톤</p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
                     { value: 'light', label: '🌸 가벼운 추억', desc: '일상적인 이야기부터' },
                     { value: 'deep', label: '🌊 깊은 인생 이야기', desc: '삶의 의미와 가치관' },
@@ -155,11 +155,11 @@ export default function OnboardingPage() {
                     <button
                       key={opt.value}
                       onClick={() => setTone(opt.value as 'light' | 'deep')}
-                      className="p-3 rounded-xl border-2 text-center text-sm transition-all"
+                      className="min-h-16 p-3 rounded-xl border-2 text-center text-sm transition-all break-keep"
                       style={{ borderColor: tone === opt.value ? 'var(--color-primary)' : 'var(--color-border)', backgroundColor: tone === opt.value ? '#EFF7F2' : 'white' }}
                     >
-                      <div className="font-medium">{opt.label}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{opt.desc}</div>
+                      <div className="font-medium leading-snug">{opt.label}</div>
+                      <div className="text-xs text-gray-400 mt-0.5 leading-relaxed">{opt.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -179,7 +179,7 @@ export default function OnboardingPage() {
                   className="w-4 h-4 accent-[var(--color-primary)]"
                   aria-label="전체 동의"
                 />
-                <span className="text-sm font-semibold text-gray-800">전체 동의</span>
+                <span className="text-sm font-semibold text-gray-800 break-keep">전체 동의</span>
               </label>
 
               {CONSENT_ITEMS.map((item) => (
@@ -192,7 +192,7 @@ export default function OnboardingPage() {
                       className="mt-0.5 w-4 h-4 accent-[var(--color-primary)]"
                       aria-label={item.label}
                     />
-                    <span className="text-sm text-gray-700 flex-1">
+                    <span className="min-w-0 text-sm text-gray-700 flex-1 leading-relaxed break-keep">
                       <strong className={item.required ? 'text-red-500' : 'text-gray-400'}>
                         [{item.required ? '필수' : '선택'}]
                       </strong>{' '}
@@ -207,16 +207,16 @@ export default function OnboardingPage() {
                       )}
                     </span>
                   </label>
-                  {item.desc && <p className="text-xs text-gray-400 pl-7 mt-0.5">{item.desc}</p>}
+                  {item.desc && <p className="text-xs text-gray-400 pl-7 mt-0.5 leading-relaxed break-keep">{item.desc}</p>}
                 </div>
               ))}
             </div>
 
             {!requiredConsented && (
-              <p className="text-xs text-gray-400">필수 항목에 모두 동의해야 가입할 수 있어요. 선택 항목은 동의하지 않아도 이용에 불이익이 없습니다.</p>
+              <p className="text-xs text-gray-400 leading-relaxed break-keep">필수 항목에 모두 동의해야 가입할 수 있어요. 선택 항목은 동의하지 않아도 이용에 불이익이 없습니다.</p>
             )}
 
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && <p className="text-sm text-red-500 leading-relaxed break-keep">{error}</p>}
 
             <button
               onClick={() =>
@@ -231,7 +231,7 @@ export default function OnboardingPage() {
                 })
               }
               disabled={register.isPending || !requiredConsented}
-              className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg transition-opacity hover:opacity-90 disabled:opacity-50 break-keep"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
               {register.isPending ? '가입 중...' : requiredConsented ? '계속하기' : '필수 항목에 동의해주세요'}
@@ -246,14 +246,14 @@ export default function OnboardingPage() {
     const normalizedInviteCode = inviteCode.replace(/[\s-]/g, '').toUpperCase();
 
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: 'var(--color-background)' }}>
+      <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-6">
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 break-keep">
             <div className="text-4xl">🔗</div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-gray-900 leading-snug">
               {role === 'child' ? '초대 코드를 보내주세요' : '자녀의 초대 코드를 입력해주세요'}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 leading-relaxed">
               {role === 'child'
                 ? '부모님이 이 코드를 입력하면 서로 연결돼요.'
                 : '자녀가 만든 초대 코드를 입력하면 연결돼요.'}
@@ -261,23 +261,23 @@ export default function OnboardingPage() {
           </div>
 
           {role === 'child' ? (
-            <div className="rounded-2xl bg-white border border-gray-100 p-5 text-center space-y-4">
+            <div className="rounded-2xl bg-white border border-gray-100 p-4 sm:p-5 text-center space-y-4">
               <p className="text-sm text-gray-500">부모님께 전달할 코드</p>
-              <div className="text-3xl font-bold tracking-[0.25em] text-gray-900 font-mono">
+              <div className="text-2xl sm:text-3xl font-bold tracking-[0.16em] sm:tracking-[0.25em] text-gray-900 font-mono break-all">
                 {createInvite.isPending ? '생성 중' : inviteCode || '--------'}
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => createInvite.mutate({ tone, regenerate: true })}
                   disabled={createInvite.isPending}
-                  className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 disabled:opacity-50"
+                  className="flex-1 min-h-11 px-3 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 disabled:opacity-50"
                 >
                   다시 생성
                 </button>
                 <button
                   onClick={() => inviteCode && navigator.clipboard?.writeText(inviteCode)}
                   disabled={!inviteCode}
-                  className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+                  className="flex-1 min-h-11 px-3 py-2 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
                   복사하기
@@ -290,21 +290,21 @@ export default function OnboardingPage() {
               <input
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base font-mono tracking-widest text-center"
+                className="w-full min-h-12 px-4 py-3 rounded-xl border border-gray-200 text-base font-mono tracking-widest text-center"
                 placeholder="XXXXXXXX"
                 maxLength={12}
               />
             </div>
           )}
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-red-500 leading-relaxed break-keep">{error}</p>}
 
           <div className="space-y-3">
             {role === 'parent' && (
               <button
                 onClick={() => acceptInvite.mutate({ inviteCode: normalizedInviteCode })}
                 disabled={acceptInvite.isPending || normalizedInviteCode.length < 4}
-                className="w-full py-4 rounded-2xl text-white font-semibold text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
                 {acceptInvite.isPending ? '연결 중...' : '연결하기'}
@@ -312,7 +312,7 @@ export default function OnboardingPage() {
             )}
             <button
               onClick={() => setStep('done')}
-              className="w-full py-3 rounded-2xl text-gray-500 font-medium"
+              className="w-full min-h-12 px-4 py-3 rounded-2xl text-gray-500 font-medium break-keep"
             >
               {role === 'child' ? '코드를 보냈어요' : '나중에 연결할게요'}
             </button>
@@ -324,12 +324,12 @@ export default function OnboardingPage() {
 
   // done
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: 'var(--color-background)' }}>
+    <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
       <div className="max-w-sm w-full text-center space-y-8">
-        <div className="text-6xl animate-bounce">🎉</div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>준비됐어요!</h2>
-          <p className="text-gray-500">
+        <div className="text-5xl sm:text-6xl animate-bounce">🎉</div>
+        <div className="space-y-2 break-keep">
+          <h2 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>준비됐어요!</h2>
+          <p className="text-gray-500 leading-relaxed">
             {role === 'child'
               ? '부모님이 코드를 입력하면 연결 소식이 피드에 표시돼요.'
               : '연결되면 피드에서 서로의 상태를 볼 수 있어요.'}
@@ -337,7 +337,7 @@ export default function OnboardingPage() {
         </div>
         <button
           onClick={() => router.push('/feed')}
-          className="w-full py-4 rounded-2xl text-white font-semibold text-lg"
+          className="w-full min-h-12 px-4 py-3 rounded-2xl text-white font-semibold text-base sm:text-lg"
           style={{ backgroundColor: 'var(--color-primary)' }}
         >
           피드 보러 가기

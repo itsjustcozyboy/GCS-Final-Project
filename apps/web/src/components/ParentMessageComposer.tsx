@@ -54,15 +54,15 @@ export function ParentMessageComposer({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 px-0 sm:px-4">
-      <div className="bg-white rounded-t-3xl sm:rounded-2xl p-6 w-full max-w-md space-y-5 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 w-full max-w-md space-y-5 shadow-xl max-h-[90dvh] overflow-y-auto">
         {done ? (
-          <div className="text-center py-10 space-y-4">
-            <div className="text-6xl" aria-hidden>💌</div>
-            <p className="text-2xl font-bold text-gray-900">잘 전달됐어요!</p>
-            <p className="text-base text-gray-500">{childName}님이 따뜻한 마음을 받아볼 거예요.</p>
+          <div className="text-center py-10 space-y-4 break-keep">
+            <div className="text-5xl sm:text-6xl" aria-hidden>💌</div>
+            <p className="text-2xl font-bold leading-snug text-gray-900">잘 전달됐어요!</p>
+            <p className="text-base text-gray-500 leading-relaxed">{childName}님이 따뜻한 마음을 받아볼 거예요.</p>
             <button
               onClick={onClose}
-              className="w-full py-4 rounded-2xl text-white text-lg font-semibold"
+              className="w-full min-h-12 px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold"
               style={{ backgroundColor: PRIMARY }}
             >
               확인
@@ -70,22 +70,22 @@ export function ParentMessageComposer({
           </div>
         ) : (
           <>
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold text-gray-900">💝 먼저 마음 전하기</h2>
+            <div className="space-y-1 break-keep">
+              <h2 className="text-xl font-bold leading-snug text-gray-900">💝 먼저 마음 전하기</h2>
               <p className="text-base text-gray-500 leading-relaxed">
                 지금 떠오르는 마음을 {childName}님에게 남겨보세요. 질문을 기다리지 않아도 돼요.
               </p>
             </div>
 
             {/* 방법 선택 — 큰 버튼, 음성 우선 */}
-            <div className="grid grid-cols-4 gap-2" role="tablist" aria-label="전하는 방법 선택">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="tablist" aria-label="전하는 방법 선택">
               {MODES.map((m) => (
                 <button
                   key={m.value}
                   role="tab"
                   aria-selected={mode === m.value}
                   onClick={() => { setMode(m.value); setMedia(null); }}
-                  className="py-3 rounded-xl border-2 text-center transition-all"
+                  className="min-h-16 py-3 rounded-xl border-2 text-center transition-all break-keep"
                   style={{
                     borderColor: mode === m.value ? PRIMARY : 'var(--color-border)',
                     backgroundColor: mode === m.value ? '#EFF7F2' : 'white',
@@ -119,17 +119,17 @@ export function ParentMessageComposer({
 
             {send.isError && <p className="text-sm text-red-500" role="alert">{send.error.message}</p>}
 
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={onClose}
-                className="flex-1 py-4 rounded-2xl border border-gray-200 text-base font-medium text-gray-500"
+                className="min-h-12 flex-1 px-4 py-3 rounded-2xl border border-gray-200 text-base font-medium text-gray-500"
               >
                 다음에 할게요
               </button>
               <button
                 onClick={handleSend}
                 disabled={!canSend || send.isPending}
-                className="flex-[2] py-4 rounded-2xl text-white text-lg font-semibold disabled:opacity-50"
+                className="min-h-12 flex-[2] px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold disabled:opacity-50"
                 style={{ backgroundColor: PRIMARY }}
               >
                 {send.isPending ? '전하는 중...' : '💌 마음 전하기'}

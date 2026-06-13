@@ -82,12 +82,12 @@ export function AnswerComposer({
   return (
     <div className={compact ? 'space-y-3' : 'space-y-4'}>
       {/* 방법 선택 탭 */}
-      <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 text-xs sm:text-sm font-medium">
+      <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 text-xs sm:text-sm font-medium break-keep">
         {METHODS.map((m) => (
           <button
             key={m.value}
             onClick={() => selectMethod(m.value)}
-            className="flex-1 px-1.5 py-2 rounded-lg transition-colors"
+            className="min-h-10 flex-1 px-1.5 py-2 rounded-lg transition-colors"
             style={method === m.value ? { backgroundColor: 'white', color: 'var(--color-primary-dark)', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' } : { color: '#9B9B9B' }}
           >
             {m.label}
@@ -112,7 +112,7 @@ export function AnswerComposer({
           <button
             onClick={() => compose.mutate({ questionId, keywords })}
             disabled={compose.isPending || keywords.length === 0}
-            className="w-full py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
+            className="w-full min-h-11 px-4 py-2 rounded-xl text-white text-sm font-semibold disabled:opacity-50 break-keep"
             style={{ backgroundColor: PRIMARY }}
           >
             {compose.isPending ? 'AI가 이야기로 엮고 있어요...' : text ? '🔄 다시 엮기' : '✨ AI가 이야기로 엮어주기'}
@@ -135,7 +135,7 @@ export function AnswerComposer({
       {method === 'guide' && (
         <div className="space-y-3">
           {/* 형식 선택 (목소리를 가장 먼저 — 타이핑이 어려운 세대 배려) */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 break-keep">
             {[
               { value: 'audio', icon: '🎤', label: '목소리로' },
               { value: 'text', icon: '✍️', label: '글로' },
@@ -151,7 +151,7 @@ export function AnswerComposer({
                 }}
                 aria-label={f.label}
                 aria-pressed={format === f.value}
-                className="p-3 rounded-xl border-2 flex items-center gap-2 text-sm font-medium transition-all"
+                className="min-h-12 p-3 rounded-xl border-2 flex items-center gap-2 text-sm font-medium transition-all"
                 style={{
                   borderColor: format === f.value ? PRIMARY : 'var(--color-border)',
                   backgroundColor: format === f.value ? '#EFF7F2' : 'white',
@@ -243,8 +243,8 @@ export function AnswerComposer({
 
       {/* 공개/비공개 선택 */}
       <div className="rounded-xl border border-gray-200 p-3 space-y-2">
-        <p className="text-xs font-medium text-gray-500">이 답변을 자녀가 볼 수 있게 할까요?</p>
-        <div className="grid grid-cols-2 gap-2">
+        <p className="text-xs font-medium text-gray-500 break-keep">이 답변을 자녀가 볼 수 있게 할까요?</p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {[
             { value: true, icon: '🔒', label: '나만 간직하기', desc: '책과 피드에 보이지 않아요' },
             { value: false, icon: '💌', label: '공개하기', desc: '자녀가 바로 볼 수 있어요' },
@@ -252,29 +252,29 @@ export function AnswerComposer({
             <button
               key={String(opt.value)}
               onClick={() => setIsPrivate(opt.value)}
-              className="p-2.5 rounded-xl border-2 text-center transition-all"
+              className="min-h-16 p-2.5 rounded-xl border-2 text-center transition-all break-keep"
               style={{
                 borderColor: isPrivate === opt.value ? PRIMARY : 'var(--color-border)',
                 backgroundColor: isPrivate === opt.value ? '#EFF7F2' : 'white',
               }}
             >
-              <p className="text-sm font-medium text-gray-800">{opt.icon} {opt.label}</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">{opt.desc}</p>
+              <p className="text-sm font-medium text-gray-800 leading-snug">{opt.icon} {opt.label}</p>
+              <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">{opt.desc}</p>
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-gray-400">나중에 언제든 바꿀 수 있어요.</p>
+        <p className="text-[11px] text-gray-400 leading-relaxed break-keep">나중에 언제든 바꿀 수 있어요.</p>
       </div>
 
-      {submit.isError && <p className="text-sm text-red-500">{submit.error.message}</p>}
-      {compose.isError && <p className="text-sm text-red-500">{compose.error.message}</p>}
+      {submit.isError && <p className="text-sm text-red-500 leading-relaxed break-keep">{submit.error.message}</p>}
+      {compose.isError && <p className="text-sm text-red-500 leading-relaxed break-keep">{compose.error.message}</p>}
 
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         {onSkip !== undefined ? (
           <button
             onClick={() => skip.mutate({ questionId })}
             disabled={skip.isPending}
-            className="flex-1 py-4 rounded-2xl border border-gray-200 text-gray-500 text-base font-medium disabled:opacity-50"
+            className="min-h-12 flex-1 px-4 py-3 rounded-2xl border border-gray-200 text-gray-500 text-base font-medium disabled:opacity-50"
             aria-label="이 질문은 다음에 답하기"
           >
             다음에 할게요
@@ -283,7 +283,7 @@ export function AnswerComposer({
         <button
           onClick={handleSubmit}
           disabled={submit.isPending || !canSubmit}
-          className="flex-grow py-4 rounded-2xl text-white text-lg font-semibold disabled:opacity-50"
+          className="min-h-12 flex-grow px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold disabled:opacity-50"
           style={{ backgroundColor: PRIMARY }}
           aria-label={isPrivate ? '나만 간직하기로 저장' : '자녀에게 답변 보내기'}
         >

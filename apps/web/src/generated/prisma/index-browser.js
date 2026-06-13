@@ -289,6 +289,51 @@ exports.Prisma.AdminAuditScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.VisitorScalarFieldEnum = {
+  anonymousId: 'anonymousId',
+  firstSeen: 'firstSeen',
+  lastSeen: 'lastSeen',
+  visitCount: 'visitCount',
+  ftSource: 'ftSource',
+  ftMedium: 'ftMedium',
+  ftCampaign: 'ftCampaign',
+  ftContent: 'ftContent',
+  ftTerm: 'ftTerm',
+  ltSource: 'ltSource',
+  ltMedium: 'ltMedium',
+  ltCampaign: 'ltCampaign',
+  ltContent: 'ltContent',
+  ltTerm: 'ltTerm',
+  convertedUserId: 'convertedUserId',
+  convertedAt: 'convertedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.VisitorEventScalarFieldEnum = {
+  id: 'id',
+  anonymousId: 'anonymousId',
+  path: 'path',
+  referrer: 'referrer',
+  utmSource: 'utmSource',
+  utmMedium: 'utmMedium',
+  utmCampaign: 'utmCampaign',
+  utmContent: 'utmContent',
+  utmTerm: 'utmTerm',
+  fbclid: 'fbclid',
+  gclid: 'gclid',
+  deviceType: 'deviceType',
+  ipHash: 'ipHash',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ConversionEventScalarFieldEnum = {
+  id: 'id',
+  anonymousId: 'anonymousId',
+  userId: 'userId',
+  type: 'type',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -385,6 +430,13 @@ exports.InquiryStatus = exports.$Enums.InquiryStatus = {
   resolved: 'resolved'
 };
 
+exports.ConversionType = exports.$Enums.ConversionType = {
+  signup_started: 'signup_started',
+  signup_completed: 'signup_completed',
+  first_login: 'first_login',
+  onboarding_completed: 'onboarding_completed'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Consent: 'Consent',
@@ -399,7 +451,10 @@ exports.Prisma.ModelName = {
   AccessLog: 'AccessLog',
   Admin: 'Admin',
   Inquiry: 'Inquiry',
-  AdminAudit: 'AdminAudit'
+  AdminAudit: 'AdminAudit',
+  Visitor: 'Visitor',
+  VisitorEvent: 'VisitorEvent',
+  ConversionEvent: 'ConversionEvent'
 };
 
 /**

@@ -13,4 +13,12 @@ body {
   background-color: var(--color-background);
   font-family: var(--font-family-sans);
   color: #1A1A1A;
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+textarea {
+  min-width: 0;
 }

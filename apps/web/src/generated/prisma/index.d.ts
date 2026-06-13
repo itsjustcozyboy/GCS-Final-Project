@@ -83,6 +83,21 @@ export type Inquiry = $Result.DefaultSelection<Prisma.$InquiryPayload>
  * 
  */
 export type AdminAudit = $Result.DefaultSelection<Prisma.$AdminAuditPayload>
+/**
+ * Model Visitor
+ * 
+ */
+export type Visitor = $Result.DefaultSelection<Prisma.$VisitorPayload>
+/**
+ * Model VisitorEvent
+ * 
+ */
+export type VisitorEvent = $Result.DefaultSelection<Prisma.$VisitorEventPayload>
+/**
+ * Model ConversionEvent
+ * 
+ */
+export type ConversionEvent = $Result.DefaultSelection<Prisma.$ConversionEventPayload>
 
 /**
  * Enums
@@ -191,6 +206,16 @@ export const ConsentType: {
 
 export type ConsentType = (typeof ConsentType)[keyof typeof ConsentType]
 
+
+export const ConversionType: {
+  signup_started: 'signup_started',
+  signup_completed: 'signup_completed',
+  first_login: 'first_login',
+  onboarding_completed: 'onboarding_completed'
+};
+
+export type ConversionType = (typeof ConversionType)[keyof typeof ConversionType]
+
 }
 
 export type Role = $Enums.Role
@@ -236,6 +261,10 @@ export const InquiryStatus: typeof $Enums.InquiryStatus
 export type ConsentType = $Enums.ConsentType
 
 export const ConsentType: typeof $Enums.ConsentType
+
+export type ConversionType = $Enums.ConversionType
+
+export const ConversionType: typeof $Enums.ConversionType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -494,6 +523,36 @@ export class PrismaClient<
     * ```
     */
   get adminAudit(): Prisma.AdminAuditDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.visitor`: Exposes CRUD operations for the **Visitor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Visitors
+    * const visitors = await prisma.visitor.findMany()
+    * ```
+    */
+  get visitor(): Prisma.VisitorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.visitorEvent`: Exposes CRUD operations for the **VisitorEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VisitorEvents
+    * const visitorEvents = await prisma.visitorEvent.findMany()
+    * ```
+    */
+  get visitorEvent(): Prisma.VisitorEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversionEvent`: Exposes CRUD operations for the **ConversionEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversionEvents
+    * const conversionEvents = await prisma.conversionEvent.findMany()
+    * ```
+    */
+  get conversionEvent(): Prisma.ConversionEventDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -948,7 +1007,10 @@ export namespace Prisma {
     AccessLog: 'AccessLog',
     Admin: 'Admin',
     Inquiry: 'Inquiry',
-    AdminAudit: 'AdminAudit'
+    AdminAudit: 'AdminAudit',
+    Visitor: 'Visitor',
+    VisitorEvent: 'VisitorEvent',
+    ConversionEvent: 'ConversionEvent'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -967,7 +1029,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "consent" | "session" | "connection" | "connectionInvite" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "inquiry" | "adminAudit"
+      modelProps: "user" | "consent" | "session" | "connection" | "connectionInvite" | "question" | "answer" | "reaction" | "bookEdition" | "curatedQuestion" | "accessLog" | "admin" | "inquiry" | "adminAudit" | "visitor" | "visitorEvent" | "conversionEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2007,6 +2069,228 @@ export namespace Prisma {
           }
         }
       }
+      Visitor: {
+        payload: Prisma.$VisitorPayload<ExtArgs>
+        fields: Prisma.VisitorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VisitorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VisitorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          findFirst: {
+            args: Prisma.VisitorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VisitorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          findMany: {
+            args: Prisma.VisitorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>[]
+          }
+          create: {
+            args: Prisma.VisitorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          createMany: {
+            args: Prisma.VisitorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VisitorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>[]
+          }
+          delete: {
+            args: Prisma.VisitorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          update: {
+            args: Prisma.VisitorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          deleteMany: {
+            args: Prisma.VisitorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VisitorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VisitorUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>[]
+          }
+          upsert: {
+            args: Prisma.VisitorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorPayload>
+          }
+          aggregate: {
+            args: Prisma.VisitorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVisitor>
+          }
+          groupBy: {
+            args: Prisma.VisitorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VisitorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VisitorCountArgs<ExtArgs>
+            result: $Utils.Optional<VisitorCountAggregateOutputType> | number
+          }
+        }
+      }
+      VisitorEvent: {
+        payload: Prisma.$VisitorEventPayload<ExtArgs>
+        fields: Prisma.VisitorEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VisitorEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VisitorEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          findFirst: {
+            args: Prisma.VisitorEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VisitorEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          findMany: {
+            args: Prisma.VisitorEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>[]
+          }
+          create: {
+            args: Prisma.VisitorEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          createMany: {
+            args: Prisma.VisitorEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VisitorEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>[]
+          }
+          delete: {
+            args: Prisma.VisitorEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          update: {
+            args: Prisma.VisitorEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.VisitorEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VisitorEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VisitorEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.VisitorEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitorEventPayload>
+          }
+          aggregate: {
+            args: Prisma.VisitorEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVisitorEvent>
+          }
+          groupBy: {
+            args: Prisma.VisitorEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VisitorEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VisitorEventCountArgs<ExtArgs>
+            result: $Utils.Optional<VisitorEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConversionEvent: {
+        payload: Prisma.$ConversionEventPayload<ExtArgs>
+        fields: Prisma.ConversionEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversionEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversionEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversionEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversionEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          findMany: {
+            args: Prisma.ConversionEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>[]
+          }
+          create: {
+            args: Prisma.ConversionEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          createMany: {
+            args: Prisma.ConversionEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversionEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversionEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          update: {
+            args: Prisma.ConversionEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversionEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversionEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversionEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversionEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversionEventPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversionEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversionEvent>
+          }
+          groupBy: {
+            args: Prisma.ConversionEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversionEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversionEventCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversionEventCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2117,6 +2401,9 @@ export namespace Prisma {
     admin?: AdminOmit
     inquiry?: InquiryOmit
     adminAudit?: AdminAuditOmit
+    visitor?: VisitorOmit
+    visitorEvent?: VisitorEventOmit
+    conversionEvent?: ConversionEventOmit
   }
 
   /* Types for Logging */
@@ -2354,6 +2641,46 @@ export namespace Prisma {
    */
   export type AnswerCountOutputTypeCountReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReactionWhereInput
+  }
+
+
+  /**
+   * Count Type VisitorCountOutputType
+   */
+
+  export type VisitorCountOutputType = {
+    events: number
+    conversions: number
+  }
+
+  export type VisitorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    events?: boolean | VisitorCountOutputTypeCountEventsArgs
+    conversions?: boolean | VisitorCountOutputTypeCountConversionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VisitorCountOutputType without action
+   */
+  export type VisitorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorCountOutputType
+     */
+    select?: VisitorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VisitorCountOutputType without action
+   */
+  export type VisitorCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitorEventWhereInput
+  }
+
+  /**
+   * VisitorCountOutputType without action
+   */
+  export type VisitorCountOutputTypeCountConversionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversionEventWhereInput
   }
 
 
@@ -18303,6 +18630,3546 @@ export namespace Prisma {
 
 
   /**
+   * Model Visitor
+   */
+
+  export type AggregateVisitor = {
+    _count: VisitorCountAggregateOutputType | null
+    _avg: VisitorAvgAggregateOutputType | null
+    _sum: VisitorSumAggregateOutputType | null
+    _min: VisitorMinAggregateOutputType | null
+    _max: VisitorMaxAggregateOutputType | null
+  }
+
+  export type VisitorAvgAggregateOutputType = {
+    visitCount: number | null
+  }
+
+  export type VisitorSumAggregateOutputType = {
+    visitCount: number | null
+  }
+
+  export type VisitorMinAggregateOutputType = {
+    anonymousId: string | null
+    firstSeen: Date | null
+    lastSeen: Date | null
+    visitCount: number | null
+    ftSource: string | null
+    ftMedium: string | null
+    ftCampaign: string | null
+    ftContent: string | null
+    ftTerm: string | null
+    ltSource: string | null
+    ltMedium: string | null
+    ltCampaign: string | null
+    ltContent: string | null
+    ltTerm: string | null
+    convertedUserId: string | null
+    convertedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type VisitorMaxAggregateOutputType = {
+    anonymousId: string | null
+    firstSeen: Date | null
+    lastSeen: Date | null
+    visitCount: number | null
+    ftSource: string | null
+    ftMedium: string | null
+    ftCampaign: string | null
+    ftContent: string | null
+    ftTerm: string | null
+    ltSource: string | null
+    ltMedium: string | null
+    ltCampaign: string | null
+    ltContent: string | null
+    ltTerm: string | null
+    convertedUserId: string | null
+    convertedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type VisitorCountAggregateOutputType = {
+    anonymousId: number
+    firstSeen: number
+    lastSeen: number
+    visitCount: number
+    ftSource: number
+    ftMedium: number
+    ftCampaign: number
+    ftContent: number
+    ftTerm: number
+    ltSource: number
+    ltMedium: number
+    ltCampaign: number
+    ltContent: number
+    ltTerm: number
+    convertedUserId: number
+    convertedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type VisitorAvgAggregateInputType = {
+    visitCount?: true
+  }
+
+  export type VisitorSumAggregateInputType = {
+    visitCount?: true
+  }
+
+  export type VisitorMinAggregateInputType = {
+    anonymousId?: true
+    firstSeen?: true
+    lastSeen?: true
+    visitCount?: true
+    ftSource?: true
+    ftMedium?: true
+    ftCampaign?: true
+    ftContent?: true
+    ftTerm?: true
+    ltSource?: true
+    ltMedium?: true
+    ltCampaign?: true
+    ltContent?: true
+    ltTerm?: true
+    convertedUserId?: true
+    convertedAt?: true
+    createdAt?: true
+  }
+
+  export type VisitorMaxAggregateInputType = {
+    anonymousId?: true
+    firstSeen?: true
+    lastSeen?: true
+    visitCount?: true
+    ftSource?: true
+    ftMedium?: true
+    ftCampaign?: true
+    ftContent?: true
+    ftTerm?: true
+    ltSource?: true
+    ltMedium?: true
+    ltCampaign?: true
+    ltContent?: true
+    ltTerm?: true
+    convertedUserId?: true
+    convertedAt?: true
+    createdAt?: true
+  }
+
+  export type VisitorCountAggregateInputType = {
+    anonymousId?: true
+    firstSeen?: true
+    lastSeen?: true
+    visitCount?: true
+    ftSource?: true
+    ftMedium?: true
+    ftCampaign?: true
+    ftContent?: true
+    ftTerm?: true
+    ltSource?: true
+    ltMedium?: true
+    ltCampaign?: true
+    ltContent?: true
+    ltTerm?: true
+    convertedUserId?: true
+    convertedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type VisitorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Visitor to aggregate.
+     */
+    where?: VisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Visitors to fetch.
+     */
+    orderBy?: VisitorOrderByWithRelationInput | VisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Visitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Visitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Visitors
+    **/
+    _count?: true | VisitorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VisitorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VisitorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VisitorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VisitorMaxAggregateInputType
+  }
+
+  export type GetVisitorAggregateType<T extends VisitorAggregateArgs> = {
+        [P in keyof T & keyof AggregateVisitor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVisitor[P]>
+      : GetScalarType<T[P], AggregateVisitor[P]>
+  }
+
+
+
+
+  export type VisitorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitorWhereInput
+    orderBy?: VisitorOrderByWithAggregationInput | VisitorOrderByWithAggregationInput[]
+    by: VisitorScalarFieldEnum[] | VisitorScalarFieldEnum
+    having?: VisitorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VisitorCountAggregateInputType | true
+    _avg?: VisitorAvgAggregateInputType
+    _sum?: VisitorSumAggregateInputType
+    _min?: VisitorMinAggregateInputType
+    _max?: VisitorMaxAggregateInputType
+  }
+
+  export type VisitorGroupByOutputType = {
+    anonymousId: string
+    firstSeen: Date
+    lastSeen: Date
+    visitCount: number
+    ftSource: string | null
+    ftMedium: string | null
+    ftCampaign: string | null
+    ftContent: string | null
+    ftTerm: string | null
+    ltSource: string | null
+    ltMedium: string | null
+    ltCampaign: string | null
+    ltContent: string | null
+    ltTerm: string | null
+    convertedUserId: string | null
+    convertedAt: Date | null
+    createdAt: Date
+    _count: VisitorCountAggregateOutputType | null
+    _avg: VisitorAvgAggregateOutputType | null
+    _sum: VisitorSumAggregateOutputType | null
+    _min: VisitorMinAggregateOutputType | null
+    _max: VisitorMaxAggregateOutputType | null
+  }
+
+  type GetVisitorGroupByPayload<T extends VisitorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VisitorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VisitorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VisitorGroupByOutputType[P]>
+            : GetScalarType<T[P], VisitorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VisitorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    anonymousId?: boolean
+    firstSeen?: boolean
+    lastSeen?: boolean
+    visitCount?: boolean
+    ftSource?: boolean
+    ftMedium?: boolean
+    ftCampaign?: boolean
+    ftContent?: boolean
+    ftTerm?: boolean
+    ltSource?: boolean
+    ltMedium?: boolean
+    ltCampaign?: boolean
+    ltContent?: boolean
+    ltTerm?: boolean
+    convertedUserId?: boolean
+    convertedAt?: boolean
+    createdAt?: boolean
+    events?: boolean | Visitor$eventsArgs<ExtArgs>
+    conversions?: boolean | Visitor$conversionsArgs<ExtArgs>
+    _count?: boolean | VisitorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["visitor"]>
+
+  export type VisitorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    anonymousId?: boolean
+    firstSeen?: boolean
+    lastSeen?: boolean
+    visitCount?: boolean
+    ftSource?: boolean
+    ftMedium?: boolean
+    ftCampaign?: boolean
+    ftContent?: boolean
+    ftTerm?: boolean
+    ltSource?: boolean
+    ltMedium?: boolean
+    ltCampaign?: boolean
+    ltContent?: boolean
+    ltTerm?: boolean
+    convertedUserId?: boolean
+    convertedAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["visitor"]>
+
+  export type VisitorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    anonymousId?: boolean
+    firstSeen?: boolean
+    lastSeen?: boolean
+    visitCount?: boolean
+    ftSource?: boolean
+    ftMedium?: boolean
+    ftCampaign?: boolean
+    ftContent?: boolean
+    ftTerm?: boolean
+    ltSource?: boolean
+    ltMedium?: boolean
+    ltCampaign?: boolean
+    ltContent?: boolean
+    ltTerm?: boolean
+    convertedUserId?: boolean
+    convertedAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["visitor"]>
+
+  export type VisitorSelectScalar = {
+    anonymousId?: boolean
+    firstSeen?: boolean
+    lastSeen?: boolean
+    visitCount?: boolean
+    ftSource?: boolean
+    ftMedium?: boolean
+    ftCampaign?: boolean
+    ftContent?: boolean
+    ftTerm?: boolean
+    ltSource?: boolean
+    ltMedium?: boolean
+    ltCampaign?: boolean
+    ltContent?: boolean
+    ltTerm?: boolean
+    convertedUserId?: boolean
+    convertedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type VisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"anonymousId" | "firstSeen" | "lastSeen" | "visitCount" | "ftSource" | "ftMedium" | "ftCampaign" | "ftContent" | "ftTerm" | "ltSource" | "ltMedium" | "ltCampaign" | "ltContent" | "ltTerm" | "convertedUserId" | "convertedAt" | "createdAt", ExtArgs["result"]["visitor"]>
+  export type VisitorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    events?: boolean | Visitor$eventsArgs<ExtArgs>
+    conversions?: boolean | Visitor$conversionsArgs<ExtArgs>
+    _count?: boolean | VisitorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type VisitorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type VisitorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $VisitorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Visitor"
+    objects: {
+      events: Prisma.$VisitorEventPayload<ExtArgs>[]
+      conversions: Prisma.$ConversionEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      anonymousId: string
+      firstSeen: Date
+      lastSeen: Date
+      visitCount: number
+      ftSource: string | null
+      ftMedium: string | null
+      ftCampaign: string | null
+      ftContent: string | null
+      ftTerm: string | null
+      ltSource: string | null
+      ltMedium: string | null
+      ltCampaign: string | null
+      ltContent: string | null
+      ltTerm: string | null
+      convertedUserId: string | null
+      convertedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["visitor"]>
+    composites: {}
+  }
+
+  type VisitorGetPayload<S extends boolean | null | undefined | VisitorDefaultArgs> = $Result.GetResult<Prisma.$VisitorPayload, S>
+
+  type VisitorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VisitorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VisitorCountAggregateInputType | true
+    }
+
+  export interface VisitorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Visitor'], meta: { name: 'Visitor' } }
+    /**
+     * Find zero or one Visitor that matches the filter.
+     * @param {VisitorFindUniqueArgs} args - Arguments to find a Visitor
+     * @example
+     * // Get one Visitor
+     * const visitor = await prisma.visitor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VisitorFindUniqueArgs>(args: SelectSubset<T, VisitorFindUniqueArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Visitor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VisitorFindUniqueOrThrowArgs} args - Arguments to find a Visitor
+     * @example
+     * // Get one Visitor
+     * const visitor = await prisma.visitor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VisitorFindUniqueOrThrowArgs>(args: SelectSubset<T, VisitorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Visitor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorFindFirstArgs} args - Arguments to find a Visitor
+     * @example
+     * // Get one Visitor
+     * const visitor = await prisma.visitor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VisitorFindFirstArgs>(args?: SelectSubset<T, VisitorFindFirstArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Visitor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorFindFirstOrThrowArgs} args - Arguments to find a Visitor
+     * @example
+     * // Get one Visitor
+     * const visitor = await prisma.visitor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VisitorFindFirstOrThrowArgs>(args?: SelectSubset<T, VisitorFindFirstOrThrowArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Visitors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Visitors
+     * const visitors = await prisma.visitor.findMany()
+     * 
+     * // Get first 10 Visitors
+     * const visitors = await prisma.visitor.findMany({ take: 10 })
+     * 
+     * // Only select the `anonymousId`
+     * const visitorWithAnonymousIdOnly = await prisma.visitor.findMany({ select: { anonymousId: true } })
+     * 
+     */
+    findMany<T extends VisitorFindManyArgs>(args?: SelectSubset<T, VisitorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Visitor.
+     * @param {VisitorCreateArgs} args - Arguments to create a Visitor.
+     * @example
+     * // Create one Visitor
+     * const Visitor = await prisma.visitor.create({
+     *   data: {
+     *     // ... data to create a Visitor
+     *   }
+     * })
+     * 
+     */
+    create<T extends VisitorCreateArgs>(args: SelectSubset<T, VisitorCreateArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Visitors.
+     * @param {VisitorCreateManyArgs} args - Arguments to create many Visitors.
+     * @example
+     * // Create many Visitors
+     * const visitor = await prisma.visitor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VisitorCreateManyArgs>(args?: SelectSubset<T, VisitorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Visitors and returns the data saved in the database.
+     * @param {VisitorCreateManyAndReturnArgs} args - Arguments to create many Visitors.
+     * @example
+     * // Create many Visitors
+     * const visitor = await prisma.visitor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Visitors and only return the `anonymousId`
+     * const visitorWithAnonymousIdOnly = await prisma.visitor.createManyAndReturn({
+     *   select: { anonymousId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VisitorCreateManyAndReturnArgs>(args?: SelectSubset<T, VisitorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Visitor.
+     * @param {VisitorDeleteArgs} args - Arguments to delete one Visitor.
+     * @example
+     * // Delete one Visitor
+     * const Visitor = await prisma.visitor.delete({
+     *   where: {
+     *     // ... filter to delete one Visitor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VisitorDeleteArgs>(args: SelectSubset<T, VisitorDeleteArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Visitor.
+     * @param {VisitorUpdateArgs} args - Arguments to update one Visitor.
+     * @example
+     * // Update one Visitor
+     * const visitor = await prisma.visitor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VisitorUpdateArgs>(args: SelectSubset<T, VisitorUpdateArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Visitors.
+     * @param {VisitorDeleteManyArgs} args - Arguments to filter Visitors to delete.
+     * @example
+     * // Delete a few Visitors
+     * const { count } = await prisma.visitor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VisitorDeleteManyArgs>(args?: SelectSubset<T, VisitorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Visitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Visitors
+     * const visitor = await prisma.visitor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VisitorUpdateManyArgs>(args: SelectSubset<T, VisitorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Visitors and returns the data updated in the database.
+     * @param {VisitorUpdateManyAndReturnArgs} args - Arguments to update many Visitors.
+     * @example
+     * // Update many Visitors
+     * const visitor = await prisma.visitor.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Visitors and only return the `anonymousId`
+     * const visitorWithAnonymousIdOnly = await prisma.visitor.updateManyAndReturn({
+     *   select: { anonymousId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VisitorUpdateManyAndReturnArgs>(args: SelectSubset<T, VisitorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Visitor.
+     * @param {VisitorUpsertArgs} args - Arguments to update or create a Visitor.
+     * @example
+     * // Update or create a Visitor
+     * const visitor = await prisma.visitor.upsert({
+     *   create: {
+     *     // ... data to create a Visitor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Visitor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VisitorUpsertArgs>(args: SelectSubset<T, VisitorUpsertArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Visitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorCountArgs} args - Arguments to filter Visitors to count.
+     * @example
+     * // Count the number of Visitors
+     * const count = await prisma.visitor.count({
+     *   where: {
+     *     // ... the filter for the Visitors we want to count
+     *   }
+     * })
+    **/
+    count<T extends VisitorCountArgs>(
+      args?: Subset<T, VisitorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VisitorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Visitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VisitorAggregateArgs>(args: Subset<T, VisitorAggregateArgs>): Prisma.PrismaPromise<GetVisitorAggregateType<T>>
+
+    /**
+     * Group by Visitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VisitorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VisitorGroupByArgs['orderBy'] }
+        : { orderBy?: VisitorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VisitorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Visitor model
+   */
+  readonly fields: VisitorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Visitor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VisitorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    events<T extends Visitor$eventsArgs<ExtArgs> = {}>(args?: Subset<T, Visitor$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversions<T extends Visitor$conversionsArgs<ExtArgs> = {}>(args?: Subset<T, Visitor$conversionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Visitor model
+   */
+  interface VisitorFieldRefs {
+    readonly anonymousId: FieldRef<"Visitor", 'String'>
+    readonly firstSeen: FieldRef<"Visitor", 'DateTime'>
+    readonly lastSeen: FieldRef<"Visitor", 'DateTime'>
+    readonly visitCount: FieldRef<"Visitor", 'Int'>
+    readonly ftSource: FieldRef<"Visitor", 'String'>
+    readonly ftMedium: FieldRef<"Visitor", 'String'>
+    readonly ftCampaign: FieldRef<"Visitor", 'String'>
+    readonly ftContent: FieldRef<"Visitor", 'String'>
+    readonly ftTerm: FieldRef<"Visitor", 'String'>
+    readonly ltSource: FieldRef<"Visitor", 'String'>
+    readonly ltMedium: FieldRef<"Visitor", 'String'>
+    readonly ltCampaign: FieldRef<"Visitor", 'String'>
+    readonly ltContent: FieldRef<"Visitor", 'String'>
+    readonly ltTerm: FieldRef<"Visitor", 'String'>
+    readonly convertedUserId: FieldRef<"Visitor", 'String'>
+    readonly convertedAt: FieldRef<"Visitor", 'DateTime'>
+    readonly createdAt: FieldRef<"Visitor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Visitor findUnique
+   */
+  export type VisitorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Visitor to fetch.
+     */
+    where: VisitorWhereUniqueInput
+  }
+
+  /**
+   * Visitor findUniqueOrThrow
+   */
+  export type VisitorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Visitor to fetch.
+     */
+    where: VisitorWhereUniqueInput
+  }
+
+  /**
+   * Visitor findFirst
+   */
+  export type VisitorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Visitor to fetch.
+     */
+    where?: VisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Visitors to fetch.
+     */
+    orderBy?: VisitorOrderByWithRelationInput | VisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Visitors.
+     */
+    cursor?: VisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Visitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Visitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Visitors.
+     */
+    distinct?: VisitorScalarFieldEnum | VisitorScalarFieldEnum[]
+  }
+
+  /**
+   * Visitor findFirstOrThrow
+   */
+  export type VisitorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Visitor to fetch.
+     */
+    where?: VisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Visitors to fetch.
+     */
+    orderBy?: VisitorOrderByWithRelationInput | VisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Visitors.
+     */
+    cursor?: VisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Visitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Visitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Visitors.
+     */
+    distinct?: VisitorScalarFieldEnum | VisitorScalarFieldEnum[]
+  }
+
+  /**
+   * Visitor findMany
+   */
+  export type VisitorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Visitors to fetch.
+     */
+    where?: VisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Visitors to fetch.
+     */
+    orderBy?: VisitorOrderByWithRelationInput | VisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Visitors.
+     */
+    cursor?: VisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Visitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Visitors.
+     */
+    skip?: number
+    distinct?: VisitorScalarFieldEnum | VisitorScalarFieldEnum[]
+  }
+
+  /**
+   * Visitor create
+   */
+  export type VisitorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Visitor.
+     */
+    data: XOR<VisitorCreateInput, VisitorUncheckedCreateInput>
+  }
+
+  /**
+   * Visitor createMany
+   */
+  export type VisitorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Visitors.
+     */
+    data: VisitorCreateManyInput | VisitorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Visitor createManyAndReturn
+   */
+  export type VisitorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * The data used to create many Visitors.
+     */
+    data: VisitorCreateManyInput | VisitorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Visitor update
+   */
+  export type VisitorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Visitor.
+     */
+    data: XOR<VisitorUpdateInput, VisitorUncheckedUpdateInput>
+    /**
+     * Choose, which Visitor to update.
+     */
+    where: VisitorWhereUniqueInput
+  }
+
+  /**
+   * Visitor updateMany
+   */
+  export type VisitorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Visitors.
+     */
+    data: XOR<VisitorUpdateManyMutationInput, VisitorUncheckedUpdateManyInput>
+    /**
+     * Filter which Visitors to update
+     */
+    where?: VisitorWhereInput
+    /**
+     * Limit how many Visitors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Visitor updateManyAndReturn
+   */
+  export type VisitorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * The data used to update Visitors.
+     */
+    data: XOR<VisitorUpdateManyMutationInput, VisitorUncheckedUpdateManyInput>
+    /**
+     * Filter which Visitors to update
+     */
+    where?: VisitorWhereInput
+    /**
+     * Limit how many Visitors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Visitor upsert
+   */
+  export type VisitorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Visitor to update in case it exists.
+     */
+    where: VisitorWhereUniqueInput
+    /**
+     * In case the Visitor found by the `where` argument doesn't exist, create a new Visitor with this data.
+     */
+    create: XOR<VisitorCreateInput, VisitorUncheckedCreateInput>
+    /**
+     * In case the Visitor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VisitorUpdateInput, VisitorUncheckedUpdateInput>
+  }
+
+  /**
+   * Visitor delete
+   */
+  export type VisitorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    /**
+     * Filter which Visitor to delete.
+     */
+    where: VisitorWhereUniqueInput
+  }
+
+  /**
+   * Visitor deleteMany
+   */
+  export type VisitorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Visitors to delete
+     */
+    where?: VisitorWhereInput
+    /**
+     * Limit how many Visitors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Visitor.events
+   */
+  export type Visitor$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    where?: VisitorEventWhereInput
+    orderBy?: VisitorEventOrderByWithRelationInput | VisitorEventOrderByWithRelationInput[]
+    cursor?: VisitorEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VisitorEventScalarFieldEnum | VisitorEventScalarFieldEnum[]
+  }
+
+  /**
+   * Visitor.conversions
+   */
+  export type Visitor$conversionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    where?: ConversionEventWhereInput
+    orderBy?: ConversionEventOrderByWithRelationInput | ConversionEventOrderByWithRelationInput[]
+    cursor?: ConversionEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversionEventScalarFieldEnum | ConversionEventScalarFieldEnum[]
+  }
+
+  /**
+   * Visitor without action
+   */
+  export type VisitorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model VisitorEvent
+   */
+
+  export type AggregateVisitorEvent = {
+    _count: VisitorEventCountAggregateOutputType | null
+    _min: VisitorEventMinAggregateOutputType | null
+    _max: VisitorEventMaxAggregateOutputType | null
+  }
+
+  export type VisitorEventMinAggregateOutputType = {
+    id: string | null
+    anonymousId: string | null
+    path: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    deviceType: string | null
+    ipHash: string | null
+    createdAt: Date | null
+  }
+
+  export type VisitorEventMaxAggregateOutputType = {
+    id: string | null
+    anonymousId: string | null
+    path: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    deviceType: string | null
+    ipHash: string | null
+    createdAt: Date | null
+  }
+
+  export type VisitorEventCountAggregateOutputType = {
+    id: number
+    anonymousId: number
+    path: number
+    referrer: number
+    utmSource: number
+    utmMedium: number
+    utmCampaign: number
+    utmContent: number
+    utmTerm: number
+    fbclid: number
+    gclid: number
+    deviceType: number
+    ipHash: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type VisitorEventMinAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    path?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    deviceType?: true
+    ipHash?: true
+    createdAt?: true
+  }
+
+  export type VisitorEventMaxAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    path?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    deviceType?: true
+    ipHash?: true
+    createdAt?: true
+  }
+
+  export type VisitorEventCountAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    path?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    deviceType?: true
+    ipHash?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type VisitorEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VisitorEvent to aggregate.
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitorEvents to fetch.
+     */
+    orderBy?: VisitorEventOrderByWithRelationInput | VisitorEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VisitorEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitorEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitorEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VisitorEvents
+    **/
+    _count?: true | VisitorEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VisitorEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VisitorEventMaxAggregateInputType
+  }
+
+  export type GetVisitorEventAggregateType<T extends VisitorEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateVisitorEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVisitorEvent[P]>
+      : GetScalarType<T[P], AggregateVisitorEvent[P]>
+  }
+
+
+
+
+  export type VisitorEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitorEventWhereInput
+    orderBy?: VisitorEventOrderByWithAggregationInput | VisitorEventOrderByWithAggregationInput[]
+    by: VisitorEventScalarFieldEnum[] | VisitorEventScalarFieldEnum
+    having?: VisitorEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VisitorEventCountAggregateInputType | true
+    _min?: VisitorEventMinAggregateInputType
+    _max?: VisitorEventMaxAggregateInputType
+  }
+
+  export type VisitorEventGroupByOutputType = {
+    id: string
+    anonymousId: string
+    path: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    deviceType: string | null
+    ipHash: string | null
+    createdAt: Date
+    _count: VisitorEventCountAggregateOutputType | null
+    _min: VisitorEventMinAggregateOutputType | null
+    _max: VisitorEventMaxAggregateOutputType | null
+  }
+
+  type GetVisitorEventGroupByPayload<T extends VisitorEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VisitorEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VisitorEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VisitorEventGroupByOutputType[P]>
+            : GetScalarType<T[P], VisitorEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VisitorEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    path?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    deviceType?: boolean
+    ipHash?: boolean
+    createdAt?: boolean
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["visitorEvent"]>
+
+  export type VisitorEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    path?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    deviceType?: boolean
+    ipHash?: boolean
+    createdAt?: boolean
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["visitorEvent"]>
+
+  export type VisitorEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    path?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    deviceType?: boolean
+    ipHash?: boolean
+    createdAt?: boolean
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["visitorEvent"]>
+
+  export type VisitorEventSelectScalar = {
+    id?: boolean
+    anonymousId?: boolean
+    path?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    deviceType?: boolean
+    ipHash?: boolean
+    createdAt?: boolean
+  }
+
+  export type VisitorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "anonymousId" | "path" | "referrer" | "utmSource" | "utmMedium" | "utmCampaign" | "utmContent" | "utmTerm" | "fbclid" | "gclid" | "deviceType" | "ipHash" | "createdAt", ExtArgs["result"]["visitorEvent"]>
+  export type VisitorEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }
+  export type VisitorEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }
+  export type VisitorEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+  }
+
+  export type $VisitorEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VisitorEvent"
+    objects: {
+      visitor: Prisma.$VisitorPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      anonymousId: string
+      path: string | null
+      referrer: string | null
+      utmSource: string | null
+      utmMedium: string | null
+      utmCampaign: string | null
+      utmContent: string | null
+      utmTerm: string | null
+      fbclid: string | null
+      gclid: string | null
+      deviceType: string | null
+      ipHash: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["visitorEvent"]>
+    composites: {}
+  }
+
+  type VisitorEventGetPayload<S extends boolean | null | undefined | VisitorEventDefaultArgs> = $Result.GetResult<Prisma.$VisitorEventPayload, S>
+
+  type VisitorEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VisitorEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VisitorEventCountAggregateInputType | true
+    }
+
+  export interface VisitorEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VisitorEvent'], meta: { name: 'VisitorEvent' } }
+    /**
+     * Find zero or one VisitorEvent that matches the filter.
+     * @param {VisitorEventFindUniqueArgs} args - Arguments to find a VisitorEvent
+     * @example
+     * // Get one VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VisitorEventFindUniqueArgs>(args: SelectSubset<T, VisitorEventFindUniqueArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VisitorEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VisitorEventFindUniqueOrThrowArgs} args - Arguments to find a VisitorEvent
+     * @example
+     * // Get one VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VisitorEventFindUniqueOrThrowArgs>(args: SelectSubset<T, VisitorEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VisitorEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventFindFirstArgs} args - Arguments to find a VisitorEvent
+     * @example
+     * // Get one VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VisitorEventFindFirstArgs>(args?: SelectSubset<T, VisitorEventFindFirstArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VisitorEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventFindFirstOrThrowArgs} args - Arguments to find a VisitorEvent
+     * @example
+     * // Get one VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VisitorEventFindFirstOrThrowArgs>(args?: SelectSubset<T, VisitorEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VisitorEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VisitorEvents
+     * const visitorEvents = await prisma.visitorEvent.findMany()
+     * 
+     * // Get first 10 VisitorEvents
+     * const visitorEvents = await prisma.visitorEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const visitorEventWithIdOnly = await prisma.visitorEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VisitorEventFindManyArgs>(args?: SelectSubset<T, VisitorEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VisitorEvent.
+     * @param {VisitorEventCreateArgs} args - Arguments to create a VisitorEvent.
+     * @example
+     * // Create one VisitorEvent
+     * const VisitorEvent = await prisma.visitorEvent.create({
+     *   data: {
+     *     // ... data to create a VisitorEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends VisitorEventCreateArgs>(args: SelectSubset<T, VisitorEventCreateArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VisitorEvents.
+     * @param {VisitorEventCreateManyArgs} args - Arguments to create many VisitorEvents.
+     * @example
+     * // Create many VisitorEvents
+     * const visitorEvent = await prisma.visitorEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VisitorEventCreateManyArgs>(args?: SelectSubset<T, VisitorEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VisitorEvents and returns the data saved in the database.
+     * @param {VisitorEventCreateManyAndReturnArgs} args - Arguments to create many VisitorEvents.
+     * @example
+     * // Create many VisitorEvents
+     * const visitorEvent = await prisma.visitorEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VisitorEvents and only return the `id`
+     * const visitorEventWithIdOnly = await prisma.visitorEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VisitorEventCreateManyAndReturnArgs>(args?: SelectSubset<T, VisitorEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VisitorEvent.
+     * @param {VisitorEventDeleteArgs} args - Arguments to delete one VisitorEvent.
+     * @example
+     * // Delete one VisitorEvent
+     * const VisitorEvent = await prisma.visitorEvent.delete({
+     *   where: {
+     *     // ... filter to delete one VisitorEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VisitorEventDeleteArgs>(args: SelectSubset<T, VisitorEventDeleteArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VisitorEvent.
+     * @param {VisitorEventUpdateArgs} args - Arguments to update one VisitorEvent.
+     * @example
+     * // Update one VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VisitorEventUpdateArgs>(args: SelectSubset<T, VisitorEventUpdateArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VisitorEvents.
+     * @param {VisitorEventDeleteManyArgs} args - Arguments to filter VisitorEvents to delete.
+     * @example
+     * // Delete a few VisitorEvents
+     * const { count } = await prisma.visitorEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VisitorEventDeleteManyArgs>(args?: SelectSubset<T, VisitorEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VisitorEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VisitorEvents
+     * const visitorEvent = await prisma.visitorEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VisitorEventUpdateManyArgs>(args: SelectSubset<T, VisitorEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VisitorEvents and returns the data updated in the database.
+     * @param {VisitorEventUpdateManyAndReturnArgs} args - Arguments to update many VisitorEvents.
+     * @example
+     * // Update many VisitorEvents
+     * const visitorEvent = await prisma.visitorEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VisitorEvents and only return the `id`
+     * const visitorEventWithIdOnly = await prisma.visitorEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VisitorEventUpdateManyAndReturnArgs>(args: SelectSubset<T, VisitorEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VisitorEvent.
+     * @param {VisitorEventUpsertArgs} args - Arguments to update or create a VisitorEvent.
+     * @example
+     * // Update or create a VisitorEvent
+     * const visitorEvent = await prisma.visitorEvent.upsert({
+     *   create: {
+     *     // ... data to create a VisitorEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VisitorEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VisitorEventUpsertArgs>(args: SelectSubset<T, VisitorEventUpsertArgs<ExtArgs>>): Prisma__VisitorEventClient<$Result.GetResult<Prisma.$VisitorEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VisitorEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventCountArgs} args - Arguments to filter VisitorEvents to count.
+     * @example
+     * // Count the number of VisitorEvents
+     * const count = await prisma.visitorEvent.count({
+     *   where: {
+     *     // ... the filter for the VisitorEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends VisitorEventCountArgs>(
+      args?: Subset<T, VisitorEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VisitorEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VisitorEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VisitorEventAggregateArgs>(args: Subset<T, VisitorEventAggregateArgs>): Prisma.PrismaPromise<GetVisitorEventAggregateType<T>>
+
+    /**
+     * Group by VisitorEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitorEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VisitorEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VisitorEventGroupByArgs['orderBy'] }
+        : { orderBy?: VisitorEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VisitorEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitorEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VisitorEvent model
+   */
+  readonly fields: VisitorEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VisitorEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VisitorEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    visitor<T extends VisitorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VisitorDefaultArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VisitorEvent model
+   */
+  interface VisitorEventFieldRefs {
+    readonly id: FieldRef<"VisitorEvent", 'String'>
+    readonly anonymousId: FieldRef<"VisitorEvent", 'String'>
+    readonly path: FieldRef<"VisitorEvent", 'String'>
+    readonly referrer: FieldRef<"VisitorEvent", 'String'>
+    readonly utmSource: FieldRef<"VisitorEvent", 'String'>
+    readonly utmMedium: FieldRef<"VisitorEvent", 'String'>
+    readonly utmCampaign: FieldRef<"VisitorEvent", 'String'>
+    readonly utmContent: FieldRef<"VisitorEvent", 'String'>
+    readonly utmTerm: FieldRef<"VisitorEvent", 'String'>
+    readonly fbclid: FieldRef<"VisitorEvent", 'String'>
+    readonly gclid: FieldRef<"VisitorEvent", 'String'>
+    readonly deviceType: FieldRef<"VisitorEvent", 'String'>
+    readonly ipHash: FieldRef<"VisitorEvent", 'String'>
+    readonly createdAt: FieldRef<"VisitorEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VisitorEvent findUnique
+   */
+  export type VisitorEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitorEvent to fetch.
+     */
+    where: VisitorEventWhereUniqueInput
+  }
+
+  /**
+   * VisitorEvent findUniqueOrThrow
+   */
+  export type VisitorEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitorEvent to fetch.
+     */
+    where: VisitorEventWhereUniqueInput
+  }
+
+  /**
+   * VisitorEvent findFirst
+   */
+  export type VisitorEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitorEvent to fetch.
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitorEvents to fetch.
+     */
+    orderBy?: VisitorEventOrderByWithRelationInput | VisitorEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitorEvents.
+     */
+    cursor?: VisitorEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitorEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitorEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitorEvents.
+     */
+    distinct?: VisitorEventScalarFieldEnum | VisitorEventScalarFieldEnum[]
+  }
+
+  /**
+   * VisitorEvent findFirstOrThrow
+   */
+  export type VisitorEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitorEvent to fetch.
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitorEvents to fetch.
+     */
+    orderBy?: VisitorEventOrderByWithRelationInput | VisitorEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitorEvents.
+     */
+    cursor?: VisitorEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitorEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitorEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitorEvents.
+     */
+    distinct?: VisitorEventScalarFieldEnum | VisitorEventScalarFieldEnum[]
+  }
+
+  /**
+   * VisitorEvent findMany
+   */
+  export type VisitorEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitorEvents to fetch.
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitorEvents to fetch.
+     */
+    orderBy?: VisitorEventOrderByWithRelationInput | VisitorEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VisitorEvents.
+     */
+    cursor?: VisitorEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitorEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitorEvents.
+     */
+    skip?: number
+    distinct?: VisitorEventScalarFieldEnum | VisitorEventScalarFieldEnum[]
+  }
+
+  /**
+   * VisitorEvent create
+   */
+  export type VisitorEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VisitorEvent.
+     */
+    data: XOR<VisitorEventCreateInput, VisitorEventUncheckedCreateInput>
+  }
+
+  /**
+   * VisitorEvent createMany
+   */
+  export type VisitorEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VisitorEvents.
+     */
+    data: VisitorEventCreateManyInput | VisitorEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VisitorEvent createManyAndReturn
+   */
+  export type VisitorEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many VisitorEvents.
+     */
+    data: VisitorEventCreateManyInput | VisitorEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VisitorEvent update
+   */
+  export type VisitorEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VisitorEvent.
+     */
+    data: XOR<VisitorEventUpdateInput, VisitorEventUncheckedUpdateInput>
+    /**
+     * Choose, which VisitorEvent to update.
+     */
+    where: VisitorEventWhereUniqueInput
+  }
+
+  /**
+   * VisitorEvent updateMany
+   */
+  export type VisitorEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VisitorEvents.
+     */
+    data: XOR<VisitorEventUpdateManyMutationInput, VisitorEventUncheckedUpdateManyInput>
+    /**
+     * Filter which VisitorEvents to update
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * Limit how many VisitorEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VisitorEvent updateManyAndReturn
+   */
+  export type VisitorEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * The data used to update VisitorEvents.
+     */
+    data: XOR<VisitorEventUpdateManyMutationInput, VisitorEventUncheckedUpdateManyInput>
+    /**
+     * Filter which VisitorEvents to update
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * Limit how many VisitorEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VisitorEvent upsert
+   */
+  export type VisitorEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VisitorEvent to update in case it exists.
+     */
+    where: VisitorEventWhereUniqueInput
+    /**
+     * In case the VisitorEvent found by the `where` argument doesn't exist, create a new VisitorEvent with this data.
+     */
+    create: XOR<VisitorEventCreateInput, VisitorEventUncheckedCreateInput>
+    /**
+     * In case the VisitorEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VisitorEventUpdateInput, VisitorEventUncheckedUpdateInput>
+  }
+
+  /**
+   * VisitorEvent delete
+   */
+  export type VisitorEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+    /**
+     * Filter which VisitorEvent to delete.
+     */
+    where: VisitorEventWhereUniqueInput
+  }
+
+  /**
+   * VisitorEvent deleteMany
+   */
+  export type VisitorEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VisitorEvents to delete
+     */
+    where?: VisitorEventWhereInput
+    /**
+     * Limit how many VisitorEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VisitorEvent without action
+   */
+  export type VisitorEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitorEvent
+     */
+    select?: VisitorEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitorEvent
+     */
+    omit?: VisitorEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConversionEvent
+   */
+
+  export type AggregateConversionEvent = {
+    _count: ConversionEventCountAggregateOutputType | null
+    _min: ConversionEventMinAggregateOutputType | null
+    _max: ConversionEventMaxAggregateOutputType | null
+  }
+
+  export type ConversionEventMinAggregateOutputType = {
+    id: string | null
+    anonymousId: string | null
+    userId: string | null
+    type: $Enums.ConversionType | null
+    createdAt: Date | null
+  }
+
+  export type ConversionEventMaxAggregateOutputType = {
+    id: string | null
+    anonymousId: string | null
+    userId: string | null
+    type: $Enums.ConversionType | null
+    createdAt: Date | null
+  }
+
+  export type ConversionEventCountAggregateOutputType = {
+    id: number
+    anonymousId: number
+    userId: number
+    type: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ConversionEventMinAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    userId?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type ConversionEventMaxAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    userId?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type ConversionEventCountAggregateInputType = {
+    id?: true
+    anonymousId?: true
+    userId?: true
+    type?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ConversionEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversionEvent to aggregate.
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversionEvents to fetch.
+     */
+    orderBy?: ConversionEventOrderByWithRelationInput | ConversionEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversionEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversionEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversionEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversionEvents
+    **/
+    _count?: true | ConversionEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversionEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversionEventMaxAggregateInputType
+  }
+
+  export type GetConversionEventAggregateType<T extends ConversionEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversionEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversionEvent[P]>
+      : GetScalarType<T[P], AggregateConversionEvent[P]>
+  }
+
+
+
+
+  export type ConversionEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversionEventWhereInput
+    orderBy?: ConversionEventOrderByWithAggregationInput | ConversionEventOrderByWithAggregationInput[]
+    by: ConversionEventScalarFieldEnum[] | ConversionEventScalarFieldEnum
+    having?: ConversionEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversionEventCountAggregateInputType | true
+    _min?: ConversionEventMinAggregateInputType
+    _max?: ConversionEventMaxAggregateInputType
+  }
+
+  export type ConversionEventGroupByOutputType = {
+    id: string
+    anonymousId: string | null
+    userId: string | null
+    type: $Enums.ConversionType
+    createdAt: Date
+    _count: ConversionEventCountAggregateOutputType | null
+    _min: ConversionEventMinAggregateOutputType | null
+    _max: ConversionEventMaxAggregateOutputType | null
+  }
+
+  type GetConversionEventGroupByPayload<T extends ConversionEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversionEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversionEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversionEventGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversionEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversionEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    userId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }, ExtArgs["result"]["conversionEvent"]>
+
+  export type ConversionEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    userId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }, ExtArgs["result"]["conversionEvent"]>
+
+  export type ConversionEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    anonymousId?: boolean
+    userId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }, ExtArgs["result"]["conversionEvent"]>
+
+  export type ConversionEventSelectScalar = {
+    id?: boolean
+    anonymousId?: boolean
+    userId?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }
+
+  export type ConversionEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "anonymousId" | "userId" | "type" | "createdAt", ExtArgs["result"]["conversionEvent"]>
+  export type ConversionEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }
+  export type ConversionEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }
+  export type ConversionEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    visitor?: boolean | ConversionEvent$visitorArgs<ExtArgs>
+  }
+
+  export type $ConversionEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversionEvent"
+    objects: {
+      visitor: Prisma.$VisitorPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      anonymousId: string | null
+      userId: string | null
+      type: $Enums.ConversionType
+      createdAt: Date
+    }, ExtArgs["result"]["conversionEvent"]>
+    composites: {}
+  }
+
+  type ConversionEventGetPayload<S extends boolean | null | undefined | ConversionEventDefaultArgs> = $Result.GetResult<Prisma.$ConversionEventPayload, S>
+
+  type ConversionEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversionEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversionEventCountAggregateInputType | true
+    }
+
+  export interface ConversionEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversionEvent'], meta: { name: 'ConversionEvent' } }
+    /**
+     * Find zero or one ConversionEvent that matches the filter.
+     * @param {ConversionEventFindUniqueArgs} args - Arguments to find a ConversionEvent
+     * @example
+     * // Get one ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversionEventFindUniqueArgs>(args: SelectSubset<T, ConversionEventFindUniqueArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversionEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversionEventFindUniqueOrThrowArgs} args - Arguments to find a ConversionEvent
+     * @example
+     * // Get one ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversionEventFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversionEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversionEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventFindFirstArgs} args - Arguments to find a ConversionEvent
+     * @example
+     * // Get one ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversionEventFindFirstArgs>(args?: SelectSubset<T, ConversionEventFindFirstArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversionEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventFindFirstOrThrowArgs} args - Arguments to find a ConversionEvent
+     * @example
+     * // Get one ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversionEventFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversionEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversionEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversionEvents
+     * const conversionEvents = await prisma.conversionEvent.findMany()
+     * 
+     * // Get first 10 ConversionEvents
+     * const conversionEvents = await prisma.conversionEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversionEventWithIdOnly = await prisma.conversionEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversionEventFindManyArgs>(args?: SelectSubset<T, ConversionEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversionEvent.
+     * @param {ConversionEventCreateArgs} args - Arguments to create a ConversionEvent.
+     * @example
+     * // Create one ConversionEvent
+     * const ConversionEvent = await prisma.conversionEvent.create({
+     *   data: {
+     *     // ... data to create a ConversionEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversionEventCreateArgs>(args: SelectSubset<T, ConversionEventCreateArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversionEvents.
+     * @param {ConversionEventCreateManyArgs} args - Arguments to create many ConversionEvents.
+     * @example
+     * // Create many ConversionEvents
+     * const conversionEvent = await prisma.conversionEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversionEventCreateManyArgs>(args?: SelectSubset<T, ConversionEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversionEvents and returns the data saved in the database.
+     * @param {ConversionEventCreateManyAndReturnArgs} args - Arguments to create many ConversionEvents.
+     * @example
+     * // Create many ConversionEvents
+     * const conversionEvent = await prisma.conversionEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversionEvents and only return the `id`
+     * const conversionEventWithIdOnly = await prisma.conversionEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversionEventCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversionEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversionEvent.
+     * @param {ConversionEventDeleteArgs} args - Arguments to delete one ConversionEvent.
+     * @example
+     * // Delete one ConversionEvent
+     * const ConversionEvent = await prisma.conversionEvent.delete({
+     *   where: {
+     *     // ... filter to delete one ConversionEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversionEventDeleteArgs>(args: SelectSubset<T, ConversionEventDeleteArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversionEvent.
+     * @param {ConversionEventUpdateArgs} args - Arguments to update one ConversionEvent.
+     * @example
+     * // Update one ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversionEventUpdateArgs>(args: SelectSubset<T, ConversionEventUpdateArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversionEvents.
+     * @param {ConversionEventDeleteManyArgs} args - Arguments to filter ConversionEvents to delete.
+     * @example
+     * // Delete a few ConversionEvents
+     * const { count } = await prisma.conversionEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversionEventDeleteManyArgs>(args?: SelectSubset<T, ConversionEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversionEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversionEvents
+     * const conversionEvent = await prisma.conversionEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversionEventUpdateManyArgs>(args: SelectSubset<T, ConversionEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversionEvents and returns the data updated in the database.
+     * @param {ConversionEventUpdateManyAndReturnArgs} args - Arguments to update many ConversionEvents.
+     * @example
+     * // Update many ConversionEvents
+     * const conversionEvent = await prisma.conversionEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversionEvents and only return the `id`
+     * const conversionEventWithIdOnly = await prisma.conversionEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversionEventUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversionEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversionEvent.
+     * @param {ConversionEventUpsertArgs} args - Arguments to update or create a ConversionEvent.
+     * @example
+     * // Update or create a ConversionEvent
+     * const conversionEvent = await prisma.conversionEvent.upsert({
+     *   create: {
+     *     // ... data to create a ConversionEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversionEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversionEventUpsertArgs>(args: SelectSubset<T, ConversionEventUpsertArgs<ExtArgs>>): Prisma__ConversionEventClient<$Result.GetResult<Prisma.$ConversionEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversionEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventCountArgs} args - Arguments to filter ConversionEvents to count.
+     * @example
+     * // Count the number of ConversionEvents
+     * const count = await prisma.conversionEvent.count({
+     *   where: {
+     *     // ... the filter for the ConversionEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversionEventCountArgs>(
+      args?: Subset<T, ConversionEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversionEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversionEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversionEventAggregateArgs>(args: Subset<T, ConversionEventAggregateArgs>): Prisma.PrismaPromise<GetConversionEventAggregateType<T>>
+
+    /**
+     * Group by ConversionEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversionEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversionEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversionEventGroupByArgs['orderBy'] }
+        : { orderBy?: ConversionEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversionEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversionEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversionEvent model
+   */
+  readonly fields: ConversionEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversionEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversionEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    visitor<T extends ConversionEvent$visitorArgs<ExtArgs> = {}>(args?: Subset<T, ConversionEvent$visitorArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversionEvent model
+   */
+  interface ConversionEventFieldRefs {
+    readonly id: FieldRef<"ConversionEvent", 'String'>
+    readonly anonymousId: FieldRef<"ConversionEvent", 'String'>
+    readonly userId: FieldRef<"ConversionEvent", 'String'>
+    readonly type: FieldRef<"ConversionEvent", 'ConversionType'>
+    readonly createdAt: FieldRef<"ConversionEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversionEvent findUnique
+   */
+  export type ConversionEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversionEvent to fetch.
+     */
+    where: ConversionEventWhereUniqueInput
+  }
+
+  /**
+   * ConversionEvent findUniqueOrThrow
+   */
+  export type ConversionEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversionEvent to fetch.
+     */
+    where: ConversionEventWhereUniqueInput
+  }
+
+  /**
+   * ConversionEvent findFirst
+   */
+  export type ConversionEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversionEvent to fetch.
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversionEvents to fetch.
+     */
+    orderBy?: ConversionEventOrderByWithRelationInput | ConversionEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversionEvents.
+     */
+    cursor?: ConversionEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversionEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversionEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversionEvents.
+     */
+    distinct?: ConversionEventScalarFieldEnum | ConversionEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversionEvent findFirstOrThrow
+   */
+  export type ConversionEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversionEvent to fetch.
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversionEvents to fetch.
+     */
+    orderBy?: ConversionEventOrderByWithRelationInput | ConversionEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversionEvents.
+     */
+    cursor?: ConversionEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversionEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversionEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversionEvents.
+     */
+    distinct?: ConversionEventScalarFieldEnum | ConversionEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversionEvent findMany
+   */
+  export type ConversionEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversionEvents to fetch.
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversionEvents to fetch.
+     */
+    orderBy?: ConversionEventOrderByWithRelationInput | ConversionEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversionEvents.
+     */
+    cursor?: ConversionEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversionEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversionEvents.
+     */
+    skip?: number
+    distinct?: ConversionEventScalarFieldEnum | ConversionEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversionEvent create
+   */
+  export type ConversionEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConversionEvent.
+     */
+    data: XOR<ConversionEventCreateInput, ConversionEventUncheckedCreateInput>
+  }
+
+  /**
+   * ConversionEvent createMany
+   */
+  export type ConversionEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversionEvents.
+     */
+    data: ConversionEventCreateManyInput | ConversionEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversionEvent createManyAndReturn
+   */
+  export type ConversionEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversionEvents.
+     */
+    data: ConversionEventCreateManyInput | ConversionEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversionEvent update
+   */
+  export type ConversionEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConversionEvent.
+     */
+    data: XOR<ConversionEventUpdateInput, ConversionEventUncheckedUpdateInput>
+    /**
+     * Choose, which ConversionEvent to update.
+     */
+    where: ConversionEventWhereUniqueInput
+  }
+
+  /**
+   * ConversionEvent updateMany
+   */
+  export type ConversionEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversionEvents.
+     */
+    data: XOR<ConversionEventUpdateManyMutationInput, ConversionEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversionEvents to update
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * Limit how many ConversionEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversionEvent updateManyAndReturn
+   */
+  export type ConversionEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversionEvents.
+     */
+    data: XOR<ConversionEventUpdateManyMutationInput, ConversionEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversionEvents to update
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * Limit how many ConversionEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversionEvent upsert
+   */
+  export type ConversionEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConversionEvent to update in case it exists.
+     */
+    where: ConversionEventWhereUniqueInput
+    /**
+     * In case the ConversionEvent found by the `where` argument doesn't exist, create a new ConversionEvent with this data.
+     */
+    create: XOR<ConversionEventCreateInput, ConversionEventUncheckedCreateInput>
+    /**
+     * In case the ConversionEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversionEventUpdateInput, ConversionEventUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversionEvent delete
+   */
+  export type ConversionEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+    /**
+     * Filter which ConversionEvent to delete.
+     */
+    where: ConversionEventWhereUniqueInput
+  }
+
+  /**
+   * ConversionEvent deleteMany
+   */
+  export type ConversionEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversionEvents to delete
+     */
+    where?: ConversionEventWhereInput
+    /**
+     * Limit how many ConversionEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversionEvent.visitor
+   */
+  export type ConversionEvent$visitorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Visitor
+     */
+    select?: VisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Visitor
+     */
+    omit?: VisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitorInclude<ExtArgs> | null
+    where?: VisitorWhereInput
+  }
+
+  /**
+   * ConversionEvent without action
+   */
+  export type ConversionEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversionEvent
+     */
+    select?: ConversionEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversionEvent
+     */
+    omit?: ConversionEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversionEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -18524,6 +22391,60 @@ export namespace Prisma {
   };
 
   export type AdminAuditScalarFieldEnum = (typeof AdminAuditScalarFieldEnum)[keyof typeof AdminAuditScalarFieldEnum]
+
+
+  export const VisitorScalarFieldEnum: {
+    anonymousId: 'anonymousId',
+    firstSeen: 'firstSeen',
+    lastSeen: 'lastSeen',
+    visitCount: 'visitCount',
+    ftSource: 'ftSource',
+    ftMedium: 'ftMedium',
+    ftCampaign: 'ftCampaign',
+    ftContent: 'ftContent',
+    ftTerm: 'ftTerm',
+    ltSource: 'ltSource',
+    ltMedium: 'ltMedium',
+    ltCampaign: 'ltCampaign',
+    ltContent: 'ltContent',
+    ltTerm: 'ltTerm',
+    convertedUserId: 'convertedUserId',
+    convertedAt: 'convertedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type VisitorScalarFieldEnum = (typeof VisitorScalarFieldEnum)[keyof typeof VisitorScalarFieldEnum]
+
+
+  export const VisitorEventScalarFieldEnum: {
+    id: 'id',
+    anonymousId: 'anonymousId',
+    path: 'path',
+    referrer: 'referrer',
+    utmSource: 'utmSource',
+    utmMedium: 'utmMedium',
+    utmCampaign: 'utmCampaign',
+    utmContent: 'utmContent',
+    utmTerm: 'utmTerm',
+    fbclid: 'fbclid',
+    gclid: 'gclid',
+    deviceType: 'deviceType',
+    ipHash: 'ipHash',
+    createdAt: 'createdAt'
+  };
+
+  export type VisitorEventScalarFieldEnum = (typeof VisitorEventScalarFieldEnum)[keyof typeof VisitorEventScalarFieldEnum]
+
+
+  export const ConversionEventScalarFieldEnum: {
+    id: 'id',
+    anonymousId: 'anonymousId',
+    userId: 'userId',
+    type: 'type',
+    createdAt: 'createdAt'
+  };
+
+  export type ConversionEventScalarFieldEnum = (typeof ConversionEventScalarFieldEnum)[keyof typeof ConversionEventScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -18786,6 +22707,20 @@ export namespace Prisma {
    * Reference to a field of type 'InquiryStatus[]'
    */
   export type ListEnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ConversionType'
+   */
+  export type EnumConversionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ConversionType[]'
+   */
+  export type ListEnumConversionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversionType[]'>
     
 
 
@@ -19904,6 +23839,281 @@ export namespace Prisma {
     action?: StringWithAggregatesFilter<"AdminAudit"> | string
     targetIds?: StringNullableListFilter<"AdminAudit">
     createdAt?: DateTimeWithAggregatesFilter<"AdminAudit"> | Date | string
+  }
+
+  export type VisitorWhereInput = {
+    AND?: VisitorWhereInput | VisitorWhereInput[]
+    OR?: VisitorWhereInput[]
+    NOT?: VisitorWhereInput | VisitorWhereInput[]
+    anonymousId?: StringFilter<"Visitor"> | string
+    firstSeen?: DateTimeFilter<"Visitor"> | Date | string
+    lastSeen?: DateTimeFilter<"Visitor"> | Date | string
+    visitCount?: IntFilter<"Visitor"> | number
+    ftSource?: StringNullableFilter<"Visitor"> | string | null
+    ftMedium?: StringNullableFilter<"Visitor"> | string | null
+    ftCampaign?: StringNullableFilter<"Visitor"> | string | null
+    ftContent?: StringNullableFilter<"Visitor"> | string | null
+    ftTerm?: StringNullableFilter<"Visitor"> | string | null
+    ltSource?: StringNullableFilter<"Visitor"> | string | null
+    ltMedium?: StringNullableFilter<"Visitor"> | string | null
+    ltCampaign?: StringNullableFilter<"Visitor"> | string | null
+    ltContent?: StringNullableFilter<"Visitor"> | string | null
+    ltTerm?: StringNullableFilter<"Visitor"> | string | null
+    convertedUserId?: StringNullableFilter<"Visitor"> | string | null
+    convertedAt?: DateTimeNullableFilter<"Visitor"> | Date | string | null
+    createdAt?: DateTimeFilter<"Visitor"> | Date | string
+    events?: VisitorEventListRelationFilter
+    conversions?: ConversionEventListRelationFilter
+  }
+
+  export type VisitorOrderByWithRelationInput = {
+    anonymousId?: SortOrder
+    firstSeen?: SortOrder
+    lastSeen?: SortOrder
+    visitCount?: SortOrder
+    ftSource?: SortOrderInput | SortOrder
+    ftMedium?: SortOrderInput | SortOrder
+    ftCampaign?: SortOrderInput | SortOrder
+    ftContent?: SortOrderInput | SortOrder
+    ftTerm?: SortOrderInput | SortOrder
+    ltSource?: SortOrderInput | SortOrder
+    ltMedium?: SortOrderInput | SortOrder
+    ltCampaign?: SortOrderInput | SortOrder
+    ltContent?: SortOrderInput | SortOrder
+    ltTerm?: SortOrderInput | SortOrder
+    convertedUserId?: SortOrderInput | SortOrder
+    convertedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    events?: VisitorEventOrderByRelationAggregateInput
+    conversions?: ConversionEventOrderByRelationAggregateInput
+  }
+
+  export type VisitorWhereUniqueInput = Prisma.AtLeast<{
+    anonymousId?: string
+    AND?: VisitorWhereInput | VisitorWhereInput[]
+    OR?: VisitorWhereInput[]
+    NOT?: VisitorWhereInput | VisitorWhereInput[]
+    firstSeen?: DateTimeFilter<"Visitor"> | Date | string
+    lastSeen?: DateTimeFilter<"Visitor"> | Date | string
+    visitCount?: IntFilter<"Visitor"> | number
+    ftSource?: StringNullableFilter<"Visitor"> | string | null
+    ftMedium?: StringNullableFilter<"Visitor"> | string | null
+    ftCampaign?: StringNullableFilter<"Visitor"> | string | null
+    ftContent?: StringNullableFilter<"Visitor"> | string | null
+    ftTerm?: StringNullableFilter<"Visitor"> | string | null
+    ltSource?: StringNullableFilter<"Visitor"> | string | null
+    ltMedium?: StringNullableFilter<"Visitor"> | string | null
+    ltCampaign?: StringNullableFilter<"Visitor"> | string | null
+    ltContent?: StringNullableFilter<"Visitor"> | string | null
+    ltTerm?: StringNullableFilter<"Visitor"> | string | null
+    convertedUserId?: StringNullableFilter<"Visitor"> | string | null
+    convertedAt?: DateTimeNullableFilter<"Visitor"> | Date | string | null
+    createdAt?: DateTimeFilter<"Visitor"> | Date | string
+    events?: VisitorEventListRelationFilter
+    conversions?: ConversionEventListRelationFilter
+  }, "anonymousId">
+
+  export type VisitorOrderByWithAggregationInput = {
+    anonymousId?: SortOrder
+    firstSeen?: SortOrder
+    lastSeen?: SortOrder
+    visitCount?: SortOrder
+    ftSource?: SortOrderInput | SortOrder
+    ftMedium?: SortOrderInput | SortOrder
+    ftCampaign?: SortOrderInput | SortOrder
+    ftContent?: SortOrderInput | SortOrder
+    ftTerm?: SortOrderInput | SortOrder
+    ltSource?: SortOrderInput | SortOrder
+    ltMedium?: SortOrderInput | SortOrder
+    ltCampaign?: SortOrderInput | SortOrder
+    ltContent?: SortOrderInput | SortOrder
+    ltTerm?: SortOrderInput | SortOrder
+    convertedUserId?: SortOrderInput | SortOrder
+    convertedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: VisitorCountOrderByAggregateInput
+    _avg?: VisitorAvgOrderByAggregateInput
+    _max?: VisitorMaxOrderByAggregateInput
+    _min?: VisitorMinOrderByAggregateInput
+    _sum?: VisitorSumOrderByAggregateInput
+  }
+
+  export type VisitorScalarWhereWithAggregatesInput = {
+    AND?: VisitorScalarWhereWithAggregatesInput | VisitorScalarWhereWithAggregatesInput[]
+    OR?: VisitorScalarWhereWithAggregatesInput[]
+    NOT?: VisitorScalarWhereWithAggregatesInput | VisitorScalarWhereWithAggregatesInput[]
+    anonymousId?: StringWithAggregatesFilter<"Visitor"> | string
+    firstSeen?: DateTimeWithAggregatesFilter<"Visitor"> | Date | string
+    lastSeen?: DateTimeWithAggregatesFilter<"Visitor"> | Date | string
+    visitCount?: IntWithAggregatesFilter<"Visitor"> | number
+    ftSource?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ftMedium?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ftCampaign?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ftContent?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ftTerm?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ltSource?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ltMedium?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ltCampaign?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ltContent?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    ltTerm?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    convertedUserId?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    convertedAt?: DateTimeNullableWithAggregatesFilter<"Visitor"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Visitor"> | Date | string
+  }
+
+  export type VisitorEventWhereInput = {
+    AND?: VisitorEventWhereInput | VisitorEventWhereInput[]
+    OR?: VisitorEventWhereInput[]
+    NOT?: VisitorEventWhereInput | VisitorEventWhereInput[]
+    id?: StringFilter<"VisitorEvent"> | string
+    anonymousId?: StringFilter<"VisitorEvent"> | string
+    path?: StringNullableFilter<"VisitorEvent"> | string | null
+    referrer?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmSource?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmMedium?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmCampaign?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmContent?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmTerm?: StringNullableFilter<"VisitorEvent"> | string | null
+    fbclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    gclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    deviceType?: StringNullableFilter<"VisitorEvent"> | string | null
+    ipHash?: StringNullableFilter<"VisitorEvent"> | string | null
+    createdAt?: DateTimeFilter<"VisitorEvent"> | Date | string
+    visitor?: XOR<VisitorScalarRelationFilter, VisitorWhereInput>
+  }
+
+  export type VisitorEventOrderByWithRelationInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    path?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    utmSource?: SortOrderInput | SortOrder
+    utmMedium?: SortOrderInput | SortOrder
+    utmCampaign?: SortOrderInput | SortOrder
+    utmContent?: SortOrderInput | SortOrder
+    utmTerm?: SortOrderInput | SortOrder
+    fbclid?: SortOrderInput | SortOrder
+    gclid?: SortOrderInput | SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    ipHash?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    visitor?: VisitorOrderByWithRelationInput
+  }
+
+  export type VisitorEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VisitorEventWhereInput | VisitorEventWhereInput[]
+    OR?: VisitorEventWhereInput[]
+    NOT?: VisitorEventWhereInput | VisitorEventWhereInput[]
+    anonymousId?: StringFilter<"VisitorEvent"> | string
+    path?: StringNullableFilter<"VisitorEvent"> | string | null
+    referrer?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmSource?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmMedium?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmCampaign?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmContent?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmTerm?: StringNullableFilter<"VisitorEvent"> | string | null
+    fbclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    gclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    deviceType?: StringNullableFilter<"VisitorEvent"> | string | null
+    ipHash?: StringNullableFilter<"VisitorEvent"> | string | null
+    createdAt?: DateTimeFilter<"VisitorEvent"> | Date | string
+    visitor?: XOR<VisitorScalarRelationFilter, VisitorWhereInput>
+  }, "id">
+
+  export type VisitorEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    path?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    utmSource?: SortOrderInput | SortOrder
+    utmMedium?: SortOrderInput | SortOrder
+    utmCampaign?: SortOrderInput | SortOrder
+    utmContent?: SortOrderInput | SortOrder
+    utmTerm?: SortOrderInput | SortOrder
+    fbclid?: SortOrderInput | SortOrder
+    gclid?: SortOrderInput | SortOrder
+    deviceType?: SortOrderInput | SortOrder
+    ipHash?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: VisitorEventCountOrderByAggregateInput
+    _max?: VisitorEventMaxOrderByAggregateInput
+    _min?: VisitorEventMinOrderByAggregateInput
+  }
+
+  export type VisitorEventScalarWhereWithAggregatesInput = {
+    AND?: VisitorEventScalarWhereWithAggregatesInput | VisitorEventScalarWhereWithAggregatesInput[]
+    OR?: VisitorEventScalarWhereWithAggregatesInput[]
+    NOT?: VisitorEventScalarWhereWithAggregatesInput | VisitorEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"VisitorEvent"> | string
+    anonymousId?: StringWithAggregatesFilter<"VisitorEvent"> | string
+    path?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    referrer?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    utmSource?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    utmMedium?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    utmCampaign?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    utmContent?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    utmTerm?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    fbclid?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    gclid?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    deviceType?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    ipHash?: StringNullableWithAggregatesFilter<"VisitorEvent"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"VisitorEvent"> | Date | string
+  }
+
+  export type ConversionEventWhereInput = {
+    AND?: ConversionEventWhereInput | ConversionEventWhereInput[]
+    OR?: ConversionEventWhereInput[]
+    NOT?: ConversionEventWhereInput | ConversionEventWhereInput[]
+    id?: StringFilter<"ConversionEvent"> | string
+    anonymousId?: StringNullableFilter<"ConversionEvent"> | string | null
+    userId?: StringNullableFilter<"ConversionEvent"> | string | null
+    type?: EnumConversionTypeFilter<"ConversionEvent"> | $Enums.ConversionType
+    createdAt?: DateTimeFilter<"ConversionEvent"> | Date | string
+    visitor?: XOR<VisitorNullableScalarRelationFilter, VisitorWhereInput> | null
+  }
+
+  export type ConversionEventOrderByWithRelationInput = {
+    id?: SortOrder
+    anonymousId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    visitor?: VisitorOrderByWithRelationInput
+  }
+
+  export type ConversionEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConversionEventWhereInput | ConversionEventWhereInput[]
+    OR?: ConversionEventWhereInput[]
+    NOT?: ConversionEventWhereInput | ConversionEventWhereInput[]
+    anonymousId?: StringNullableFilter<"ConversionEvent"> | string | null
+    userId?: StringNullableFilter<"ConversionEvent"> | string | null
+    type?: EnumConversionTypeFilter<"ConversionEvent"> | $Enums.ConversionType
+    createdAt?: DateTimeFilter<"ConversionEvent"> | Date | string
+    visitor?: XOR<VisitorNullableScalarRelationFilter, VisitorWhereInput> | null
+  }, "id">
+
+  export type ConversionEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    anonymousId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    _count?: ConversionEventCountOrderByAggregateInput
+    _max?: ConversionEventMaxOrderByAggregateInput
+    _min?: ConversionEventMinOrderByAggregateInput
+  }
+
+  export type ConversionEventScalarWhereWithAggregatesInput = {
+    AND?: ConversionEventScalarWhereWithAggregatesInput | ConversionEventScalarWhereWithAggregatesInput[]
+    OR?: ConversionEventScalarWhereWithAggregatesInput[]
+    NOT?: ConversionEventScalarWhereWithAggregatesInput | ConversionEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConversionEvent"> | string
+    anonymousId?: StringNullableWithAggregatesFilter<"ConversionEvent"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"ConversionEvent"> | string | null
+    type?: EnumConversionTypeWithAggregatesFilter<"ConversionEvent"> | $Enums.ConversionType
+    createdAt?: DateTimeWithAggregatesFilter<"ConversionEvent"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -21124,6 +25334,327 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VisitorCreateInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    events?: VisitorEventCreateNestedManyWithoutVisitorInput
+    conversions?: ConversionEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorUncheckedCreateInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    events?: VisitorEventUncheckedCreateNestedManyWithoutVisitorInput
+    conversions?: ConversionEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorUpdateInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: VisitorEventUpdateManyWithoutVisitorNestedInput
+    conversions?: ConversionEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type VisitorUncheckedUpdateInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: VisitorEventUncheckedUpdateManyWithoutVisitorNestedInput
+    conversions?: ConversionEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type VisitorCreateManyInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type VisitorUpdateManyMutationInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorUncheckedUpdateManyInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventCreateInput = {
+    id?: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+    visitor: VisitorCreateNestedOneWithoutEventsInput
+  }
+
+  export type VisitorEventUncheckedCreateInput = {
+    id?: string
+    anonymousId: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+  }
+
+  export type VisitorEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitor?: VisitorUpdateOneRequiredWithoutEventsNestedInput
+  }
+
+  export type VisitorEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventCreateManyInput = {
+    id?: string
+    anonymousId: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+  }
+
+  export type VisitorEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventCreateInput = {
+    id?: string
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+    visitor?: VisitorCreateNestedOneWithoutConversionsInput
+  }
+
+  export type ConversionEventUncheckedCreateInput = {
+    id?: string
+    anonymousId?: string | null
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+  }
+
+  export type ConversionEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitor?: VisitorUpdateOneWithoutConversionsNestedInput
+  }
+
+  export type ConversionEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventCreateManyInput = {
+    id?: string
+    anonymousId?: string | null
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+  }
+
+  export type ConversionEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -22190,6 +26721,196 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type VisitorEventListRelationFilter = {
+    every?: VisitorEventWhereInput
+    some?: VisitorEventWhereInput
+    none?: VisitorEventWhereInput
+  }
+
+  export type ConversionEventListRelationFilter = {
+    every?: ConversionEventWhereInput
+    some?: ConversionEventWhereInput
+    none?: ConversionEventWhereInput
+  }
+
+  export type VisitorEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversionEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VisitorCountOrderByAggregateInput = {
+    anonymousId?: SortOrder
+    firstSeen?: SortOrder
+    lastSeen?: SortOrder
+    visitCount?: SortOrder
+    ftSource?: SortOrder
+    ftMedium?: SortOrder
+    ftCampaign?: SortOrder
+    ftContent?: SortOrder
+    ftTerm?: SortOrder
+    ltSource?: SortOrder
+    ltMedium?: SortOrder
+    ltCampaign?: SortOrder
+    ltContent?: SortOrder
+    ltTerm?: SortOrder
+    convertedUserId?: SortOrder
+    convertedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VisitorAvgOrderByAggregateInput = {
+    visitCount?: SortOrder
+  }
+
+  export type VisitorMaxOrderByAggregateInput = {
+    anonymousId?: SortOrder
+    firstSeen?: SortOrder
+    lastSeen?: SortOrder
+    visitCount?: SortOrder
+    ftSource?: SortOrder
+    ftMedium?: SortOrder
+    ftCampaign?: SortOrder
+    ftContent?: SortOrder
+    ftTerm?: SortOrder
+    ltSource?: SortOrder
+    ltMedium?: SortOrder
+    ltCampaign?: SortOrder
+    ltContent?: SortOrder
+    ltTerm?: SortOrder
+    convertedUserId?: SortOrder
+    convertedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VisitorMinOrderByAggregateInput = {
+    anonymousId?: SortOrder
+    firstSeen?: SortOrder
+    lastSeen?: SortOrder
+    visitCount?: SortOrder
+    ftSource?: SortOrder
+    ftMedium?: SortOrder
+    ftCampaign?: SortOrder
+    ftContent?: SortOrder
+    ftTerm?: SortOrder
+    ltSource?: SortOrder
+    ltMedium?: SortOrder
+    ltCampaign?: SortOrder
+    ltContent?: SortOrder
+    ltTerm?: SortOrder
+    convertedUserId?: SortOrder
+    convertedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VisitorSumOrderByAggregateInput = {
+    visitCount?: SortOrder
+  }
+
+  export type VisitorScalarRelationFilter = {
+    is?: VisitorWhereInput
+    isNot?: VisitorWhereInput
+  }
+
+  export type VisitorEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    deviceType?: SortOrder
+    ipHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VisitorEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    deviceType?: SortOrder
+    ipHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VisitorEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    path?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    deviceType?: SortOrder
+    ipHash?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumConversionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversionType | EnumConversionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversionTypeFilter<$PrismaModel> | $Enums.ConversionType
+  }
+
+  export type VisitorNullableScalarRelationFilter = {
+    is?: VisitorWhereInput | null
+    isNot?: VisitorWhereInput | null
+  }
+
+  export type ConversionEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversionEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversionEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    anonymousId?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumConversionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversionType | EnumConversionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversionTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConversionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConversionTypeFilter<$PrismaModel>
+    _max?: NestedEnumConversionTypeFilter<$PrismaModel>
+  }
+
   export type ConnectionCreateNestedManyWithoutFromUserInput = {
     create?: XOR<ConnectionCreateWithoutFromUserInput, ConnectionUncheckedCreateWithoutFromUserInput> | ConnectionCreateWithoutFromUserInput[] | ConnectionUncheckedCreateWithoutFromUserInput[]
     connectOrCreate?: ConnectionCreateOrConnectWithoutFromUserInput | ConnectionCreateOrConnectWithoutFromUserInput[]
@@ -23040,6 +27761,124 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type VisitorEventCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput> | VisitorEventCreateWithoutVisitorInput[] | VisitorEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: VisitorEventCreateOrConnectWithoutVisitorInput | VisitorEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: VisitorEventCreateManyVisitorInputEnvelope
+    connect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+  }
+
+  export type ConversionEventCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput> | ConversionEventCreateWithoutVisitorInput[] | ConversionEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: ConversionEventCreateOrConnectWithoutVisitorInput | ConversionEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: ConversionEventCreateManyVisitorInputEnvelope
+    connect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+  }
+
+  export type VisitorEventUncheckedCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput> | VisitorEventCreateWithoutVisitorInput[] | VisitorEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: VisitorEventCreateOrConnectWithoutVisitorInput | VisitorEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: VisitorEventCreateManyVisitorInputEnvelope
+    connect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+  }
+
+  export type ConversionEventUncheckedCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput> | ConversionEventCreateWithoutVisitorInput[] | ConversionEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: ConversionEventCreateOrConnectWithoutVisitorInput | ConversionEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: ConversionEventCreateManyVisitorInputEnvelope
+    connect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+  }
+
+  export type VisitorEventUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput> | VisitorEventCreateWithoutVisitorInput[] | VisitorEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: VisitorEventCreateOrConnectWithoutVisitorInput | VisitorEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: VisitorEventUpsertWithWhereUniqueWithoutVisitorInput | VisitorEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: VisitorEventCreateManyVisitorInputEnvelope
+    set?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    disconnect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    delete?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    connect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    update?: VisitorEventUpdateWithWhereUniqueWithoutVisitorInput | VisitorEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: VisitorEventUpdateManyWithWhereWithoutVisitorInput | VisitorEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: VisitorEventScalarWhereInput | VisitorEventScalarWhereInput[]
+  }
+
+  export type ConversionEventUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput> | ConversionEventCreateWithoutVisitorInput[] | ConversionEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: ConversionEventCreateOrConnectWithoutVisitorInput | ConversionEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: ConversionEventUpsertWithWhereUniqueWithoutVisitorInput | ConversionEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: ConversionEventCreateManyVisitorInputEnvelope
+    set?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    disconnect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    delete?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    connect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    update?: ConversionEventUpdateWithWhereUniqueWithoutVisitorInput | ConversionEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: ConversionEventUpdateManyWithWhereWithoutVisitorInput | ConversionEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: ConversionEventScalarWhereInput | ConversionEventScalarWhereInput[]
+  }
+
+  export type VisitorEventUncheckedUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput> | VisitorEventCreateWithoutVisitorInput[] | VisitorEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: VisitorEventCreateOrConnectWithoutVisitorInput | VisitorEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: VisitorEventUpsertWithWhereUniqueWithoutVisitorInput | VisitorEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: VisitorEventCreateManyVisitorInputEnvelope
+    set?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    disconnect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    delete?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    connect?: VisitorEventWhereUniqueInput | VisitorEventWhereUniqueInput[]
+    update?: VisitorEventUpdateWithWhereUniqueWithoutVisitorInput | VisitorEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: VisitorEventUpdateManyWithWhereWithoutVisitorInput | VisitorEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: VisitorEventScalarWhereInput | VisitorEventScalarWhereInput[]
+  }
+
+  export type ConversionEventUncheckedUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput> | ConversionEventCreateWithoutVisitorInput[] | ConversionEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: ConversionEventCreateOrConnectWithoutVisitorInput | ConversionEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: ConversionEventUpsertWithWhereUniqueWithoutVisitorInput | ConversionEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: ConversionEventCreateManyVisitorInputEnvelope
+    set?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    disconnect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    delete?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    connect?: ConversionEventWhereUniqueInput | ConversionEventWhereUniqueInput[]
+    update?: ConversionEventUpdateWithWhereUniqueWithoutVisitorInput | ConversionEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: ConversionEventUpdateManyWithWhereWithoutVisitorInput | ConversionEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: ConversionEventScalarWhereInput | ConversionEventScalarWhereInput[]
+  }
+
+  export type VisitorCreateNestedOneWithoutEventsInput = {
+    create?: XOR<VisitorCreateWithoutEventsInput, VisitorUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: VisitorCreateOrConnectWithoutEventsInput
+    connect?: VisitorWhereUniqueInput
+  }
+
+  export type VisitorUpdateOneRequiredWithoutEventsNestedInput = {
+    create?: XOR<VisitorCreateWithoutEventsInput, VisitorUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: VisitorCreateOrConnectWithoutEventsInput
+    upsert?: VisitorUpsertWithoutEventsInput
+    connect?: VisitorWhereUniqueInput
+    update?: XOR<XOR<VisitorUpdateToOneWithWhereWithoutEventsInput, VisitorUpdateWithoutEventsInput>, VisitorUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type VisitorCreateNestedOneWithoutConversionsInput = {
+    create?: XOR<VisitorCreateWithoutConversionsInput, VisitorUncheckedCreateWithoutConversionsInput>
+    connectOrCreate?: VisitorCreateOrConnectWithoutConversionsInput
+    connect?: VisitorWhereUniqueInput
+  }
+
+  export type EnumConversionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ConversionType
+  }
+
+  export type VisitorUpdateOneWithoutConversionsNestedInput = {
+    create?: XOR<VisitorCreateWithoutConversionsInput, VisitorUncheckedCreateWithoutConversionsInput>
+    connectOrCreate?: VisitorCreateOrConnectWithoutConversionsInput
+    upsert?: VisitorUpsertWithoutConversionsInput
+    disconnect?: VisitorWhereInput | boolean
+    delete?: VisitorWhereInput | boolean
+    connect?: VisitorWhereUniqueInput
+    update?: XOR<XOR<VisitorUpdateToOneWithWhereWithoutConversionsInput, VisitorUpdateWithoutConversionsInput>, VisitorUncheckedUpdateWithoutConversionsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23422,6 +28261,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumInquiryStatusFilter<$PrismaModel>
     _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumConversionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversionType | EnumConversionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversionTypeFilter<$PrismaModel> | $Enums.ConversionType
+  }
+
+  export type NestedEnumConversionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversionType | EnumConversionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ConversionType[] | ListEnumConversionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumConversionTypeWithAggregatesFilter<$PrismaModel> | $Enums.ConversionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConversionTypeFilter<$PrismaModel>
+    _max?: NestedEnumConversionTypeFilter<$PrismaModel>
   }
 
   export type ConnectionCreateWithoutFromUserInput = {
@@ -25747,6 +30603,335 @@ export namespace Prisma {
     consents?: ConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type VisitorEventCreateWithoutVisitorInput = {
+    id?: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+  }
+
+  export type VisitorEventUncheckedCreateWithoutVisitorInput = {
+    id?: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+  }
+
+  export type VisitorEventCreateOrConnectWithoutVisitorInput = {
+    where: VisitorEventWhereUniqueInput
+    create: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type VisitorEventCreateManyVisitorInputEnvelope = {
+    data: VisitorEventCreateManyVisitorInput | VisitorEventCreateManyVisitorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversionEventCreateWithoutVisitorInput = {
+    id?: string
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+  }
+
+  export type ConversionEventUncheckedCreateWithoutVisitorInput = {
+    id?: string
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+  }
+
+  export type ConversionEventCreateOrConnectWithoutVisitorInput = {
+    where: ConversionEventWhereUniqueInput
+    create: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type ConversionEventCreateManyVisitorInputEnvelope = {
+    data: ConversionEventCreateManyVisitorInput | ConversionEventCreateManyVisitorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VisitorEventUpsertWithWhereUniqueWithoutVisitorInput = {
+    where: VisitorEventWhereUniqueInput
+    update: XOR<VisitorEventUpdateWithoutVisitorInput, VisitorEventUncheckedUpdateWithoutVisitorInput>
+    create: XOR<VisitorEventCreateWithoutVisitorInput, VisitorEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type VisitorEventUpdateWithWhereUniqueWithoutVisitorInput = {
+    where: VisitorEventWhereUniqueInput
+    data: XOR<VisitorEventUpdateWithoutVisitorInput, VisitorEventUncheckedUpdateWithoutVisitorInput>
+  }
+
+  export type VisitorEventUpdateManyWithWhereWithoutVisitorInput = {
+    where: VisitorEventScalarWhereInput
+    data: XOR<VisitorEventUpdateManyMutationInput, VisitorEventUncheckedUpdateManyWithoutVisitorInput>
+  }
+
+  export type VisitorEventScalarWhereInput = {
+    AND?: VisitorEventScalarWhereInput | VisitorEventScalarWhereInput[]
+    OR?: VisitorEventScalarWhereInput[]
+    NOT?: VisitorEventScalarWhereInput | VisitorEventScalarWhereInput[]
+    id?: StringFilter<"VisitorEvent"> | string
+    anonymousId?: StringFilter<"VisitorEvent"> | string
+    path?: StringNullableFilter<"VisitorEvent"> | string | null
+    referrer?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmSource?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmMedium?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmCampaign?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmContent?: StringNullableFilter<"VisitorEvent"> | string | null
+    utmTerm?: StringNullableFilter<"VisitorEvent"> | string | null
+    fbclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    gclid?: StringNullableFilter<"VisitorEvent"> | string | null
+    deviceType?: StringNullableFilter<"VisitorEvent"> | string | null
+    ipHash?: StringNullableFilter<"VisitorEvent"> | string | null
+    createdAt?: DateTimeFilter<"VisitorEvent"> | Date | string
+  }
+
+  export type ConversionEventUpsertWithWhereUniqueWithoutVisitorInput = {
+    where: ConversionEventWhereUniqueInput
+    update: XOR<ConversionEventUpdateWithoutVisitorInput, ConversionEventUncheckedUpdateWithoutVisitorInput>
+    create: XOR<ConversionEventCreateWithoutVisitorInput, ConversionEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type ConversionEventUpdateWithWhereUniqueWithoutVisitorInput = {
+    where: ConversionEventWhereUniqueInput
+    data: XOR<ConversionEventUpdateWithoutVisitorInput, ConversionEventUncheckedUpdateWithoutVisitorInput>
+  }
+
+  export type ConversionEventUpdateManyWithWhereWithoutVisitorInput = {
+    where: ConversionEventScalarWhereInput
+    data: XOR<ConversionEventUpdateManyMutationInput, ConversionEventUncheckedUpdateManyWithoutVisitorInput>
+  }
+
+  export type ConversionEventScalarWhereInput = {
+    AND?: ConversionEventScalarWhereInput | ConversionEventScalarWhereInput[]
+    OR?: ConversionEventScalarWhereInput[]
+    NOT?: ConversionEventScalarWhereInput | ConversionEventScalarWhereInput[]
+    id?: StringFilter<"ConversionEvent"> | string
+    anonymousId?: StringNullableFilter<"ConversionEvent"> | string | null
+    userId?: StringNullableFilter<"ConversionEvent"> | string | null
+    type?: EnumConversionTypeFilter<"ConversionEvent"> | $Enums.ConversionType
+    createdAt?: DateTimeFilter<"ConversionEvent"> | Date | string
+  }
+
+  export type VisitorCreateWithoutEventsInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    conversions?: ConversionEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorUncheckedCreateWithoutEventsInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    conversions?: ConversionEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorCreateOrConnectWithoutEventsInput = {
+    where: VisitorWhereUniqueInput
+    create: XOR<VisitorCreateWithoutEventsInput, VisitorUncheckedCreateWithoutEventsInput>
+  }
+
+  export type VisitorUpsertWithoutEventsInput = {
+    update: XOR<VisitorUpdateWithoutEventsInput, VisitorUncheckedUpdateWithoutEventsInput>
+    create: XOR<VisitorCreateWithoutEventsInput, VisitorUncheckedCreateWithoutEventsInput>
+    where?: VisitorWhereInput
+  }
+
+  export type VisitorUpdateToOneWithWhereWithoutEventsInput = {
+    where?: VisitorWhereInput
+    data: XOR<VisitorUpdateWithoutEventsInput, VisitorUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type VisitorUpdateWithoutEventsInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversions?: ConversionEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type VisitorUncheckedUpdateWithoutEventsInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversions?: ConversionEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type VisitorCreateWithoutConversionsInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    events?: VisitorEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorUncheckedCreateWithoutConversionsInput = {
+    anonymousId: string
+    firstSeen?: Date | string
+    lastSeen?: Date | string
+    visitCount?: number
+    ftSource?: string | null
+    ftMedium?: string | null
+    ftCampaign?: string | null
+    ftContent?: string | null
+    ftTerm?: string | null
+    ltSource?: string | null
+    ltMedium?: string | null
+    ltCampaign?: string | null
+    ltContent?: string | null
+    ltTerm?: string | null
+    convertedUserId?: string | null
+    convertedAt?: Date | string | null
+    createdAt?: Date | string
+    events?: VisitorEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type VisitorCreateOrConnectWithoutConversionsInput = {
+    where: VisitorWhereUniqueInput
+    create: XOR<VisitorCreateWithoutConversionsInput, VisitorUncheckedCreateWithoutConversionsInput>
+  }
+
+  export type VisitorUpsertWithoutConversionsInput = {
+    update: XOR<VisitorUpdateWithoutConversionsInput, VisitorUncheckedUpdateWithoutConversionsInput>
+    create: XOR<VisitorCreateWithoutConversionsInput, VisitorUncheckedCreateWithoutConversionsInput>
+    where?: VisitorWhereInput
+  }
+
+  export type VisitorUpdateToOneWithWhereWithoutConversionsInput = {
+    where?: VisitorWhereInput
+    data: XOR<VisitorUpdateWithoutConversionsInput, VisitorUncheckedUpdateWithoutConversionsInput>
+  }
+
+  export type VisitorUpdateWithoutConversionsInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: VisitorEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type VisitorUncheckedUpdateWithoutConversionsInput = {
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    firstSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitCount?: IntFieldUpdateOperationsInput | number
+    ftSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ftMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ftCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ftContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ftTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    ltSource?: NullableStringFieldUpdateOperationsInput | string | null
+    ltMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    ltCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    ltContent?: NullableStringFieldUpdateOperationsInput | string | null
+    ltTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: VisitorEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
   export type ConnectionCreateManyFromUserInput = {
     id?: string
     toUserId: string
@@ -26286,6 +31471,98 @@ export namespace Prisma {
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     isFollowup?: BoolFieldUpdateOperationsInput | boolean
     notified?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventCreateManyVisitorInput = {
+    id?: string
+    path?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    deviceType?: string | null
+    ipHash?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversionEventCreateManyVisitorInput = {
+    id?: string
+    userId?: string | null
+    type: $Enums.ConversionType
+    createdAt?: Date | string
+  }
+
+  export type VisitorEventUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventUncheckedUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitorEventUncheckedUpdateManyWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceType?: NullableStringFieldUpdateOperationsInput | string | null
+    ipHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventUncheckedUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversionEventUncheckedUpdateManyWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversionTypeFieldUpdateOperationsInput | $Enums.ConversionType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -102,13 +102,13 @@ export function MarketingPixels() {
         <p className="text-sm text-gray-600 flex-1 leading-relaxed">
           서비스 개선과 광고 효과 측정을 위해 쿠키·광고 추적을 사용해도 될까요? 동의하지 않아도 서비스 이용에는 영향이 없어요.
         </p>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex w-full gap-2 shrink-0 sm:w-auto">
           <button
             onClick={() => {
               localStorage.setItem(CONSENT_KEY, 'denied');
               setConsent('denied');
             }}
-            className="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-500"
+            className="min-h-11 flex-1 px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 sm:flex-none"
           >
             거부
           </button>
@@ -117,7 +117,7 @@ export function MarketingPixels() {
               localStorage.setItem(CONSENT_KEY, 'granted');
               setConsent('granted');
             }}
-            className="px-4 py-2 rounded-xl text-white text-sm font-semibold"
+            className="min-h-11 flex-1 px-4 py-2 rounded-xl text-white text-sm font-semibold sm:flex-none"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
             동의

@@ -14,7 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: adminData } = trpc.admin.isAdmin.useQuery();
 
   return (
-    <div className="min-h-screen pb-20" style={{ background: 'var(--color-background)' }}>
+    <div className="min-h-dvh pb-20" style={{ background: 'var(--color-background)' }}>
       {/* 헤더 */}
       <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <Link href="/feed" className="text-lg font-bold" style={{ color: 'var(--color-primary-dark)' }}>
@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="max-w-lg mx-auto px-4 py-6">{children}</main>
 
       {/* 하단 내비게이션 */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex pb-[env(safe-area-inset-bottom)]">
         {NAV.map((item) => {
           const active = pathname.startsWith(item.href);
           return (

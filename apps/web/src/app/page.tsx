@@ -16,42 +16,42 @@ const VALUES = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen" style={{ background: 'var(--color-background)' }}>
-      <div className="max-w-md mx-auto px-6 py-14 space-y-16">
+    <main className="min-h-dvh" style={{ background: 'var(--color-background)' }}>
+      <div className="w-full max-w-5xl mx-auto px-4 py-10 sm:px-6 sm:py-14 lg:py-20 space-y-12 sm:space-y-16">
         {/* 1. 히어로 */}
-        <section className="text-center space-y-5">
-          <div className="text-5xl" aria-hidden>💌</div>
-          <h1 className="text-[28px] leading-snug font-bold" style={{ color: 'var(--color-primary-dark)' }}>
+        <section className="max-w-2xl mx-auto text-center space-y-5 break-keep">
+          <div className="text-4xl sm:text-5xl" aria-hidden>💌</div>
+          <h1 className="text-[26px] sm:text-[32px] md:text-4xl leading-snug font-bold text-balance" style={{ color: 'var(--color-primary-dark)' }}>
             매일 질문 하나로,<br />부모님의 이야기를 책으로 남겨요
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-balance">
             자녀가 보낸 질문에 부모님이 답하면,<br />그 이야기가 한 권의 책으로 모입니다.
           </p>
-          <div className="space-y-3 pt-2">
+          <div className="flex flex-col sm:flex-row sm:justify-center gap-3 pt-2">
             <Link
               href="/onboarding"
-              className="block w-full py-4 rounded-2xl text-white text-lg font-semibold transition-opacity hover:opacity-90"
+              className="flex min-h-12 w-full sm:w-auto items-center justify-center px-6 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold transition-opacity hover:opacity-90"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
               시작하기
             </Link>
             <Link
               href="/login"
-              className="block w-full py-3 rounded-2xl font-medium"
+              className="flex min-h-12 w-full sm:w-auto items-center justify-center px-6 py-3 rounded-2xl font-medium"
               style={{ color: 'var(--color-primary)' }}
             >
               이미 계정이 있어요 →
             </Link>
-            <AdminLink />
           </div>
+          <AdminLink />
         </section>
 
         {/* 2. 작동 방식 (3단계) */}
-        <section className="space-y-6">
+        <section className="space-y-6 break-keep">
           <h2 className="text-center text-xl font-bold text-gray-900">이렇게 이어져요</h2>
-          <ol className="space-y-3">
+          <ol className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {HOW_IT_WORKS.map((s) => (
-              <li key={s.step} className="flex items-center gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+              <li key={s.step} className="flex items-start gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
                 <span
                   className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold"
                   style={{ backgroundColor: 'var(--color-primary)' }}
@@ -59,7 +59,7 @@ export default function Home() {
                 >
                   {s.step}
                 </span>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <p className="text-base font-semibold text-gray-900">
                     <span className="mr-1.5" aria-hidden>{s.icon}</span>{s.title}
                   </p>
@@ -71,13 +71,13 @@ export default function Home() {
         </section>
 
         {/* 3. 핵심 가치 */}
-        <section className="space-y-6">
+        <section className="space-y-6 break-keep">
           <h2 className="text-center text-xl font-bold text-gray-900">왜 마음 잇기인가요</h2>
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {VALUES.map((v) => (
-              <div key={v.title} className="flex gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
-                <span className="text-2xl mt-0.5" aria-hidden>{v.icon}</span>
-                <div>
+              <div key={v.title} className="flex gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+                <span className="shrink-0 text-2xl mt-0.5" aria-hidden>{v.icon}</span>
+                <div className="min-w-0">
                   <p className="text-base font-semibold text-gray-900">{v.title}</p>
                   <p className="text-[15px] text-gray-500 mt-0.5 leading-relaxed">{v.desc}</p>
                 </div>
@@ -88,7 +88,7 @@ export default function Home() {
 
         {/* 4. 현재 응답 방식 안내 + 로드맵 */}
         <section
-          className="rounded-2xl p-5 space-y-2 border"
+          className="max-w-2xl mx-auto rounded-2xl p-5 space-y-2 border break-keep"
           style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }}
         >
           <p className="text-base font-semibold" style={{ color: 'var(--color-primary-dark)' }}>
