@@ -60,7 +60,8 @@ export default function ProfilePage() {
         {[
           { href: '/terms', icon: '📄', label: '이용약관' },
           { href: '/privacy', icon: '🔐', label: '개인정보 처리방침' },
-          { href: '/faq', icon: '💬', label: '자주 묻는 질문 (FAQ)' },
+          { href: '/faq', icon: '❓', label: '자주 묻는 질문 (FAQ)' },
+          { href: '/profile/inquiry', icon: '💬', label: '서비스 문의' },
         ].map((item) => (
           <Link
             key={item.href}
