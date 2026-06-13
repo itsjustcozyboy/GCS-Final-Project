@@ -86,7 +86,7 @@ export function AnswerComposer({
         {METHODS.map((m) => (
           <button
             key={m.value}
-            onClick={() => setMethod(m.value)}
+            onClick={() => selectMethod(m.value)}
             className="flex-1 px-1.5 py-2 rounded-lg transition-colors"
             style={method === m.value ? { backgroundColor: 'white', color: 'var(--color-primary-dark)', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' } : { color: '#9B9B9B' }}
           >
