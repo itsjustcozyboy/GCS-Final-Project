@@ -139,7 +139,14 @@ export async function recordConversion(
     }
   }
 
-  await db.conversionEvent.create({
-    data: { anonymousId: args.anonymousId ?? null, userId: args.userId, type: args.type },
-  });
+  // 동일 단계 중복 방지: anonymousId(있으면) 또는 userId 기준으로 같은 type 1건만 남긴다.
+  const dupWhere = args.anonymousId
+    ? { type: args.type, anonymousId: args.anonymousId }
+    : { type: args.type, userId: args.userId };
+  const exists = await db.conversionEvent.findFirst({ where: dupWhere, select: { id: true } });
+  if (!exists) {
+    await db.conversionEvent.create({
+      data: { anonymousId: args.anonymousId ?? null, userId: args.userId, type: args.type },
+    });
+  }
 }
