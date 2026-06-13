@@ -62,11 +62,12 @@ function loadPixels(): void {
     s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
     document.head.appendChild(s);
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () {
+    const gtag = function () {
       window.dataLayer!.push(arguments);
-    } as any;
-    window.gtag('js', new Date());
-    window.gtag('config', GA_ID);
+    } as (...args: any[]) => void;
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', GA_ID);
   }
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
