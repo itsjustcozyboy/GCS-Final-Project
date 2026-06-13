@@ -19,6 +19,8 @@ export default function LoginPage() {
     onSuccess(data) {
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('userId', data.user.id);
+      // 이전 계정의 캐시를 비우고 새 토큰으로 다시 패칭되게 한다.
+      queryClient.clear();
       router.push(next);
     },
     onError(err) {
