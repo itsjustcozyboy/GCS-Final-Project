@@ -49,6 +49,10 @@ function questionLanguage(requestLocale?: string | null, targetLocale?: string |
   return languageFromLocale(requestLocale ?? targetLocale);
 }
 
+function parentLabel(language: Language, name?: string | null): string {
+  return name || (language === 'en' ? 'your parent' : '부모님');
+}
+
 async function getOwnedConnection(db: Context['db'], connectionId: string, userId: string) {
   const conn = await db.connection.findUnique({
     where: { id: connectionId },
@@ -154,7 +158,7 @@ export const questionRouter = router({
         select: { body: true },
       });
       const generated = await ai.generateQuestion({
-        parentName: conn.fromUser?.name ?? '부모님',
+        parentName: parentLabel(language, conn.fromUser?.name),
         intimacy: conn.intimacy,
         hasConflict: conn.hasConflict,
         tone: conn.tone,
@@ -200,7 +204,7 @@ export const questionRouter = router({
       const ai = createAIClient();
       const generated = await ai.generateQuestionFromKeywords({
         keywords: input.keywords,
-        parentName: conn.fromUser?.name ?? '부모님',
+        parentName: parentLabel(language, conn.fromUser?.name),
         tone: conn.tone,
         language,
       });

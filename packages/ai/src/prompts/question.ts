@@ -4,7 +4,7 @@ import type { QuestionContext, Language } from '../client';
 function langDirective(language: Language): string {
   if (language === 'en') {
     return `\n\n[LANGUAGE]
-Write ALL output text (questions, answers, tips, chapter names) in natural, warm English suited to an older parent: simple, conversational, never stiff. Never use words about death, dying, "last words", or "before passing". JSON keys must stay in English.`;
+Write ALL output text values in English only. Do not use Korean words or Hangul characters anywhere in the JSON values. Use natural, warm English suited to an older parent: simple, conversational, never stiff. Never use words about death, dying, "last words", or "before passing". JSON keys must stay in English.`;
   }
   return `\n\n[언어] 모든 출력 텍스트는 한국어로 작성한다. JSON 키는 영어 그대로 둔다.`;
 }
@@ -15,6 +15,29 @@ const CHAPTERS = {
 } as const;
 
 export function buildQuestionSystemPrompt(language: Language = 'ko'): string {
+  if (language === 'en') {
+    return `You are a gentle life-story interview assistant for parents and adult children.
+Generate exactly one daily question that a grown child can send to a parent.
+
+[Rules]
+1. Do not repeat topics that were already asked. A thoughtful follow-up about an interesting person or memory from a previous answer is welcome.
+2. Ask only one thing at a time. Do not create compound questions.
+3. Use plain, conversational English that an older parent can understand immediately.
+4. Avoid yes/no questions. Invite a scene, memory, story, photo, voice note, or short answer.
+5. Do not mention death, dying, wills, last words, final messages, funerals, or before passing.
+6. If a photo or video would make answering easier, gently suggest that format.
+7. If a recent topic was skipped, approach it more lightly or choose a nearby topic.
+
+[Output]
+Return only valid JSON, with no Markdown or extra text:
+{
+  "question": "Question text, no more than 2 sentences",
+  "suggestedFormat": "text|photo|video",
+  "depth": 1,
+  "tags": { "chapter": "Chapter name", "person": "Optional person", "era": "Optional era" }
+}${langDirective(language)}`;
+  }
+
   return `당신은 부모와 자식이 평생 나누지 못한 대화를 잇는 따뜻한 인터뷰어다.
 매일 부모에게 보낼 질문 1개를 생성한다.
 
@@ -38,6 +61,22 @@ export function buildQuestionSystemPrompt(language: Language = 'ko'): string {
 
 // 자녀가 입력한 키워드 → 부모에게 보낼 질문 생성
 export function buildKeywordQuestionPrompt(keywords: string[], parentName: string, tone: 'light' | 'deep', language: Language = 'ko'): string {
+  if (language === 'en') {
+    return `The child wants to ask their parent (${parentName}) about these keywords: ${keywords.join(', ')}
+Conversation tone: ${tone === 'light' ? 'light memories' : 'deeper life story'}
+
+Turn those keywords into exactly one warm question the child can send to the parent.
+- Do not simply list the keywords. Weave them into one natural question.
+- Use no more than 2 sentences.
+- Use plain, conversational English an older parent can understand immediately.
+- Ask an open question that invites a scene, memory, or story.
+- If the keywords are in Korean, understand their meaning and write the final question in English only.
+
+[Output]
+Return only valid JSON:
+{"question":"...","suggestedFormat":"text|photo|video","depth":2,"tags":{"chapter":"${CHAPTERS[language]}"}}${langDirective(language)}`;
+  }
+
   return `자녀가 부모(${parentName})에게 묻고 싶은 주제 키워드: ${keywords.join(', ')}
 대화 톤: ${tone === 'light' ? '가벼운 추억' : '깊은 인생 이야기'}
 
@@ -120,6 +159,22 @@ ${question}
 }
 
 export function buildQuestionUserPrompt(ctx: QuestionContext): string {
+  if ((ctx.language ?? 'ko') === 'en') {
+    return `[Input context]
+- Parent name: ${ctx.parentName}
+- Age: ${ctx.parentAge ?? 'unknown'}
+- Closeness with child: ${ctx.intimacy}/5
+- Conflict history: ${ctx.hasConflict ? 'yes' : 'no'}
+- Conversation tone: ${ctx.tone === 'light' ? 'light memories' : 'deeper life story'}
+- Current depth level: ${ctx.currentDepth}/5
+- Recent answer summary: ${ctx.recentAnswerSummary ?? 'none'}
+- Recently skipped topics: ${ctx.recentSkippedTopics?.join(', ') ?? 'none'}
+- Topics they answered well: ${ctx.recentWellAnsweredTopics?.join(', ') ?? 'none'}
+- Today: ${ctx.dayOfWeek ?? ''} ${ctx.season ?? ''}
+
+Generate one question as JSON from this context. The final JSON values must be in English only. Do not include Korean.`;
+  }
+
   return `[입력 컨텍스트]
 - 부모 이름: ${ctx.parentName}
 - 나이: ${ctx.parentAge ?? '미상'}

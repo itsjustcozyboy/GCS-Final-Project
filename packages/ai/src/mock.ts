@@ -30,6 +30,10 @@ const MOCK_QUESTIONS: Record<Language, Record<QuestionDepth, QuestionOutput>> = 
   },
 };
 
+function englishKeyword(keyword: string): string {
+  return /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(keyword) ? 'that memory' : keyword;
+}
+
 export class MockAIClient implements AIClient {
   async transcribeAudio(_input: { mediaUrl: string; mimeType?: string }): Promise<{ text: string; isMock: boolean }> {
     console.log('[MockAI] transcribeAudio 호출 (Mock 응답) — TODO: 실제 STT 연동');
@@ -51,9 +55,11 @@ export class MockAIClient implements AIClient {
     const main = input.keywords[0] ?? (lang === 'en' ? 'a memory' : '추억');
     const rest = input.keywords.slice(1);
     if (lang === 'en') {
+      const safeMain = englishKeyword(main);
+      const safeRest = rest.map(englishKeyword);
       const question = input.tone === 'deep'
-        ? `When you think of ${main}${rest.length ? ` (and ${rest.join(', ')})` : ''}, what scene comes to mind first? I'd love to hear that story.`
-        : `Does ${main} bring back any memories?${rest.length ? ` I'm curious about ${rest.join(', ')} too.` : ''}`;
+        ? `When you think of ${safeMain}${safeRest.length ? ` (and ${safeRest.join(', ')})` : ''}, what scene comes to mind first? I'd love to hear that story.`
+        : `Does ${safeMain} bring back any memories?${safeRest.length ? ` I'm curious about ${safeRest.join(', ')} too.` : ''}`;
       return { question, suggestedFormat: 'text', depth: 2, tags: { chapter: 'Who you are now' } };
     }
     const question = input.tone === 'deep'

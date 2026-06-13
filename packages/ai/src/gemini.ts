@@ -1,5 +1,6 @@
 import type {
   AIClient,
+  Language,
   QuestionContext,
   QuestionOutput,
   BookChapterInput,
@@ -104,29 +105,68 @@ export class GeminiAIClient implements AIClient {
     }
   }
 
+  private hasHangul(text: string): boolean {
+    return /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(text);
+  }
+
+  private questionHasWrongLanguage(output: QuestionOutput, language: Language): boolean {
+    if (language !== 'en') return false;
+    return this.hasHangul([
+      output.question,
+      output.tags.chapter,
+      output.tags.person,
+      output.tags.era,
+    ].filter(Boolean).join(' '));
+  }
+
+  private async englishOnlyQuestionRetry(system: string, user: string): Promise<QuestionOutput> {
+    return this.jsonRequest<QuestionOutput>(
+      system,
+      `${user}
+
+STRICT LANGUAGE CORRECTION:
+Your previous answer used Korean or Hangul. Rewrite the question and every JSON value in English only.
+Do not include Korean words or Hangul characters anywhere.
+Return only valid JSON.`,
+      512,
+    );
+  }
+
   async generateQuestion(ctx: QuestionContext): Promise<QuestionOutput> {
+    const language = ctx.language ?? 'ko';
+    const system = buildQuestionSystemPrompt(language);
+    const user = buildQuestionUserPrompt({ ...ctx, language });
     try {
-      return await this.jsonRequest<QuestionOutput>(
-        buildQuestionSystemPrompt(ctx.language ?? 'ko'),
-        buildQuestionUserPrompt(ctx),
-        512,
-      );
+      const generated = await this.jsonRequest<QuestionOutput>(system, user, 512);
+      if (!this.questionHasWrongLanguage(generated, language)) return generated;
+
+      const corrected = await this.englishOnlyQuestionRetry(system, user);
+      if (!this.questionHasWrongLanguage(corrected, language)) return corrected;
+
+      console.error('[GeminiAI] generateQuestion 영어 응답에 한글 포함 → Mock 폴백');
+      return this.fallback.generateQuestion({ ...ctx, language });
     } catch (e) {
       console.error('[GeminiAI] generateQuestion 오류, Mock 폴백:', e);
-      return this.fallback.generateQuestion(ctx);
+      return this.fallback.generateQuestion({ ...ctx, language });
     }
   }
 
   async generateQuestionFromKeywords(input: QuestionFromKeywordsInput): Promise<QuestionOutput> {
+    const language = input.language ?? 'ko';
+    const system = buildQuestionSystemPrompt(language);
+    const user = buildKeywordQuestionPrompt(input.keywords, input.parentName, input.tone, language);
     try {
-      return await this.jsonRequest<QuestionOutput>(
-        buildQuestionSystemPrompt(input.language ?? 'ko'),
-        buildKeywordQuestionPrompt(input.keywords, input.parentName, input.tone, input.language ?? 'ko'),
-        512,
-      );
+      const generated = await this.jsonRequest<QuestionOutput>(system, user, 512);
+      if (!this.questionHasWrongLanguage(generated, language)) return generated;
+
+      const corrected = await this.englishOnlyQuestionRetry(system, user);
+      if (!this.questionHasWrongLanguage(corrected, language)) return corrected;
+
+      console.error('[GeminiAI] generateQuestionFromKeywords 영어 응답에 한글 포함 → Mock 폴백');
+      return this.fallback.generateQuestionFromKeywords({ ...input, language });
     } catch (e) {
       console.error('[GeminiAI] generateQuestionFromKeywords 오류, Mock 폴백:', e);
-      return this.fallback.generateQuestionFromKeywords(input);
+      return this.fallback.generateQuestionFromKeywords({ ...input, language });
     }
   }
 
