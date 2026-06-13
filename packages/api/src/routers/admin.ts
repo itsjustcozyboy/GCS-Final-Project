@@ -208,4 +208,152 @@ export const adminRouter = router({
 
       return { deletedCount: count };
     }),
+
+  // ── 방문자 전환율(퍼널) 분석 ──────────────────────────────────
+  // 방문자 수 = 기간 내 첫 방문(firstSeen)한 고유 anonymousId. 전환 = 그중 계정으로 연결된 수.
+  // 채널 귀속은 first-touch(ftSource) 기준.
+  funnelSummary: adminProcedure
+    .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
+    .query(async ({ ctx, input }) => {
+      const cutoff = new Date(Date.now() - input.days * 86_400_000);
+      const [totalVisitors, conversions] = await Promise.all([
+        ctx.db.visitor.count({ where: { firstSeen: { gte: cutoff } } }),
+        ctx.db.visitor.count({ where: { firstSeen: { gte: cutoff }, convertedUserId: { not: null } } }),
+      ]);
+      return {
+        totalVisitors,
+        conversions,
+        conversionRate: totalVisitors ? conversions / totalVisitors : 0,
+      };
+    }),
+
+  // 채널별(utm_source, first-touch) 방문/전환/전환율
+  channelStats: adminProcedure
+    .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
+    .query(async ({ ctx, input }) => {
+      const cutoff = new Date(Date.now() - input.days * 86_400_000);
+      const [visits, conv] = await Promise.all([
+        ctx.db.visitor.groupBy({ by: ['ftSource'], where: { firstSeen: { gte: cutoff } }, _count: { _all: true } }),
+        ctx.db.visitor.groupBy({
+          by: ['ftSource'],
+          where: { firstSeen: { gte: cutoff }, convertedUserId: { not: null } },
+          _count: { _all: true },
+        }),
+      ]);
+      const agg = new Map<string, { visits: number; conversions: number }>();
+      for (const v of visits) {
+        const s = v.ftSource ?? 'direct';
+        agg.set(s, { visits: (agg.get(s)?.visits ?? 0) + v._count._all, conversions: agg.get(s)?.conversions ?? 0 });
+      }
+      for (const c of conv) {
+        const s = c.ftSource ?? 'direct';
+        const cur = agg.get(s) ?? { visits: 0, conversions: 0 };
+        cur.conversions += c._count._all;
+        agg.set(s, cur);
+      }
+      return [...agg.entries()]
+        .map(([source, { visits, conversions }]) => ({
+          source,
+          visits,
+          conversions,
+          conversionRate: visits ? conversions / visits : 0,
+        }))
+        .sort((a, b) => b.visits - a.visits);
+    }),
+
+  // 아직 전환되지 않은 익명 방문자 (링크만 타고 들어온 사람들). 식별정보 없음.
+  anonymousVisitors: adminProcedure
+    .input(z.object({
+      days: z.number().int().min(1).max(365).default(30),
+      search: z.string().optional(),
+      limit: z.number().int().min(1).max(200).default(100),
+    }))
+    .query(async ({ ctx, input }) => {
+      const cutoff = new Date(Date.now() - input.days * 86_400_000);
+      const visitors = await ctx.db.visitor.findMany({
+        where: {
+          convertedUserId: null,
+          firstSeen: { gte: cutoff },
+          ...(input.search
+            ? { OR: [{ ftSource: { contains: input.search, mode: 'insensitive' as const } }, { anonymousId: { contains: input.search } }] }
+            : {}),
+        },
+        orderBy: { lastSeen: 'desc' },
+        take: input.limit,
+      });
+      const ids = visitors.map((v) => v.anonymousId);
+      const latest = ids.length
+        ? await ctx.db.visitorEvent.findMany({
+            where: { anonymousId: { in: ids } },
+            orderBy: { createdAt: 'desc' },
+            distinct: ['anonymousId'],
+            select: { anonymousId: true, path: true, deviceType: true },
+          })
+        : [];
+      const lm = new Map(latest.map((e) => [e.anonymousId, e]));
+      return visitors.map((v) => ({
+        anonymousId: v.anonymousId,
+        firstSeen: v.firstSeen,
+        lastSeen: v.lastSeen,
+        visitCount: v.visitCount,
+        source: v.ftSource ?? 'direct',
+        lastPath: lm.get(v.anonymousId)?.path ?? null,
+        deviceType: lm.get(v.anonymousId)?.deviceType ?? null,
+      }));
+    }),
+
+  // 전환된 방문자: anonymousId → 연결 계정(이름/이메일), 전환 시각, 유입(first-touch)
+  convertedVisitors: adminProcedure
+    .input(z.object({
+      days: z.number().int().min(1).max(365).default(30),
+      source: z.string().optional(),
+      limit: z.number().int().min(1).max(200).default(100),
+    }))
+    .query(async ({ ctx, input }) => {
+      const cutoff = new Date(Date.now() - input.days * 86_400_000);
+      const visitors = await ctx.db.visitor.findMany({
+        where: {
+          convertedUserId: { not: null },
+          convertedAt: { gte: cutoff },
+          ...(input.source ? { ftSource: input.source === 'direct' ? null : input.source } : {}),
+        },
+        orderBy: { convertedAt: 'desc' },
+        take: input.limit,
+      });
+      const userIds = [...new Set(visitors.map((v) => v.convertedUserId!).filter(Boolean))];
+      const users = userIds.length
+        ? await ctx.db.user.findMany({ where: { id: { in: userIds } }, select: { id: true, name: true, email: true } })
+        : [];
+      const um = new Map(users.map((u) => [u.id, u]));
+      return visitors.map((v) => ({
+        anonymousId: v.anonymousId,
+        userId: v.convertedUserId,
+        name: um.get(v.convertedUserId!)?.name ?? null,
+        email: um.get(v.convertedUserId!)?.email ?? null,
+        convertedAt: v.convertedAt,
+        source: v.ftSource ?? 'direct',
+      }));
+    }),
+
+  // 일자별 방문/전환 추이 (UTC 기준 버킷 — TODO: 표시 타임존 정교화)
+  visitorTrend: adminProcedure
+    .input(z.object({ days: z.number().int().min(1).max(90).default(14) }))
+    .query(async ({ ctx, input }) => {
+      const cutoff = new Date(Date.now() - input.days * 86_400_000);
+      const rows = await ctx.db.visitor.findMany({
+        where: { firstSeen: { gte: cutoff } },
+        select: { firstSeen: true, convertedAt: true },
+      });
+      const byDay = new Map<string, { visitors: number; conversions: number }>();
+      const bump = (d: string, key: 'visitors' | 'conversions') => {
+        const cur = byDay.get(d) ?? { visitors: 0, conversions: 0 };
+        cur[key] += 1;
+        byDay.set(d, cur);
+      };
+      for (const r of rows) {
+        bump(r.firstSeen.toISOString().slice(0, 10), 'visitors');
+        if (r.convertedAt && r.convertedAt >= cutoff) bump(r.convertedAt.toISOString().slice(0, 10), 'conversions');
+      }
+      return [...byDay.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, v]) => ({ date, ...v }));
+    }),
 });
