@@ -298,10 +298,8 @@ export default function FeedPage() {
   const [showComposer, setShowComposer] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
-  const questions = trpc.question.list.useQuery(
-    { connectionId: firstConn?.id ?? '', limit: 20 },
-    { enabled: !!firstConn?.id },
-  );
+  const listInput: ListInput = { connectionId: firstConn?.id ?? '', limit: 20 };
+  const questions = trpc.question.list.useQuery(listInput, { enabled: !!firstConn?.id });
 
   if (connections.isLoading || me.isLoading) {
     return (
