@@ -131,58 +131,26 @@ export function AnswerComposer({
         </div>
       )}
 
-      {/* (1) AI 가이드 */}
+      {/* (1) 가이드 — 글·사진·영상·목소리 모두 여기서. 미디어 첨부는 가이드 전용 */}
       {method === 'guide' && (
-        <div className="space-y-2">
-          {guide.isLoading ? (
-            <div className="py-6 text-center text-gray-400 text-sm">가이드를 준비하고 있어요...</div>
-          ) : (
-            (guide.data?.guides ?? []).map((g) => (
-              <button
-                key={g.format}
-                onClick={() => {
-                  setFormat(g.format);
-                  if (g.format === 'text') {
-                    if (g.starter && !text) setText(g.starter + ' ');
-                    setMethod('direct');
-                  } else if (g.format === 'audio') {
-                    setMethod('voice');
-                  } else {
-                    setMethod('direct');
-                  }
-                }}
-                className="w-full p-3.5 rounded-xl border-2 text-left transition-all hover:shadow-sm"
-                style={{ borderColor: format === g.format ? PRIMARY : 'var(--color-border)' }}
-              >
-                <p className="text-sm font-semibold text-gray-800">{g.title}</p>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">{g.tip}</p>
-              </button>
-            ))
-          )}
-        </div>
-      )}
-
-      {/* (3) 직접 작성 (기존 형식 선택 포함) */}
-      {method === 'direct' && (
         <div className="space-y-3">
+          {/* 형식 선택 (목소리를 가장 먼저 — 타이핑이 어려운 세대 배려) */}
           <div className="grid grid-cols-2 gap-2">
             {[
-              { value: 'text', icon: '✍️', label: '글로 쓸게요' },
-              { value: 'photo', icon: '📸', label: '사진을 보낼게요' },
-              { value: 'video', icon: '🎥', label: '영상으로' },
               { value: 'audio', icon: '🎤', label: '목소리로' },
+              { value: 'text', icon: '✍️', label: '글로' },
+              { value: 'photo', icon: '📸', label: '사진으로' },
+              { value: 'video', icon: '🎥', label: '영상으로' },
             ].map((f) => (
               <button
                 key={f.value}
                 onClick={() => {
-                  if (f.value === 'audio') {
-                    setMethod('voice');
-                    return;
-                  }
-                  setFormat(f.value as Format);
-                  if (media && media.kind !== f.value) setMedia(null);
+                  const next = f.value as Format;
+                  setFormat(next);
+                  if (media && media.kind !== next) setMedia(null);
                 }}
                 aria-label={f.label}
+                aria-pressed={format === f.value}
                 className="p-3 rounded-xl border-2 flex items-center gap-2 text-sm font-medium transition-all"
                 style={{
                   borderColor: format === f.value ? PRIMARY : 'var(--color-border)',
@@ -195,7 +163,37 @@ export function AnswerComposer({
               </button>
             ))}
           </div>
-          {format === 'text' ? (
+
+          {/* 선택한 형식에 맞는 AI 가이드 한마디 */}
+          {guide.isLoading ? (
+            <div className="py-3 text-center text-gray-400 text-sm">가이드를 준비하고 있어요...</div>
+          ) : (() => {
+            const g = guide.data?.guides.find((x) => x.format === format);
+            if (!g) return null;
+            return (
+              <div className="rounded-xl bg-amber-50 p-3 space-y-2">
+                <p className="text-xs text-amber-700 leading-relaxed">💡 {g.tip}</p>
+                {g.format === 'text' && g.starter && (
+                  <button
+                    onClick={() => setText(g.starter!.endsWith(' ') ? g.starter! : `${g.starter} `)}
+                    className="text-xs font-medium underline"
+                    style={{ color: PRIMARY }}
+                  >
+                    “{g.starter}” 로 시작하기
+                  </button>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* 형식별 입력 */}
+          {format === 'audio' ? (
+            <VoiceRecorder
+              uploaded={media?.kind === 'audio' ? media : null}
+              onUploaded={setMedia}
+              onClear={() => setMedia(null)}
+            />
+          ) : format === 'text' ? (
             <textarea
               value={text}
               onChange={(e) => {
@@ -226,6 +224,21 @@ export function AnswerComposer({
             </div>
           )}
         </div>
+      )}
+
+      {/* (3) 직접 쓰기 — 글 전용 (사진·영상·목소리는 가이드에서) */}
+      {method === 'direct' && (
+        <textarea
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            setAiComposed(false);
+          }}
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
+          style={{ minHeight: '160px', fontSize: '17px' }}
+          placeholder="편하게 이야기해주세요..."
+          aria-label="답변 작성"
+        />
       )}
 
       {/* 공개/비공개 선택 */}
