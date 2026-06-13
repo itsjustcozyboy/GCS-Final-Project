@@ -473,7 +473,7 @@ export default function FeedPage() {
                   <VisibilityToggle
                     answerId={q.answer.id}
                     isPrivate={q.answer.isPrivate}
-                    connectionId={firstConn.id}
+                    listInput={listInput}
                   />
                 )}
 
