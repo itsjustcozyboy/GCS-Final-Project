@@ -50,9 +50,17 @@ export default function FaqPage() {
         ))}
       </div>
 
-      {/* 서비스 문의 — FAQ 하단 */}
-      <div className="mt-8">
-        <InquiryForm />
+      {/* 서비스 문의 — 별도 페이지로 분리. FAQ 하단에는 진입 경로만 둔다. */}
+      <div className="mt-8 rounded-2xl bg-white border border-gray-100 shadow-sm p-6 text-center space-y-3">
+        <p className="text-base font-medium text-gray-900">답을 찾지 못하셨나요?</p>
+        <p className="text-sm text-gray-500">직접 물어봐 주세요. 빠르게 확인해 답변드릴게요.</p>
+        <Link
+          href="/profile/inquiry"
+          className="inline-block px-6 py-3 rounded-2xl text-white text-base font-semibold"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          💬 서비스 문의하기
+        </Link>
       </div>
 
       <p className="mt-4 text-center text-xs text-gray-400">
