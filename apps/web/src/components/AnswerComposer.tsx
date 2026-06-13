@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 import { KeywordInput } from './QuestionComposer';
 import { MediaAttach, VoiceRecorder, type UploadedMedia } from './MediaAttach';
 
@@ -22,6 +23,7 @@ export function AnswerComposer({
 }) {
   // 가이드가 1순위 동선 — 미디어(사진·영상·목소리)는 가이드에서만 다룬다.
   // (타이핑이 어려운 세대를 위해 가이드 안에서 '목소리로'가 가장 먼저 보이게 둔다.)
+  const { t } = useTranslation('today');
   const [method, setMethod] = useState<Method>('guide');
   const [keywords, setKeywords] = useState<string[]>([]);
   const [text, setText] = useState('');
@@ -64,10 +66,10 @@ export function AnswerComposer({
   }
 
   // 직접 쓰기 = 글 전용 / 가이드 = 글·사진·영상·목소리 모두 / 키워드 = AI 문장화
-  const METHODS: Array<{ value: Method; label: string }> = [
-    { value: 'guide', label: '💡 가이드' },
-    { value: 'keywords', label: '🔑 키워드로' },
-    { value: 'direct', label: '✍️ 직접 쓰기' },
+  const METHODS: Array<{ value: Method; labelKey: string }> = [
+    { value: 'guide', labelKey: 'composer.tab.guide' },
+    { value: 'keywords', labelKey: 'composer.tab.keywords' },
+    { value: 'direct', labelKey: 'composer.tab.direct' },
   ];
 
   // 직접 쓰기는 글만 — 들어올 때 첨부 미디어와 형식을 글로 초기화한다.
@@ -90,7 +92,7 @@ export function AnswerComposer({
             className="min-h-10 flex-1 px-1.5 py-2 rounded-lg transition-colors"
             style={method === m.value ? { backgroundColor: 'white', color: 'var(--color-primary-dark)', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' } : { color: '#9B9B9B' }}
           >
-            {m.label}
+            {t(m.labelKey)}
           </button>
         ))}
       </div>
@@ -99,15 +101,12 @@ export function AnswerComposer({
       {method === 'keywords' && (
         <div className="space-y-3">
           <div className="rounded-xl bg-amber-50 p-3">
-            <p className="text-xs text-amber-700 leading-relaxed">
-              💛 문장으로 쓰기 쑥스러우면 <strong>떠오르는 단어만</strong> 적어주세요.
-              AI가 자연스러운 이야기로 엮어드려요. 마음에 들 때까지 고칠 수 있어요.
-            </p>
+            <p className="text-xs text-amber-700 leading-relaxed">{t('composer.keywordHint')}</p>
           </div>
           <KeywordInput
             keywords={keywords}
             setKeywords={setKeywords}
-            placeholder="예) 아이와 드라이브, 바닷가, 김밥"
+            placeholder={t('composer.keywordPlaceholder')}
           />
           <button
             onClick={() => compose.mutate({ questionId, keywords })}
@@ -115,11 +114,11 @@ export function AnswerComposer({
             className="w-full min-h-11 px-4 py-2 rounded-xl text-white text-sm font-semibold disabled:opacity-50 break-keep"
             style={{ backgroundColor: PRIMARY }}
           >
-            {compose.isPending ? 'AI가 이야기로 엮고 있어요...' : text ? '🔄 다시 엮기' : '✨ AI가 이야기로 엮어주기'}
+            {compose.isPending ? t('composer.weaving') : text ? t('composer.reweave') : t('composer.weave')}
           </button>
           {text && (
             <div className="space-y-1">
-              <p className="text-xs font-medium text-gray-500">엮어진 이야기 (자유롭게 고쳐주세요)</p>
+              <p className="text-xs font-medium text-gray-500">{t('composer.woven')}</p>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -137,10 +136,10 @@ export function AnswerComposer({
           {/* 형식 선택 (목소리를 가장 먼저 — 타이핑이 어려운 세대 배려) */}
           <div className="grid grid-cols-2 gap-2 break-keep">
             {[
-              { value: 'audio', icon: '🎤', label: '목소리로' },
-              { value: 'text', icon: '✍️', label: '글로' },
-              { value: 'photo', icon: '📸', label: '사진으로' },
-              { value: 'video', icon: '🎥', label: '영상으로' },
+              { value: 'audio', icon: '🎤', label: t('composer.format.audio') },
+              { value: 'text', icon: '✍️', label: t('composer.format.text') },
+              { value: 'photo', icon: '📸', label: t('composer.format.photo') },
+              { value: 'video', icon: '🎥', label: t('composer.format.video') },
             ].map((f) => (
               <button
                 key={f.value}
@@ -166,7 +165,7 @@ export function AnswerComposer({
 
           {/* 선택한 형식에 맞는 AI 가이드 한마디 */}
           {guide.isLoading ? (
-            <div className="py-3 text-center text-gray-400 text-sm">가이드를 준비하고 있어요...</div>
+            <div className="py-3 text-center text-gray-400 text-sm">{t('composer.guidePreparing')}</div>
           ) : (() => {
             const g = guide.data?.guides.find((x) => x.format === format);
             if (!g) return null;
@@ -179,7 +178,7 @@ export function AnswerComposer({
                     className="text-xs font-medium underline"
                     style={{ color: PRIMARY }}
                   >
-                    “{g.starter}” 로 시작하기
+                    {t('composer.startWith', { starter: g.starter })}
                   </button>
                 )}
               </div>
@@ -202,8 +201,8 @@ export function AnswerComposer({
               }}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
               style={{ minHeight: '130px', fontSize: '17px' }}
-              placeholder="편하게 이야기해주세요..."
-              aria-label="답변 작성"
+              placeholder={t('composer.textPlaceholder')}
+              aria-label={t('composer.textPlaceholder')}
             />
           ) : (
             <div className="space-y-2">
@@ -218,8 +217,8 @@ export function AnswerComposer({
                 onChange={(e) => setText(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
                 style={{ minHeight: '70px', fontSize: '17px' }}
-                placeholder="곁들이고 싶은 한마디 (선택)"
-                aria-label="곁들이는 글"
+                placeholder={t('composer.extraPlaceholder')}
+                aria-label={t('composer.extraPlaceholder')}
               />
             </div>
           )}
@@ -236,18 +235,18 @@ export function AnswerComposer({
           }}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
           style={{ minHeight: '160px', fontSize: '17px' }}
-          placeholder="편하게 이야기해주세요..."
-          aria-label="답변 작성"
+          placeholder={t('composer.textPlaceholder')}
+          aria-label={t('composer.textPlaceholder')}
         />
       )}
 
       {/* 공개/비공개 선택 */}
       <div className="rounded-xl border border-gray-200 p-3 space-y-2">
-        <p className="text-xs font-medium text-gray-500 break-keep">이 답변을 자녀가 볼 수 있게 할까요?</p>
+        <p className="text-xs font-medium text-gray-500 break-keep">{t('composer.visQuestion')}</p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {[
-            { value: true, icon: '🔒', label: '나만 간직하기', desc: '책과 피드에 보이지 않아요' },
-            { value: false, icon: '💌', label: '공개하기', desc: '자녀가 바로 볼 수 있어요' },
+            { value: true, icon: '🔒', label: t('composer.privateLabel'), desc: t('composer.privateDesc') },
+            { value: false, icon: '💌', label: t('composer.publicLabel'), desc: t('composer.publicDesc') },
           ].map((opt) => (
             <button
               key={String(opt.value)}
@@ -263,7 +262,7 @@ export function AnswerComposer({
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-gray-400 leading-relaxed break-keep">나중에 언제든 바꿀 수 있어요.</p>
+        <p className="text-[11px] text-gray-400 leading-relaxed break-keep">{t('composer.changeLater')}</p>
       </div>
 
       {submit.isError && <p className="text-sm text-red-500 leading-relaxed break-keep">{submit.error.message}</p>}
@@ -275,9 +274,9 @@ export function AnswerComposer({
             onClick={() => skip.mutate({ questionId })}
             disabled={skip.isPending}
             className="min-h-12 flex-1 px-4 py-3 rounded-2xl border border-gray-200 text-gray-500 text-base font-medium disabled:opacity-50"
-            aria-label="이 질문은 다음에 답하기"
+            aria-label={t('composer.skipAria')}
           >
-            다음에 할게요
+            {t('composer.skip')}
           </button>
         ) : null}
         <button
@@ -285,9 +284,9 @@ export function AnswerComposer({
           disabled={submit.isPending || !canSubmit}
           className="min-h-12 flex-grow px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold disabled:opacity-50"
           style={{ backgroundColor: PRIMARY }}
-          aria-label={isPrivate ? '나만 간직하기로 저장' : '자녀에게 답변 보내기'}
+          aria-label={isPrivate ? t('composer.submitAriaPrivate') : t('composer.submitAriaPublic')}
         >
-          {submit.isPending ? '보내는 중...' : isPrivate ? '🔒 간직하기' : '💌 답변 보내기'}
+          {submit.isPending ? t('composer.submitting') : isPrivate ? t('composer.keep') : t('composer.sendAnswer')}
         </button>
       </div>
     </div>

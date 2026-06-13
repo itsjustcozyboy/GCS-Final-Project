@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { MediaAttach, VoiceRecorder, type UploadedMedia } from './MediaAttach';
+import { useTranslation } from 'react-i18next';
 
 type Mode = 'voice' | 'text' | 'photo' | 'video';
 
@@ -20,6 +21,7 @@ export function ParentMessageComposer({
   onSent: () => void;
 }) {
   // 음성이 1순위 동선 (타이핑이 어려운 세대 배려)
+  const { t } = useTranslation('today');
   const [mode, setMode] = useState<Mode>('voice');
   const [text, setText] = useState('');
   const [media, setMedia] = useState<UploadedMedia | null>(null);
@@ -46,10 +48,10 @@ export function ParentMessageComposer({
   }
 
   const MODES: Array<{ value: Mode; icon: string; label: string }> = [
-    { value: 'voice', icon: '🎤', label: '목소리로' },
-    { value: 'text', icon: '✍️', label: '글로' },
-    { value: 'photo', icon: '📸', label: '사진으로' },
-    { value: 'video', icon: '🎥', label: '영상으로' },
+    { value: 'voice', icon: '🎤', label: t('composer.format.audio') },
+    { value: 'text', icon: '✍️', label: t('composer.format.text') },
+    { value: 'photo', icon: '📸', label: t('composer.format.photo') },
+    { value: 'video', icon: '🎥', label: t('composer.format.video') },
   ];
 
   return (
@@ -58,27 +60,27 @@ export function ParentMessageComposer({
         {done ? (
           <div className="text-center py-10 space-y-4 break-keep">
             <div className="text-5xl sm:text-6xl" aria-hidden>💌</div>
-            <p className="text-2xl font-bold leading-snug text-gray-900">잘 전달됐어요!</p>
-            <p className="text-base text-gray-500 leading-relaxed">{childName}님이 따뜻한 마음을 받아볼 거예요.</p>
+            <p className="text-2xl font-bold leading-snug text-gray-900">{t('parentMsg.sentTitle')}</p>
+            <p className="text-base text-gray-500 leading-relaxed">{t('parentMsg.sentBody', { name: childName })}</p>
             <button
               onClick={onClose}
               className="w-full min-h-12 px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold"
               style={{ backgroundColor: PRIMARY }}
             >
-              확인
+              {t('actions.confirm', { ns: 'common' })}
             </button>
           </div>
         ) : (
           <>
             <div className="space-y-1 break-keep">
-              <h2 className="text-xl font-bold leading-snug text-gray-900">💝 먼저 마음 전하기</h2>
+              <h2 className="text-xl font-bold leading-snug text-gray-900">{t('parentMsg.title')}</h2>
               <p className="text-base text-gray-500 leading-relaxed">
-                지금 떠오르는 마음을 {childName}님에게 남겨보세요. 질문을 기다리지 않아도 돼요.
+                {t('parentMsg.subtitle', { name: childName })}
               </p>
             </div>
 
             {/* 방법 선택 — 큰 버튼, 음성 우선 */}
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="tablist" aria-label="전하는 방법 선택">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="tablist" aria-label={t('parentMsg.modeAria')}>
               {MODES.map((m) => (
                 <button
                   key={m.value}
@@ -106,14 +108,14 @@ export function ParentMessageComposer({
 
             {/* 글 — 단독 작성 또는 미디어에 곁들이는 한마디 */}
             <div className="space-y-1">
-              {mode !== 'text' && <p className="text-sm text-gray-500">곁들이고 싶은 한마디 (선택)</p>}
+              {mode !== 'text' && <p className="text-sm text-gray-500">{t('parentMsg.extraLabel')}</p>}
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 leading-relaxed resize-none focus:outline-none"
                 style={{ minHeight: mode === 'text' ? '160px' : '80px', fontSize: '18px' }}
-                placeholder={mode === 'text' ? '하고 싶었던 이야기를 편하게 적어주세요...' : '예) 오늘 문득 네 생각이 나서.'}
-                aria-label="전하고 싶은 글"
+                placeholder={mode === 'text' ? t('parentMsg.textPlaceholder') : t('parentMsg.mediaPlaceholder')}
+                aria-label={t('parentMsg.textAria')}
               />
             </div>
 
@@ -124,7 +126,7 @@ export function ParentMessageComposer({
                 onClick={onClose}
                 className="min-h-12 flex-1 px-4 py-3 rounded-2xl border border-gray-200 text-base font-medium text-gray-500"
               >
-                다음에 할게요
+                {t('parentMsg.later')}
               </button>
               <button
                 onClick={handleSend}
@@ -132,7 +134,7 @@ export function ParentMessageComposer({
                 className="min-h-12 flex-[2] px-4 py-3 rounded-2xl text-white text-base sm:text-lg font-semibold disabled:opacity-50"
                 style={{ backgroundColor: PRIMARY }}
               >
-                {send.isPending ? '전하는 중...' : '💌 마음 전하기'}
+                {send.isPending ? t('parentMsg.sending') : t('parentMsg.send')}
               </button>
             </div>
           </>

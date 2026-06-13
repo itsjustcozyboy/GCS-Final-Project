@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 // 광고 픽셀(Meta/GA)은 보조 지표일 뿐 1차 신뢰 소스는 우리 DB(직접 구축)다.
 // 동의 기반 로딩: 광고/쿠키 추적 동의 전에는 픽셀을 로드하지 않고 이벤트도 보내지 않는다.
@@ -73,6 +74,7 @@ function loadPixels(): void {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function MarketingPixels() {
+  const { t } = useTranslation('common');
   const pathname = usePathname();
   const [consent, setConsent] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -100,7 +102,7 @@ export function MarketingPixels() {
     <div className="fixed bottom-0 inset-x-0 z-50 p-4">
       <div className="max-w-lg mx-auto bg-white rounded-2xl shadow-lg border border-gray-100 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
         <p className="text-sm text-gray-600 flex-1 leading-relaxed">
-          서비스 개선과 광고 효과 측정을 위해 쿠키·광고 추적을 사용해도 될까요? 동의하지 않아도 서비스 이용에는 영향이 없어요.
+          {t('adConsent.message')}
         </p>
         <div className="flex w-full gap-2 shrink-0 sm:w-auto">
           <button
@@ -110,7 +112,7 @@ export function MarketingPixels() {
             }}
             className="min-h-11 flex-1 px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 sm:flex-none"
           >
-            거부
+            {t('adConsent.deny')}
           </button>
           <button
             onClick={() => {
@@ -120,7 +122,7 @@ export function MarketingPixels() {
             className="min-h-11 flex-1 px-4 py-2 rounded-xl text-white text-sm font-semibold sm:flex-none"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            동의
+            {t('adConsent.allow')}
           </button>
         </div>
       </div>

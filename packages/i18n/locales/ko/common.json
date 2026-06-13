@@ -20,7 +20,9 @@
     "confirm": "확인",
     "close": "닫기",
     "retry": "다시 시도",
-    "copy": "복사하기"
+    "copy": "복사하기",
+    "add": "추가",
+    "send": "보내기"
   },
   "loading": "불러오는 중...",
   "comingSoon": "준비 중",
@@ -83,5 +85,10 @@
     }
   },
   "adminBadge": "관리자",
-  "contactLabel": "문의:"
+  "contactLabel": "문의:",
+  "adConsent": {
+    "message": "서비스 개선과 광고 효과 측정을 위해 쿠키·광고 추적을 사용해도 될까요? 동의하지 않아도 서비스 이용에는 영향이 없어요.",
+    "deny": "거부",
+    "allow": "동의"
+  }
 }

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 
 type Method = 'suggest' | 'keywords' | 'direct';
 
@@ -15,6 +16,7 @@ function KeywordInput({
   setKeywords: (k: string[]) => void;
   placeholder: string;
 }) {
+  const { t: tc } = useTranslation('common');
   const [input, setInput] = useState('');
 
   function addKeyword() {
@@ -45,7 +47,7 @@ function KeywordInput({
           className="px-4 py-2 rounded-xl border-2 text-sm font-medium"
           style={{ borderColor: PRIMARY, color: PRIMARY }}
         >
-          추가
+          {tc('actions.add')}
         </button>
       </div>
       {keywords.length > 0 && (
@@ -79,6 +81,7 @@ export function QuestionComposer({
   onClose: () => void;
   onSent: () => void;
 }) {
+  const { t } = useTranslation('today');
   const [method, setMethod] = useState<Method>('suggest');
   const [keywords, setKeywords] = useState<string[]>([]);
   // 확정 전 미리보기/수정 단계의 질문
@@ -111,20 +114,20 @@ export function QuestionComposer({
     });
   }
 
-  const METHODS: Array<{ value: Method; label: string }> = [
-    { value: 'suggest', label: '✨ AI 추천' },
-    { value: 'keywords', label: '🔑 키워드로' },
-    { value: 'direct', label: '✍️ 직접 쓰기' },
+  const METHODS: Array<{ value: Method; labelKey: string }> = [
+    { value: 'suggest', labelKey: 'question.tab.suggest' },
+    { value: 'keywords', labelKey: 'question.tab.keywords' },
+    { value: 'direct', labelKey: 'question.tab.direct' },
   ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">오늘의 질문 보내기</h2>
+          <h2 className="text-lg font-bold text-gray-900">{t('question.title')}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
         </div>
-        <p className="text-sm text-gray-500">{parentName}님께 어떤 질문을 보낼까요?</p>
+        <p className="text-sm text-gray-500">{t('question.to', { name: parentName })}</p>
 
         {/* 방법 선택 탭 */}
         <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 text-sm font-medium">
@@ -138,7 +141,7 @@ export function QuestionComposer({
               className="flex-1 px-2 py-2 rounded-lg transition-colors"
               style={method === m.value ? { backgroundColor: 'white', color: 'var(--color-primary-dark)', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' } : { color: '#9B9B9B' }}
             >
-              {m.label}
+              {t(m.labelKey)}
             </button>
           ))}
         </div>
@@ -147,7 +150,7 @@ export function QuestionComposer({
         {method === 'suggest' && (
           <div className="space-y-2">
             {suggestions.isLoading ? (
-              <div className="py-8 text-center text-gray-400 text-sm">질문을 고르고 있어요...</div>
+              <div className="py-8 text-center text-gray-400 text-sm">{t('question.picking')}</div>
             ) : (
               (suggestions.data ?? []).map((s, i) => (
                 <button
@@ -159,7 +162,7 @@ export function QuestionComposer({
                 >
                   <p className="text-sm text-gray-800 leading-relaxed">{s.body}</p>
                   <p className="text-xs text-gray-400 mt-1.5">
-                    {s.source === 'ai' ? '✨ AI 추천' : '🌿 추천 질문'} · {s.chapterTag}
+                    {s.source === 'ai' ? t('question.sourceAi') : t('question.sourceCurated')} · {s.chapterTag}
                   </p>
                 </button>
               ))
@@ -169,7 +172,7 @@ export function QuestionComposer({
               disabled={suggestions.isFetching}
               className="w-full py-2 text-sm text-gray-400 hover:text-gray-600 disabled:opacity-50"
             >
-              {suggestions.isFetching ? '고르는 중...' : '🔄 다른 질문 보기'}
+              {suggestions.isFetching ? t('question.refetching') : t('question.refetch')}
             </button>
           </div>
         )}
@@ -180,7 +183,7 @@ export function QuestionComposer({
             <KeywordInput
               keywords={keywords}
               setKeywords={setKeywords}
-              placeholder="예) 자동차, 첫 직장, 신혼여행"
+              placeholder={t('question.keywordPlaceholder')}
             />
             {!draft && (
               <button
@@ -189,12 +192,12 @@ export function QuestionComposer({
                 className="w-full py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
                 style={{ backgroundColor: PRIMARY }}
               >
-                {generate.isPending ? 'AI가 질문을 만들고 있어요...' : '✨ AI로 질문 만들기'}
+                {generate.isPending ? t('question.generating') : t('question.makeWithAi')}
               </button>
             )}
             {draft && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-500">만들어진 질문 (수정할 수 있어요)</p>
+                <p className="text-xs font-medium text-gray-500">{t('question.madeQuestion')}</p>
                 <textarea
                   value={draft.body}
                   onChange={(e) => setDraft({ ...draft, body: e.target.value })}
@@ -207,7 +210,7 @@ export function QuestionComposer({
                     disabled={generate.isPending}
                     className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 disabled:opacity-50"
                   >
-                    {generate.isPending ? '생성 중...' : '다시 만들기'}
+                    {generate.isPending ? t('question.remaking') : t('question.remake')}
                   </button>
                   <button
                     onClick={() => draft.body.trim() && sendDraft(draft)}
@@ -215,7 +218,7 @@ export function QuestionComposer({
                     className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
                     style={{ backgroundColor: PRIMARY }}
                   >
-                    {send.isPending ? '보내는 중...' : '이 질문 보내기'}
+                    {send.isPending ? t('question.sending') : t('question.sendThis')}
                   </button>
                 </div>
               </div>
@@ -231,7 +234,7 @@ export function QuestionComposer({
               onChange={(e) => setDirectText(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base resize-none focus:outline-none"
               style={{ minHeight: '110px' }}
-              placeholder={`${parentName}님께 직접 묻고 싶은 질문을 적어보세요.\n예) 엄마는 내 나이 때 무슨 꿈이 있었어?`}
+              placeholder={t('question.directPlaceholder', { name: parentName })}
             />
             <button
               onClick={() => directText.trim() && sendDraft({ body: directText.trim(), depth: 2, source: 'custom' })}
@@ -239,7 +242,7 @@ export function QuestionComposer({
               className="w-full py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
               style={{ backgroundColor: PRIMARY }}
             >
-              {send.isPending ? '보내는 중...' : '질문 보내기'}
+              {send.isPending ? t('question.sending') : t('question.sendQuestion')}
             </button>
           </div>
         )}
@@ -247,7 +250,7 @@ export function QuestionComposer({
         {send.isError && <p className="text-sm text-red-500">{send.error.message}</p>}
         {generate.isError && <p className="text-sm text-red-500">{generate.error.message}</p>}
         {send.data && !send.data.sent && (
-          <p className="text-sm text-orange-500">⚠️ 현재 발송이 차단된 상태입니다</p>
+          <p className="text-sm text-orange-500">{t('question.blocked')}</p>
         )}
       </div>
     </div>

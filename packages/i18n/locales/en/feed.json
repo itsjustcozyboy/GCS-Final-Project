@@ -1,1 +1,54 @@
-{}
+{
+  "noConnection": {
+    "title": "No connection yet",
+    "parent": "Enter the invite code you got from your child",
+    "child": "Create an invite code and send it to your parent"
+  },
+  "startConnect": "Start connecting",
+  "modal": {
+    "title": "Start connecting",
+    "parent": "Enter the invite code your child created.",
+    "child": "Create an invite code to share with your parent.",
+    "codeLabel": "Invite code",
+    "codeShare": "Code to share with your parent",
+    "copyCode": "Copy code",
+    "toneLabel": "Conversation tone",
+    "toneLight": "🌸 Light memories",
+    "toneDeep": "🌊 Deeper stories",
+    "connecting": "Connecting...",
+    "connect": "Connect",
+    "generating": "Creating...",
+    "remake": "Remake",
+    "makeCode": "Create code"
+  },
+  "reaction": {
+    "comment": "💬 Comment",
+    "followup": "🔁 Ask back",
+    "followupTitle": "Send what you'd like to hear more about as a follow-up",
+    "followupNote": "Your follow-up is delivered to your parent as the next question.",
+    "followupPlaceholder": "Ask about what you'd like to hear more...",
+    "commentPlaceholder": "Leave a comment...",
+    "reactAria": "Leave a {{emoji}} reaction"
+  },
+  "header": {
+    "title": "Your story with {{name}}",
+    "online": "Online",
+    "offline": "Offline",
+    "sendQuestion": "+ Send question",
+    "shareHeart": "💝 Share your heart first"
+  },
+  "connectedNotice": "{{from}} and {{to}} are connected.",
+  "emptyParent": "When your child sends a question, it'll appear here",
+  "emptyChildPrompt": "Shall we send the first question?",
+  "sendToday": "Send today's question",
+  "parentMessaged": "{{name}} shared their heart first",
+  "privateMasked": "{{name}} left an answer but chose to keep it private.",
+  "skipped": "Skipped",
+  "waiting": "Still waiting for an answer...",
+  "answer": "✍️ Answer",
+  "collapse": "Collapse",
+  "visPrivate": "🔒 Private (tap to share)",
+  "visPublic": "💌 Shared (tap to make private)",
+  "visToggleTitle": "Tap to change visibility",
+  "visChangeError": "Couldn't change visibility. Please try again shortly."
+}

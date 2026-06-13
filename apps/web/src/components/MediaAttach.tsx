@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type MediaKind = 'photo' | 'video' | 'audio';
 
@@ -31,7 +32,7 @@ async function uploadFile(kind: MediaKind, file: File | Blob, fileName: string):
 
   const data = (await res.json().catch(() => ({}))) as { url?: string; transcript?: string; error?: string };
   if (!res.ok || !data.url) {
-    throw new Error(data.error ?? '올리는 중 문제가 생겼어요. 다시 시도해주세요.');
+    throw new Error(data.error ?? '');
   }
   return { kind, url: data.url, transcript: data.transcript };
 }
@@ -48,6 +49,7 @@ export function MediaAttach({
   onUploaded: (media: UploadedMedia) => void;
   onClear: () => void;
 }) {
+  const { t } = useTranslation('today');
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
@@ -59,7 +61,7 @@ export function MediaAttach({
     try {
       onUploaded(await uploadFile(kind, file, file.name));
     } catch (e) {
-      setError(e instanceof Error ? e.message : '올리는 중 문제가 생겼어요. 다시 시도해주세요.');
+      setError((e instanceof Error && e.message) ? e.message : t('media.uploadError'));
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = '';
@@ -71,12 +73,12 @@ export function MediaAttach({
       <div className="space-y-2">
         {uploaded.kind === 'photo' ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={uploaded.url} alt="첨부한 사진" className="rounded-xl max-h-64 w-full object-cover" />
+          <img src={uploaded.url} alt={t('media.photoAttachedAlt')} className="rounded-xl max-h-64 w-full object-cover" />
         ) : (
-          <video src={uploaded.url} controls className="rounded-xl max-h-64 w-full" aria-label="첨부한 영상" />
+          <video src={uploaded.url} controls className="rounded-xl max-h-64 w-full" aria-label={t('media.videoAttachedAria')} />
         )}
         <button onClick={onClear} className="w-full py-3 rounded-xl border border-gray-200 text-base text-gray-500">
-          🗑 다시 선택하기
+          {t('media.reselect')}
         </button>
       </div>
     );
@@ -90,7 +92,7 @@ export function MediaAttach({
         accept={ACCEPT[kind]}
         className="hidden"
         onChange={(e) => void handleFile(e.target.files?.[0])}
-        aria-label={kind === 'photo' ? '사진 선택' : '영상 선택'}
+        aria-label={kind === 'photo' ? t('media.photoSelectAria') : t('media.videoSelectAria')}
       />
       <button
         onClick={() => inputRef.current?.click()}
@@ -101,12 +103,12 @@ export function MediaAttach({
         <div className="text-3xl" aria-hidden>{kind === 'photo' ? '📸' : '🎥'}</div>
         <p className="text-base font-medium text-gray-700">
           {uploading
-            ? '올리는 중이에요...'
+            ? t('media.uploading')
             : kind === 'photo'
-              ? '눌러서 사진 찍기 또는 앨범에서 고르기'
-              : '눌러서 영상 찍기 또는 앨범에서 고르기'}
+              ? t('media.photoCta')
+              : t('media.videoCta')}
         </p>
-        <p className="text-xs text-gray-400">{kind === 'photo' ? 'JPG·PNG 등, 10MB까지' : 'MP4·MOV 등, 100MB까지'}</p>
+        <p className="text-xs text-gray-400">{kind === 'photo' ? t('media.photoHint') : t('media.videoHint')}</p>
       </button>
       {error && <p className="text-sm text-red-500" role="alert">{error}</p>}
     </div>
@@ -123,6 +125,7 @@ export function VoiceRecorder({
   onUploaded: (media: UploadedMedia) => void;
   onClear: () => void;
 }) {
+  const { t } = useTranslation('today');
   const inputRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -155,7 +158,7 @@ export function VoiceRecorder({
       setSeconds(0);
       setRecording(true);
     } catch {
-      setError('마이크를 사용할 수 없어요. 아래에서 녹음 파일을 직접 골라주셔도 돼요.');
+      setError(t('media.micError'));
     }
   }
 
@@ -170,7 +173,7 @@ export function VoiceRecorder({
     try {
       onUploaded(await uploadFile('audio', blob, name));
     } catch (e) {
-      setError(e instanceof Error ? e.message : '올리는 중 문제가 생겼어요. 다시 시도해주세요.');
+      setError((e instanceof Error && e.message) ? e.message : t('media.uploadError'));
     } finally {
       setUploading(false);
     }
@@ -180,13 +183,13 @@ export function VoiceRecorder({
     return (
       <div className="space-y-2">
         <div className="rounded-xl bg-gray-50 p-4 space-y-2">
-          <audio src={uploaded.url} controls className="w-full" aria-label="녹음한 목소리 듣기" />
+          <audio src={uploaded.url} controls className="w-full" aria-label={t('media.voiceListenAria')} />
           {uploaded.transcript && (
             <p className="text-sm text-gray-500 italic">📝 {uploaded.transcript}</p>
           )}
         </div>
         <button onClick={onClear} className="w-full py-3 rounded-xl border border-gray-200 text-base text-gray-500">
-          🗑 다시 녹음하기
+          {t('media.rerecord')}
         </button>
       </div>
     );
@@ -197,21 +200,21 @@ export function VoiceRecorder({
       <button
         onClick={recording ? stopRecording : startRecording}
         disabled={uploading}
-        aria-label={recording ? '녹음 끝내기' : '녹음 시작하기'}
+        aria-label={recording ? t('media.recStopAria') : t('media.recStartAria')}
         className="w-full py-8 rounded-2xl text-white text-xl font-bold disabled:opacity-50 transition-colors"
         style={{ backgroundColor: recording ? '#DC2626' : PRIMARY }}
       >
         {uploading ? (
-          '목소리를 저장하고 있어요...'
+          t('media.savingVoice')
         ) : recording ? (
           <span>
-            ⏺ 녹음 중 ({Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, '0')})
-            <span className="block text-base font-medium mt-1">다 말씀하셨으면 여기를 눌러주세요</span>
+            {t('media.recording')} ({Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, '0')})
+            <span className="block text-base font-medium mt-1">{t('media.recordingHint')}</span>
           </span>
         ) : (
           <span>
-            🎤 눌러서 말하기
-            <span className="block text-base font-medium mt-1">편하게 말씀해 주시면 글로 바꿔드려요</span>
+            {t('media.recordCta')}
+            <span className="block text-base font-medium mt-1">{t('media.recordHint')}</span>
           </span>
         )}
       </button>
@@ -226,14 +229,14 @@ export function VoiceRecorder({
           if (f) void handleUpload(f, f.name);
           e.target.value = '';
         }}
-        aria-label="녹음 파일 선택"
+        aria-label={t('media.voiceFileSelectAria')}
       />
       <button
         onClick={() => inputRef.current?.click()}
         disabled={uploading || recording}
         className="w-full py-2 text-sm text-gray-400 underline disabled:opacity-50"
       >
-        가지고 있는 녹음 파일 올리기
+        {t('media.uploadVoiceFile')}
       </button>
 
       {error && <p className="text-sm text-red-500" role="alert">{error}</p>}

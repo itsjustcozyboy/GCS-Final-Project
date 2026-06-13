@@ -4,9 +4,11 @@ import { trpc } from '@/lib/trpc';
 import { QuestionComposer } from '@/components/QuestionComposer';
 import { AnswerComposer } from '@/components/AnswerComposer';
 import { ParentMessageComposer } from '@/components/ParentMessageComposer';
+import { useTranslation } from 'react-i18next';
 
 // 답변/메시지의 미디어(사진·영상·음성) 표시
 function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | null; transcript: string | null } }) {
+  const { t } = useTranslation('today');
   if (!answer.mediaUrl) {
     return answer.transcript ? <p className="text-sm text-gray-500 italic">🎤 {answer.transcript}</p> : null;
   }
@@ -14,13 +16,13 @@ function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | 
     <div className="space-y-1">
       {answer.format === 'photo' && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={answer.mediaUrl} alt="사진 답변" className="rounded-xl max-h-64 object-cover" />
+        <img src={answer.mediaUrl} alt={t('media.photo')} className="rounded-xl max-h-64 object-cover" />
       )}
       {answer.format === 'video' && (
-        <video src={answer.mediaUrl} controls className="rounded-xl max-h-64 w-full" aria-label="영상 답변" />
+        <video src={answer.mediaUrl} controls className="rounded-xl max-h-64 w-full" aria-label={t('media.video')} />
       )}
       {answer.format === 'audio' && (
-        <audio src={answer.mediaUrl} controls className="w-full" aria-label="음성 답변" />
+        <audio src={answer.mediaUrl} controls className="w-full" aria-label={t('media.audio')} />
       )}
       {answer.transcript && <p className="text-sm text-gray-500 italic">📝 {answer.transcript}</p>}
     </div>
@@ -28,6 +30,7 @@ function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | 
 }
 
 function ReactionBar({ answerId, connectionId }: { answerId: string; connectionId: string }) {
+  const { t } = useTranslation('feed');
   const [comment, setComment] = useState('');
   // 'comment' = 일반 댓글, 'followup' = 되묻기 (후속 질문으로 부모에게 전달)
   const [inputMode, setInputMode] = useState<'comment' | 'followup' | null>(null);
@@ -56,7 +59,7 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
             key={emoji}
             onClick={() => addReaction.mutate({ answerId, emoji })}
             className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
-            aria-label={`${emoji} 반응 남기기`}
+            aria-label={t('reaction.reactAria', { emoji })}
           >
             {emoji}
           </button>
@@ -65,27 +68,27 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
           onClick={() => setInputMode(inputMode === 'comment' ? null : 'comment')}
           className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
         >
-          💬 댓글
+          {t('reaction.comment')}
         </button>
         <button
           onClick={() => setInputMode(inputMode === 'followup' ? null : 'followup')}
           className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
-          title="더 듣고 싶은 이야기를 후속 질문으로 보내요"
+          title={t('reaction.followupTitle')}
         >
-          🔁 되묻기
+          {t('reaction.followup')}
         </button>
       </div>
       {inputMode && (
         <div className="space-y-1">
           {inputMode === 'followup' && (
-            <p className="text-xs text-gray-400">되묻는 내용은 다음 질문으로 부모님께 전달돼요.</p>
+            <p className="text-xs text-gray-400">{t('reaction.followupNote')}</p>
           )}
           <div className="flex gap-2">
             <input
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="flex-1 px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none"
-              placeholder={inputMode === 'followup' ? '더 듣고 싶은 이야기를 물어보세요...' : '댓글을 남겨요...'}
+              placeholder={inputMode === 'followup' ? t('reaction.followupPlaceholder') : t('reaction.commentPlaceholder')}
               onKeyDown={(e) => e.key === 'Enter' && send()}
             />
             <button
@@ -94,7 +97,7 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
               className="px-4 py-2 rounded-xl text-white text-sm font-medium disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              보내기
+              {t('actions.send', { ns: 'common' })}
             </button>
           </div>
         </div>
@@ -104,6 +107,8 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
 }
 
 function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'both'; onClose: () => void }) {
+  const { t } = useTranslation('feed');
+  const { t: tc } = useTranslation('common');
   const utils = trpc.useUtils();
   const [inviteCode, setInviteCode] = useState('');
   const [tone, setTone] = useState<'light' | 'deep'>('light');
@@ -123,15 +128,15 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-5 shadow-xl">
         <div className="space-y-1">
-          <h2 className="text-lg font-bold text-gray-900">연결 시작하기</h2>
+          <h2 className="text-lg font-bold text-gray-900">{t('modal.title')}</h2>
           <p className="text-sm text-gray-500">
-            {isParent ? '자녀가 만든 초대 코드를 입력해주세요.' : '부모님께 전달할 초대 코드를 만들어요.'}
+            {isParent ? t('modal.parent') : t('modal.child')}
           </p>
         </div>
 
         {isParent ? (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">초대 코드</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('modal.codeLabel')}</label>
             <input
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
@@ -142,7 +147,7 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
           </div>
         ) : createInvite.data ? (
           <div className="rounded-2xl bg-gray-50 p-5 text-center space-y-4">
-            <p className="text-sm text-gray-500">부모님께 전달할 코드</p>
+            <p className="text-sm text-gray-500">{t('modal.codeShare')}</p>
             <div className="text-3xl font-bold tracking-[0.25em] text-gray-900 font-mono">
               {createInvite.data.code}
             </div>
@@ -151,18 +156,18 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
               className="w-full py-3 rounded-xl text-white text-sm font-semibold"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              코드 복사하기
+              {t('modal.copyCode')}
             </button>
           </div>
         ) : null}
 
         {!isParent && !createInvite.data && (
           <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">대화 톤</p>
+          <p className="text-sm font-medium text-gray-700 mb-2">{t('modal.toneLabel')}</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { value: 'light', label: '🌸 가벼운 추억' },
-              { value: 'deep', label: '🌊 깊은 이야기' },
+              { value: 'light', label: t('modal.toneLight') },
+              { value: 'deep', label: t('modal.toneDeep') },
             ].map((opt) => (
               <button
                 key={opt.value}
@@ -185,7 +190,7 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
 
         <div className="flex gap-3 pt-1">
           <button onClick={onClose} className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">
-            취소
+            {tc('actions.cancel')}
           </button>
           {isParent ? (
             <button
@@ -194,7 +199,7 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
               className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {acceptInvite.isPending ? '연결 중...' : '연결하기'}
+              {acceptInvite.isPending ? t('modal.connecting') : t('modal.connect')}
             </button>
           ) : (
             <button
@@ -203,7 +208,7 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
               className="flex-1 py-3 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {createInvite.isPending ? '생성 중...' : createInvite.data ? '다시 만들기' : '코드 만들기'}
+              {createInvite.isPending ? t('modal.generating') : createInvite.data ? t('modal.remake') : t('modal.makeCode')}
             </button>
           )}
         </div>
@@ -214,13 +219,14 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
 
 // 부모용 — 피드에서 바로 답변 (3가지 방식 + 공개 설정)
 function InlineAnswer({ questionId, connectionId }: { questionId: string; connectionId: string }) {
+  const { t } = useTranslation('feed');
   const utils = trpc.useUtils();
   const [open, setOpen] = useState(false);
 
   if (!open) {
     return (
       <button onClick={() => setOpen(true)} className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-        ✍️ 답변하기
+        {t('answer')}
       </button>
     );
   }
@@ -236,7 +242,7 @@ function InlineAnswer({ questionId, connectionId }: { questionId: string; connec
         }}
       />
       <button onClick={() => setOpen(false)} className="mt-2 text-xs text-gray-400 hover:text-gray-600">
-        접기
+        {t('collapse')}
       </button>
     </div>
   );
@@ -248,6 +254,7 @@ function InlineAnswer({ questionId, connectionId }: { questionId: string; connec
 type ListInput = { connectionId: string; limit: number };
 
 function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string; isPrivate: boolean; listInput: ListInput }) {
+  const { t } = useTranslation('feed');
   const utils = trpc.useUtils();
   const toggle = trpc.answer.setVisibility.useMutation({
     onMutate: async ({ isPrivate: next }) => {
@@ -269,7 +276,7 @@ function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string
     },
     onError: (_err, _vars, context) => {
       if (context?.prev) utils.question.list.setData(listInput, context.prev);
-      alert('공개 설정을 바꾸지 못했어요. 잠시 후 다시 시도해주세요.');
+      alert(t('visChangeError'));
     },
     onSettled: () => void utils.question.list.invalidate(listInput),
   });
@@ -282,14 +289,15 @@ function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string
       style={isPrivate
         ? { borderColor: '#D1D5DB', color: '#6B7280', backgroundColor: '#F9FAFB' }
         : { borderColor: 'var(--color-primary)', color: 'var(--color-primary)', backgroundColor: '#EFF7F2' }}
-      title="눌러서 공개 설정 변경"
+      title={t('visToggleTitle')}
     >
-      {isPrivate ? '🔒 비공개 (눌러서 공개)' : '💌 공개됨 (눌러서 비공개)'}
+      {isPrivate ? t('visPrivate') : t('visPublic')}
     </button>
   );
 }
 
 export default function FeedPage() {
+  const { t, i18n } = useTranslation('feed');
   const me = trpc.auth.me.useQuery();
   const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: 30_000 });
   const firstConn = connections.data?.[0];
@@ -317,9 +325,9 @@ export default function FeedPage() {
         <div className="text-center space-y-4 py-12">
           <div className="text-5xl">💌</div>
           <div>
-            <p className="text-gray-700 font-medium">아직 연결된 관계가 없어요</p>
+            <p className="text-gray-700 font-medium">{t('noConnection.title')}</p>
             <p className="text-sm text-gray-400 mt-1">
-              {isParent ? '자녀에게 받은 초대 코드를 입력해주세요' : '초대 코드를 만들어 부모님께 보내주세요'}
+              {isParent ? t('noConnection.parent') : t('noConnection.child')}
             </p>
           </div>
           <button
@@ -327,7 +335,7 @@ export default function FeedPage() {
             className="px-6 py-3 rounded-2xl text-white font-medium"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            연결 시작하기
+            {t('startConnect')}
           </button>
         </div>
         {showStart && <StartConnectionModal role={me.data?.role ?? 'child'} onClose={() => setShowStart(false)} />}
@@ -338,7 +346,7 @@ export default function FeedPage() {
   const items = questions.data?.questions ?? [];
   const isParentView = firstConn.fromUserId === me.data?.id; // 부모(답변자) 시점인가
   const otherUser = isParentView ? firstConn.toUser : firstConn.fromUser;
-  const connectedDate = new Date(firstConn.createdAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+  const connectedDate = new Date(firstConn.createdAt).toLocaleDateString(i18n.language, { month: 'long', day: 'numeric' });
 
   return (
     <div className="space-y-4">
@@ -346,14 +354,14 @@ export default function FeedPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-gray-900">
-            {otherUser?.name}님과의 이야기
+            {t('header.title', { name: otherUser?.name })}
           </h2>
           <div className="mt-1 inline-flex items-center gap-1.5 text-xs text-gray-500">
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: otherUser?.isOnline ? '#22C55E' : '#D1D5DB' }}
             />
-            {otherUser?.isOnline ? '접속중' : '미접속중'}
+            {otherUser?.isOnline ? t('header.online') : t('header.offline')}
           </div>
         </div>
         {!isParentView ? (
@@ -362,16 +370,16 @@ export default function FeedPage() {
             className="text-xs font-medium px-3 py-1.5 rounded-full text-white"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            + 질문 보내기
+            {t('header.sendQuestion')}
           </button>
         ) : (
           <button
             onClick={() => setShowMessage(true)}
             className="text-sm font-semibold px-4 py-2.5 rounded-full text-white"
             style={{ backgroundColor: 'var(--color-primary)' }}
-            aria-label="먼저 마음 전하기"
+            aria-label={t('header.shareHeart')}
           >
-            💝 먼저 마음 전하기
+            {t('header.shareHeart')}
           </button>
         )}
       </div>
@@ -379,7 +387,7 @@ export default function FeedPage() {
       {showMessage && (
         <ParentMessageComposer
           connectionId={firstConn.id}
-          childName={firstConn.toUser?.name ?? '자녀'}
+          childName={firstConn.toUser?.name ?? t('defaultChild', { ns: 'today' })}
           onClose={() => setShowMessage(false)}
           onSent={() => void utils.question.list.invalidate({ connectionId: firstConn.id })}
         />
@@ -388,7 +396,7 @@ export default function FeedPage() {
       {showComposer && (
         <QuestionComposer
           connectionId={firstConn.id}
-          parentName={firstConn.fromUser?.name ?? '부모님'}
+          parentName={firstConn.fromUser?.name ?? t('defaultParent', { ns: 'today' })}
           onClose={() => setShowComposer(false)}
           onSent={() => void utils.question.list.invalidate({ connectionId: firstConn.id })}
         />
@@ -401,7 +409,7 @@ export default function FeedPage() {
           </span>
           <div className="space-y-1">
             <p className="text-sm font-medium text-gray-900">
-              {firstConn.fromUser?.name}님과 {firstConn.toUser?.name}님이 연결되었어요.
+              {t('connectedNotice', { from: firstConn.fromUser?.name, to: firstConn.toUser?.name })}
             </p>
             <p className="text-xs text-gray-400">{connectedDate}</p>
           </div>
@@ -412,16 +420,16 @@ export default function FeedPage() {
         <div className="text-center py-12 space-y-3">
           <div className="text-4xl">🌱</div>
           {isParentView ? (
-            <p className="text-gray-500">자녀가 질문을 보내면 여기에 표시돼요</p>
+            <p className="text-gray-500">{t('emptyParent')}</p>
           ) : (
             <>
-              <p className="text-gray-500">첫 번째 질문을 보내볼까요?</p>
+              <p className="text-gray-500">{t('emptyChildPrompt')}</p>
               <button
                 onClick={() => setShowComposer(true)}
                 className="px-6 py-3 rounded-2xl text-white font-medium"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
-                오늘의 질문 보내기
+                {t('sendToday')}
               </button>
             </>
           )}
@@ -437,7 +445,7 @@ export default function FeedPage() {
                 💝
               </span>
               <p className="text-sm font-medium flex-1" style={{ color: '#DB2777' }}>
-                {firstConn.fromUser?.name}님이 먼저 마음을 전했어요
+                {t('parentMessaged', { name: firstConn.fromUser?.name })}
               </p>
             </div>
           ) : (
@@ -457,7 +465,7 @@ export default function FeedPage() {
                 <div className="flex items-center gap-2 rounded-xl bg-gray-50 p-3 text-gray-400">
                   <span className="text-lg">🔒</span>
                   <p className="text-sm">
-                    {firstConn.fromUser?.name}님이 답변을 남기셨지만, 마음속에 간직하기로 했어요.
+                    {t('privateMasked', { name: firstConn.fromUser?.name })}
                   </p>
                 </div>
               </div>
@@ -495,14 +503,14 @@ export default function FeedPage() {
             )
           ) : q.answer?.skipped ? (
             <div className="pl-7">
-              <span className="text-sm text-gray-400 italic">건너뛰었어요</span>
+              <span className="text-sm text-gray-400 italic">{t('skipped')}</span>
             </div>
           ) : (
             <div className="pl-7 space-y-2">
               {isParentView ? (
                 <InlineAnswer questionId={q.id} connectionId={firstConn.id} />
               ) : (
-                <span className="text-sm text-gray-400">아직 답변을 기다리고 있어요...</span>
+                <span className="text-sm text-gray-400">{t('waiting')}</span>
               )}
             </div>
           )}
@@ -510,7 +518,7 @@ export default function FeedPage() {
           {/* 날짜 */}
           {q.sentAt && (
             <p className="text-xs text-gray-300 pl-7">
-              {new Date(q.sentAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
+              {new Date(q.sentAt).toLocaleDateString(i18n.language, { month: 'long', day: 'numeric' })}
             </p>
           )}
         </div>

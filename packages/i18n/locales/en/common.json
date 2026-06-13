@@ -20,7 +20,9 @@
     "confirm": "OK",
     "close": "Close",
     "retry": "Try again",
-    "copy": "Copy"
+    "copy": "Copy",
+    "add": "Add",
+    "send": "Send"
   },
   "loading": "Loading...",
   "comingSoon": "Coming soon",
@@ -83,5 +85,10 @@
     }
   },
   "adminBadge": "Admin",
-  "contactLabel": "Contact:"
+  "contactLabel": "Contact:",
+  "adConsent": {
+    "message": "May we use cookies and ad tracking to improve the service and measure ad performance? Declining has no effect on your use of the service.",
+    "deny": "Decline",
+    "allow": "Allow"
+  }
 }

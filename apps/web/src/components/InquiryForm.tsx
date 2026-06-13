@@ -2,20 +2,16 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
+import { useTranslation } from 'react-i18next';
 
-const CATEGORIES = [
-  { value: '', label: '문의 유형을 골라주세요 (선택)' },
-  { value: 'bug', label: '버그/오류' },
-  { value: 'feature', label: '기능 제안' },
-  { value: 'payment', label: '결제' },
-  { value: 'privacy', label: '개인정보' },
-  { value: 'etc', label: '기타' },
-] as const;
+const CATEGORY_VALUES = ['', 'bug', 'feature', 'payment', 'privacy', 'etc'] as const;
 
 type Category = 'bug' | 'feature' | 'payment' | 'privacy' | 'etc';
 
 // 서비스 문의 폼 — FAQ 하단. 비로그인도 제출 가능, 로그인 시 이메일 자동 채움.
 export function InquiryForm() {
+  const { t } = useTranslation('inquiry');
+  const { t: tc } = useTranslation('common');
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState<'' | Category>('');
   const [message, setMessage] = useState('');
@@ -44,13 +40,13 @@ export function InquiryForm() {
     return (
       <div className="rounded-2xl bg-white border border-gray-100 p-6 text-center space-y-3">
         <div className="text-4xl" aria-hidden>📬</div>
-        <p className="text-lg font-bold text-gray-900">문의가 접수되었습니다.</p>
-        <p className="text-base text-gray-500">빠르게 확인하겠습니다. 답변은 입력하신 이메일로 드려요.</p>
+        <p className="text-lg font-bold text-gray-900">{t('doneTitle')}</p>
+        <p className="text-base text-gray-500">{t('doneBody')}</p>
         <button
           onClick={() => setDone(false)}
           className="text-sm underline text-gray-400 hover:text-gray-600"
         >
-          다른 문의 보내기
+          {t('doneAnother')}
         </button>
       </div>
     );
@@ -59,13 +55,13 @@ export function InquiryForm() {
   return (
     <div className="rounded-2xl bg-white border border-gray-100 p-6 space-y-4">
       <div>
-        <h2 className="text-lg font-bold text-gray-900">💬 서비스 문의</h2>
-        <p className="text-sm text-gray-500 mt-1">FAQ에서 답을 찾지 못하셨나요? 직접 물어봐 주세요.</p>
+        <h2 className="text-lg font-bold text-gray-900">{t('title')}</h2>
+        <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
       </div>
 
       <div>
         <label htmlFor="inquiry-email" className="block text-base font-medium text-gray-700 mb-1">
-          회신받을 이메일 <span className="text-red-500" aria-hidden>*</span>
+          {t('emailLabel')} <span className="text-red-500" aria-hidden>*</span>
         </label>
         <input
           id="inquiry-email"
@@ -80,7 +76,7 @@ export function InquiryForm() {
 
       <div>
         <label htmlFor="inquiry-category" className="block text-base font-medium text-gray-700 mb-1">
-          문의 유형
+          {t('categoryLabel')}
         </label>
         <select
           id="inquiry-category"
@@ -88,15 +84,15 @@ export function InquiryForm() {
           onChange={(e) => setCategory(e.target.value as '' | Category)}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base bg-white focus:outline-none"
         >
-          {CATEGORIES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
+          {CATEGORY_VALUES.map((c) => (
+            <option key={c} value={c}>{c === '' ? t('category.placeholder') : t(`category.${c}`)}</option>
           ))}
         </select>
       </div>
 
       <div>
         <label htmlFor="inquiry-message" className="block text-base font-medium text-gray-700 mb-1">
-          문의 내용 <span className="text-red-500" aria-hidden>*</span>
+          {t('messageLabel')} <span className="text-red-500" aria-hidden>*</span>
         </label>
         <textarea
           id="inquiry-message"
@@ -104,10 +100,10 @@ export function InquiryForm() {
           onChange={(e) => setMessage(e.target.value)}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base leading-relaxed resize-none focus:outline-none"
           style={{ minHeight: '120px' }}
-          placeholder="겪으신 문제나 궁금한 점을 적어주세요. (10자 이상)"
+          placeholder={t('messagePlaceholder')}
         />
         {message.trim().length > 0 && message.trim().length < 10 && (
-          <p className="text-xs text-gray-400 mt-1">조금 더 자세히 적어주시면 정확히 도와드릴 수 있어요. (10자 이상)</p>
+          <p className="text-xs text-gray-400 mt-1">{t('tooShort')}</p>
         )}
       </div>
 
@@ -125,7 +121,7 @@ export function InquiryForm() {
 
       {submit.isError && (
         <p className="text-sm text-red-500" role="alert">
-          {submit.error.message || '접수에 실패했어요. 잠시 후 다시 시도해주세요.'}
+          {submit.error.message || t('submitError')}
         </p>
       )}
 
@@ -139,14 +135,14 @@ export function InquiryForm() {
         disabled={!canSubmit}
         className="w-full py-4 rounded-2xl text-white text-lg font-semibold disabled:opacity-50"
         style={{ backgroundColor: 'var(--color-primary)' }}
-        aria-label="문의 보내기"
+        aria-label={t('submit')}
       >
-        {submit.isPending ? '접수 중...' : '문의 보내기'}
+        {submit.isPending ? t('submitting') : t('submit')}
       </button>
 
       <p className="text-xs text-gray-400">
-        문의 내용과 이메일은 답변 목적으로만 이용되며,{' '}
-        <Link href="/privacy" className="underline">개인정보 처리방침</Link>에 따라 보관됩니다.
+        {t('privacyNotePre')}
+        <Link href="/privacy" className="underline">{tc('legalLinks.privacy')}</Link>{t('privacyNotePost')}
       </p>
     </div>
   );

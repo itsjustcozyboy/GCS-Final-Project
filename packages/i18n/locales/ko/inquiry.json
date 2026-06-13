@@ -1,1 +1,27 @@
-{}
+{
+  "category": {
+    "placeholder": "문의 유형을 골라주세요 (선택)",
+    "bug": "버그/오류",
+    "feature": "기능 제안",
+    "payment": "결제",
+    "privacy": "개인정보",
+    "etc": "기타"
+  },
+  "doneTitle": "문의가 접수되었습니다.",
+  "doneBody": "빠르게 확인하겠습니다. 답변은 입력하신 이메일로 드려요.",
+  "doneAnother": "다른 문의 보내기",
+  "title": "💬 서비스 문의",
+  "subtitle": "FAQ에서 답을 찾지 못하셨나요? 직접 물어봐 주세요.",
+  "emailLabel": "회신받을 이메일",
+  "categoryLabel": "문의 유형",
+  "messageLabel": "문의 내용",
+  "messagePlaceholder": "겪으신 문제나 궁금한 점을 적어주세요. (10자 이상)",
+  "tooShort": "조금 더 자세히 적어주시면 정확히 도와드릴 수 있어요. (10자 이상)",
+  "submitError": "접수에 실패했어요. 잠시 후 다시 시도해주세요.",
+  "submitting": "접수 중...",
+  "submit": "문의 보내기",
+  "privacyNotePre": "문의 내용과 이메일은 답변 목적으로만 이용되며, ",
+  "privacyNotePost": "에 따라 보관됩니다.",
+  "pageBack": "← 내 정보",
+  "pageEmailHint": "이메일로 직접 문의하셔도 돼요:"
+}

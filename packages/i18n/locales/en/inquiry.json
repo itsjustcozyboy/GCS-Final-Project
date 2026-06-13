@@ -1,1 +1,27 @@
-{}
+{
+  "category": {
+    "placeholder": "Choose a topic (optional)",
+    "bug": "Bug / error",
+    "feature": "Feature request",
+    "payment": "Payment",
+    "privacy": "Privacy",
+    "etc": "Other"
+  },
+  "doneTitle": "Your inquiry has been received.",
+  "doneBody": "We'll get back to you soon by the email you provided.",
+  "doneAnother": "Send another inquiry",
+  "title": "💬 Contact us",
+  "subtitle": "Didn't find your answer in the FAQ? Just ask us directly.",
+  "emailLabel": "Email for our reply",
+  "categoryLabel": "Topic",
+  "messageLabel": "Your message",
+  "messagePlaceholder": "Tell us about the issue or question. (at least 10 characters)",
+  "tooShort": "A little more detail helps us help you. (at least 10 characters)",
+  "submitError": "Couldn't submit. Please try again shortly.",
+  "submitting": "Submitting...",
+  "submit": "Send inquiry",
+  "privacyNotePre": "Your message and email are used only to reply to you, and are stored under our ",
+  "privacyNotePost": ".",
+  "pageBack": "← My profile",
+  "pageEmailHint": "You can also email us directly:"
+}
