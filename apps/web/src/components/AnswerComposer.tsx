@@ -63,12 +63,21 @@ export function AnswerComposer({
     });
   }
 
+  // 직접 쓰기 = 글 전용 / 가이드 = 글·사진·영상·목소리 모두 / 키워드 = AI 문장화
   const METHODS: Array<{ value: Method; label: string }> = [
-    { value: 'voice', label: '🎤 말로 답하기' },
-    { value: 'keywords', label: '🔑 키워드로' },
     { value: 'guide', label: '💡 가이드' },
+    { value: 'keywords', label: '🔑 키워드로' },
     { value: 'direct', label: '✍️ 직접 쓰기' },
   ];
+
+  // 직접 쓰기는 글만 — 들어올 때 첨부 미디어와 형식을 글로 초기화한다.
+  function selectMethod(next: Method) {
+    if (next === 'direct') {
+      setMedia(null);
+      setFormat('text');
+    }
+    setMethod(next);
+  }
 
   return (
     <div className={compact ? 'space-y-3' : 'space-y-4'}>
