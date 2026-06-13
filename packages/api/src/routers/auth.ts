@@ -194,9 +194,17 @@ export const authRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true, consentAnalytics: true, lastSeenAt: true },
+      select: { id: true, name: true, email: true, phone: true, role: true, avatarUrl: true, locale: true, consentAnalytics: true, lastSeenAt: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
   }),
+
+  // 로그인 사용자의 선택 언어를 프로필에 저장 → 기기 간 유지
+  setLocale: protectedProcedure
+    .input(z.object({ locale: z.enum(['ko', 'en']) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.user.update({ where: { id: ctx.userId }, data: { locale: input.locale } });
+      return { ok: true, locale: input.locale };
+    }),
 });

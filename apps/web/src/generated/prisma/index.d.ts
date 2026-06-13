@@ -2705,6 +2705,7 @@ export namespace Prisma {
     name: string | null
     role: $Enums.Role | null
     avatarUrl: string | null
+    locale: string | null
     passwordHash: string | null
     consentAnalytics: boolean | null
     consentMarketing: boolean | null
@@ -2721,6 +2722,7 @@ export namespace Prisma {
     name: string | null
     role: $Enums.Role | null
     avatarUrl: string | null
+    locale: string | null
     passwordHash: string | null
     consentAnalytics: boolean | null
     consentMarketing: boolean | null
@@ -2737,6 +2739,7 @@ export namespace Prisma {
     name: number
     role: number
     avatarUrl: number
+    locale: number
     passwordHash: number
     consentAnalytics: number
     consentMarketing: number
@@ -2755,6 +2758,7 @@ export namespace Prisma {
     name?: true
     role?: true
     avatarUrl?: true
+    locale?: true
     passwordHash?: true
     consentAnalytics?: true
     consentMarketing?: true
@@ -2771,6 +2775,7 @@ export namespace Prisma {
     name?: true
     role?: true
     avatarUrl?: true
+    locale?: true
     passwordHash?: true
     consentAnalytics?: true
     consentMarketing?: true
@@ -2787,6 +2792,7 @@ export namespace Prisma {
     name?: true
     role?: true
     avatarUrl?: true
+    locale?: true
     passwordHash?: true
     consentAnalytics?: true
     consentMarketing?: true
@@ -2876,6 +2882,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl: string | null
+    locale: string | null
     passwordHash: string | null
     consentAnalytics: boolean
     consentMarketing: boolean
@@ -2909,6 +2916,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     avatarUrl?: boolean
+    locale?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -2935,6 +2943,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     avatarUrl?: boolean
+    locale?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -2951,6 +2960,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     avatarUrl?: boolean
+    locale?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -2967,6 +2977,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     avatarUrl?: boolean
+    locale?: boolean
     passwordHash?: boolean
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -2976,7 +2987,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "passwordHash" | "consentAnalytics" | "consentMarketing" | "consentAt" | "lastSeenAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "name" | "role" | "avatarUrl" | "locale" | "passwordHash" | "consentAnalytics" | "consentMarketing" | "consentAt" | "lastSeenAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sentConnections?: boolean | User$sentConnectionsArgs<ExtArgs>
     receivedConnections?: boolean | User$receivedConnectionsArgs<ExtArgs>
@@ -3012,6 +3023,7 @@ export namespace Prisma {
       name: string
       role: $Enums.Role
       avatarUrl: string | null
+      locale: string | null
       passwordHash: string | null
       consentAnalytics: boolean
       consentMarketing: boolean
@@ -3457,6 +3469,7 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly avatarUrl: FieldRef<"User", 'String'>
+    readonly locale: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly consentAnalytics: FieldRef<"User", 'Boolean'>
     readonly consentMarketing: FieldRef<"User", 'Boolean'>
@@ -22190,6 +22203,7 @@ export namespace Prisma {
     name: 'name',
     role: 'role',
     avatarUrl: 'avatarUrl',
+    locale: 'locale',
     passwordHash: 'passwordHash',
     consentAnalytics: 'consentAnalytics',
     consentMarketing: 'consentMarketing',
@@ -22751,6 +22765,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     avatarUrl?: StringNullableFilter<"User"> | string | null
+    locale?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
     consentMarketing?: BoolFilter<"User"> | boolean
@@ -22776,6 +22791,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    locale?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
     consentMarketing?: SortOrder
@@ -22804,6 +22820,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     avatarUrl?: StringNullableFilter<"User"> | string | null
+    locale?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     consentAnalytics?: BoolFilter<"User"> | boolean
     consentMarketing?: BoolFilter<"User"> | boolean
@@ -22829,6 +22846,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    locale?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     consentAnalytics?: SortOrder
     consentMarketing?: SortOrder
@@ -22851,6 +22869,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    locale?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     consentAnalytics?: BoolWithAggregatesFilter<"User"> | boolean
     consentMarketing?: BoolWithAggregatesFilter<"User"> | boolean
@@ -24123,6 +24142,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -24148,6 +24168,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -24173,6 +24194,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -24198,6 +24220,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -24223,6 +24246,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -24239,6 +24263,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -24255,6 +24280,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -25796,6 +25822,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     avatarUrl?: SortOrder
+    locale?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentMarketing?: SortOrder
@@ -25812,6 +25839,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     avatarUrl?: SortOrder
+    locale?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentMarketing?: SortOrder
@@ -25828,6 +25856,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     avatarUrl?: SortOrder
+    locale?: SortOrder
     passwordHash?: SortOrder
     consentAnalytics?: SortOrder
     consentMarketing?: SortOrder
@@ -28826,6 +28855,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -28850,6 +28880,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -28890,6 +28921,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -28914,6 +28946,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -28938,6 +28971,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -28962,6 +28996,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29002,6 +29037,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29026,6 +29062,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29050,6 +29087,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29074,6 +29112,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29103,6 +29142,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29127,6 +29167,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29270,6 +29311,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29294,6 +29336,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29329,6 +29372,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29353,6 +29397,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29480,6 +29525,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29504,6 +29550,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29533,6 +29580,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29557,6 +29605,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -29642,6 +29691,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29666,6 +29716,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29701,6 +29752,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -29725,6 +29777,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30133,6 +30186,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30157,6 +30211,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30242,6 +30297,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30266,6 +30322,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30386,6 +30443,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30410,6 +30468,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30450,6 +30509,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30474,6 +30534,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30498,6 +30559,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30522,6 +30584,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role
     avatarUrl?: string | null
+    locale?: string | null
     passwordHash?: string | null
     consentAnalytics?: boolean
     consentMarketing?: boolean
@@ -30562,6 +30625,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean
@@ -30586,6 +30650,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     consentAnalytics?: BoolFieldUpdateOperationsInput | boolean
     consentMarketing?: BoolFieldUpdateOperationsInput | boolean

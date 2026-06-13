@@ -128,6 +128,7 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   role: 'role',
   avatarUrl: 'avatarUrl',
+  locale: 'locale',
   passwordHash: 'passwordHash',
   consentAnalytics: 'consentAnalytics',
   consentMarketing: 'consentMarketing',

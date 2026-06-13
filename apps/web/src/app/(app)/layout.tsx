@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { LocaleSync } from '@/components/LocaleSync';
 
 const NAV = [
   { href: '/feed', icon: '📬', label: '피드' },
@@ -15,12 +17,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh pb-20" style={{ background: 'var(--color-background)' }}>
+      <LocaleSync />
       {/* 헤더 */}
       <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <Link href="/feed" className="text-lg font-bold" style={{ color: 'var(--color-primary-dark)' }}>
           💌 마음 잇기
         </Link>
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           {adminData?.isAdmin && (
             <Link
               href="/admin"

@@ -91,6 +91,7 @@ model User {
   name             String
   role             Role
   avatarUrl        String?
+  locale           String? // 'ko' | 'en' — 사용자가 선택한 UI/AI 언어 (null=미설정, ko 기본)
   passwordHash     String?
   consentAnalytics Boolean   @default(false)
   consentMarketing Boolean   @default(false)

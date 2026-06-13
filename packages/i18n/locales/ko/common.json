@@ -23,5 +23,9 @@
     "copy": "복사하기"
   },
   "loading": "불러오는 중...",
-  "comingSoon": "준비 중"
+  "comingSoon": "준비 중",
+  "meta": {
+    "title": "마음 잇기",
+    "description": "부모와 자식이 매일 질문 하나로 이어지는 공간"
+  }
 }

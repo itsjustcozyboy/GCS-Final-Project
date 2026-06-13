@@ -199,3 +199,6 @@ BEGIN
       FOREIGN KEY ("anonymousId") REFERENCES "Visitor"("anonymousId") ON DELETE SET NULL ON UPDATE CASCADE;
   END IF;
 END $$;
+
+-- i18n: 사용자 선택 언어
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "locale" TEXT;

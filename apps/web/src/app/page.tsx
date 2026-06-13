@@ -1,3 +1,4 @@
+import { LanguageToggle } from '@/components/LanguageToggle';
 import Link from 'next/link';
 import { AdminLink } from '@/components/AdminLink';
 
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <main className="min-h-dvh" style={{ background: 'var(--color-background)' }}>
       <div className="w-full max-w-5xl mx-auto px-4 py-10 sm:px-6 sm:py-14 lg:py-20 space-y-12 sm:space-y-16">
+        <div className="flex justify-end"><LanguageToggle /></div>
         {/* 1. 히어로 */}
         <section className="max-w-2xl mx-auto text-center space-y-5 break-keep">
           <div className="text-4xl sm:text-5xl" aria-hidden>💌</div>

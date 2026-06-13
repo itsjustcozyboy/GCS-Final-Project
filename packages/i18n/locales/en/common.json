@@ -23,5 +23,9 @@
     "copy": "Copy"
   },
   "loading": "Loading...",
-  "comingSoon": "Coming soon"
+  "comingSoon": "Coming soon",
+  "meta": {
+    "title": "Maeum Itgi — letters between generations",
+    "description": "One question a day brings parents and children closer, gathered into a book."
+  }
 }
