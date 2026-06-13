@@ -318,3 +318,81 @@ model AdminAudit {
 
   @@index([adminId])
 }
+
+// ── 방문자 전환율(퍼널) 추적 ──────────────────────────────────
+// 익명 비식별 단계: anonymousId(우리가 발급한 무작위 쿠키), UTM, path, referrer, 대략적 기기,
+// IP는 원문 대신 ipHash만 저장. 식별정보(이름·이메일·원문 IP)는 동의/로그인 후 AccessLog에만 둔다.
+
+enum ConversionType {
+  signup_started
+  signup_completed
+  first_login
+  onboarding_completed
+}
+
+// 익명 방문자 집계 단위 (anonymousId). first-touch UTM은 덮어쓰지 않고, last-touch는 최신값 갱신.
+model Visitor {
+  anonymousId     String    @id
+  firstSeen       DateTime  @default(now())
+  lastSeen        DateTime  @default(now())
+  visitCount      Int       @default(0)
+  // first-touch (최초 유입 출처 — 한 번만 기록)
+  ftSource        String?
+  ftMedium        String?
+  ftCampaign      String?
+  ftContent       String?
+  ftTerm          String?
+  // last-touch (가장 최근 유입 출처 — 매번 갱신)
+  ltSource        String?
+  ltMedium        String?
+  ltCampaign      String?
+  ltContent       String?
+  ltTerm          String?
+  // 전환(가입/로그인 도달) — 다대일: 여러 anonymousId가 한 user로 연결될 수 있음
+  convertedUserId String?
+  convertedAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  events      VisitorEvent[]
+  conversions ConversionEvent[]
+
+  @@index([convertedUserId])
+  @@index([ftSource])
+  @@index([firstSeen])
+}
+
+model VisitorEvent {
+  id          String   @id @default(cuid())
+  anonymousId String
+  visitor     Visitor  @relation(fields: [anonymousId], references: [anonymousId], onDelete: Cascade)
+  path        String?
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+  fbclid      String?
+  gclid       String?
+  deviceType  String? // 대략적 기기/브라우저 종류 (mobile/tablet/desktop · bot)
+  ipHash      String? // 익명 단계: 해시만. 원문 IP는 저장하지 않음
+  createdAt   DateTime @default(now())
+
+  @@index([anonymousId])
+  @@index([createdAt])
+  @@index([utmSource])
+}
+
+model ConversionEvent {
+  id          String         @id @default(cuid())
+  anonymousId String?
+  visitor     Visitor?       @relation(fields: [anonymousId], references: [anonymousId], onDelete: SetNull)
+  userId      String?
+  type        ConversionType
+  createdAt   DateTime       @default(now())
+
+  @@index([anonymousId])
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
