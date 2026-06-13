@@ -92,6 +92,7 @@ export const adminRouter = router({
         const latest = latestMap.get(g.userId!);
         return {
           key: `user:${g.userId}`,
+          anonymousId: null as string | null,
           userId: g.userId,
           ipAddress: latest?.ipAddress ?? null,
           name: u?.name ?? null,
@@ -105,36 +106,36 @@ export const adminRouter = router({
         };
       });
 
-      // 2) 비로그인 방문: IP 기준 집계
-      const byIp = await ctx.db.accessLog.groupBy({
-        by: ['ipAddress'],
-        where: { userId: null },
-        _count: { _all: true },
-        _max: { createdAt: true },
-        _min: { createdAt: true },
-      });
-      const anonIps = byIp.map((g) => g.ipAddress).filter((ip): ip is string => !!ip);
-      const latestAnonLogs = await ctx.db.accessLog.findMany({
-        where: { userId: null, ipAddress: { in: anonIps } },
+      // 2) 비로그인 방문: Supabase/Prisma의 Visitor 퍼널 테이블 기준
+      const funnelVisitors = await ctx.db.visitor.findMany({
+        where: { convertedUserId: null },
         orderBy: { createdAt: 'desc' },
-        distinct: ['ipAddress'],
-        select: { ipAddress: true, userAgent: true, path: true },
       });
-      const anonLatestMap = new Map(latestAnonLogs.map((l) => [l.ipAddress!, l]));
+      const anonymousIds = funnelVisitors.map((v) => v.anonymousId);
+      const latestAnonEvents = anonymousIds.length
+        ? await ctx.db.visitorEvent.findMany({
+            where: { anonymousId: { in: anonymousIds } },
+            orderBy: { createdAt: 'desc' },
+            distinct: ['anonymousId'],
+            select: { anonymousId: true, path: true, deviceType: true },
+          })
+        : [];
+      const anonLatestMap = new Map(latestAnonEvents.map((l) => [l.anonymousId, l]));
 
-      const anonVisitors = byIp.map((g) => {
-        const latest = g.ipAddress ? anonLatestMap.get(g.ipAddress) : undefined;
+      const anonVisitors = funnelVisitors.map((v) => {
+        const latest = anonLatestMap.get(v.anonymousId);
         return {
-          key: `ip:${g.ipAddress ?? 'unknown'}`,
+          key: `anon:${v.anonymousId}`,
+          anonymousId: v.anonymousId,
           userId: null as string | null,
-          ipAddress: g.ipAddress,
+          ipAddress: null as string | null,
           name: null as string | null,
           email: null as string | null,
-          userAgent: latest?.userAgent ?? null,
+          userAgent: latest?.deviceType ?? null,
           lastPath: latest?.path ?? null,
-          visitCount: g._count._all,
-          firstVisit: g._min.createdAt!,
-          lastVisit: g._max.createdAt!,
+          visitCount: v.visitCount,
+          firstVisit: v.firstSeen,
+          lastVisit: v.lastSeen,
           isOnline: false,
         };
       });
@@ -148,7 +149,9 @@ export const adminRouter = router({
           (v) =>
             v.name?.toLowerCase().includes(q) ||
             v.email?.toLowerCase().includes(q) ||
-            v.ipAddress?.toLowerCase().includes(q),
+            v.ipAddress?.toLowerCase().includes(q) ||
+            v.anonymousId?.toLowerCase().includes(q) ||
+            v.lastPath?.toLowerCase().includes(q),
         );
       }
 
@@ -166,7 +169,8 @@ export const adminRouter = router({
     .input(z.object({
       userIds: z.array(z.string()).max(100).default([]),
       ipAddresses: z.array(z.string()).max(100).default([]),
-    }).refine((d) => d.userIds.length > 0 || d.ipAddresses.length > 0, {
+      anonymousIds: z.array(z.string()).max(100).default([]),
+    }).refine((d) => d.userIds.length > 0 || d.ipAddresses.length > 0 || d.anonymousIds.length > 0, {
       message: '삭제할 대상을 선택해주세요.',
     }))
     .mutation(async ({ ctx, input }) => {
@@ -188,19 +192,22 @@ export const adminRouter = router({
           : [];
 
         const anonymousIds = [
-          ...new Set([...convertedVisitors, ...ipEvents].map((v) => v.anonymousId)),
+          ...new Set([...input.anonymousIds, ...convertedVisitors, ...ipEvents].map((v) => typeof v === 'string' ? v : v.anonymousId)),
         ];
 
-        const accessLogWhere = {
-          OR: [
-            ...(input.userIds.length ? [{ userId: { in: input.userIds } }] : []),
-            ...(input.ipAddresses.length
-              ? [{ userId: null, ipAddress: { in: input.ipAddresses } }]
-              : []),
-          ],
-        };
-
-        const accessLogs = await tx.accessLog.deleteMany({ where: accessLogWhere });
+        const accessLogs =
+          input.userIds.length || input.ipAddresses.length
+            ? await tx.accessLog.deleteMany({
+                where: {
+                  OR: [
+                    ...(input.userIds.length ? [{ userId: { in: input.userIds } }] : []),
+                    ...(input.ipAddresses.length
+                      ? [{ userId: null, ipAddress: { in: input.ipAddresses } }]
+                      : []),
+                  ],
+                },
+              })
+            : { count: 0 };
 
         const conversionEvents =
           input.userIds.length || anonymousIds.length
@@ -234,7 +241,11 @@ export const adminRouter = router({
           data: {
             adminId: ctx.userId,
             action: 'delete_visitors',
-            targetIds: [...input.userIds.map((id) => `user:${id}`), ...input.ipAddresses.map((ip) => `ip:${ip}`)],
+            targetIds: [
+              ...input.userIds.map((id) => `user:${id}`),
+              ...input.ipAddresses.map((ip) => `ip:${ip}`),
+              ...input.anonymousIds.map((id) => `anon:${id}`),
+            ],
           },
         });
 

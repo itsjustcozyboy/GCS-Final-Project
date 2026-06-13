@@ -17,6 +17,7 @@ type Log = {
 
 type Visitor = {
   key: string;
+  anonymousId?: string | null;
   userId: string | null;
   ipAddress: string | null;
   name: string | null;
@@ -50,6 +51,8 @@ function VisitorsView({ search }: { search: string }) {
   const { data, isLoading, refetch } = trpc.admin.getVisitors.useQuery({
     search: search || undefined,
     orderBy,
+  }, {
+    refetchInterval: 10_000,
   });
 
   const deleteMutation = trpc.admin.deleteVisitors.useMutation({
@@ -87,6 +90,7 @@ function VisitorsView({ search }: { search: string }) {
     deleteMutation.mutate({
       userIds: chosen.filter((v) => v.userId).map((v) => v.userId!),
       ipAddresses: chosen.filter((v) => !v.userId && v.ipAddress).map((v) => v.ipAddress!),
+      anonymousIds: chosen.filter((v) => !v.userId && v.anonymousId).map((v) => v.anonymousId!),
     });
   }
 
@@ -232,17 +236,28 @@ function LogsView({ search }: { search: string }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const utils = trpc.useUtils();
   const { data, isLoading, refetch } = trpc.admin.getLogs.useQuery({
     search: search || undefined,
     orderBy,
     limit: 100,
+  }, {
+    refetchInterval: 10_000,
   });
 
   const deleteMutation = trpc.admin.deleteLogs.useMutation({
     onSuccess: () => {
       setSelected(new Set());
       setShowDeleteModal(false);
-      void refetch();
+      void Promise.all([
+        refetch(),
+        utils.admin.getVisitors.invalidate(),
+        utils.admin.funnelSummary.invalidate(),
+        utils.admin.channelStats.invalidate(),
+        utils.admin.anonymousVisitors.invalidate(),
+        utils.admin.convertedVisitors.invalidate(),
+        utils.admin.visitorTrend.invalidate(),
+      ]);
     },
   });
 
@@ -411,6 +426,8 @@ function InquiriesView({ search }: { search: string }) {
     category: category || undefined,
     status: status || undefined,
     limit: 100,
+  }, {
+    refetchInterval: 10_000,
   });
 
   const setStatusMutation = trpc.inquiry.setStatus.useMutation({ onSuccess: () => void refetch() });
@@ -595,11 +612,12 @@ function FunnelView({ search }: { search: string }) {
   const [days, setDays] = useState<number>(7);
   const [seg, setSeg] = useState<'anon' | 'converted'>('anon');
 
-  const summary = trpc.admin.funnelSummary.useQuery({ days });
-  const channels = trpc.admin.channelStats.useQuery({ days });
-  const anon = trpc.admin.anonymousVisitors.useQuery({ days, search: search || undefined, limit: 100 });
-  const converted = trpc.admin.convertedVisitors.useQuery({ days, limit: 100 });
-  const trend = trpc.admin.visitorTrend.useQuery({ days: Math.min(days, 30) });
+  const liveQuery = { refetchInterval: 10_000 };
+  const summary = trpc.admin.funnelSummary.useQuery({ days }, liveQuery);
+  const channels = trpc.admin.channelStats.useQuery({ days }, liveQuery);
+  const anon = trpc.admin.anonymousVisitors.useQuery({ days, search: search || undefined, limit: 100 }, liveQuery);
+  const converted = trpc.admin.convertedVisitors.useQuery({ days, limit: 100 }, liveQuery);
+  const trend = trpc.admin.visitorTrend.useQuery({ days: Math.min(days, 30) }, liveQuery);
 
   const s = summary.data;
   const maxTrend = Math.max(1, ...(trend.data ?? []).map((d) => d.visitors));

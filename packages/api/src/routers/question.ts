@@ -45,6 +45,10 @@ function languageFromLocale(locale?: string | null): Language {
   return locale === 'en' ? 'en' : 'ko';
 }
 
+function questionLanguage(requestLocale?: string | null, targetLocale?: string | null): Language {
+  return languageFromLocale(requestLocale ?? targetLocale);
+}
+
 async function getOwnedConnection(db: Context['db'], connectionId: string, userId: string) {
   const conn = await db.connection.findUnique({
     where: { id: connectionId },
@@ -120,7 +124,7 @@ export const questionRouter = router({
     .input(z.object({ connectionId: z.string() }))
     .query(async ({ ctx, input }) => {
       const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
-      const language = languageFromLocale(conn.fromUser.locale);
+      const language = questionLanguage(ctx.locale, conn.fromUser.locale);
 
       const depth = calcNextDepth(conn.currentDepth, conn.skipCount, conn.answerCount);
       const sent = await ctx.db.question.findMany({
@@ -191,7 +195,7 @@ export const questionRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
-      const language = languageFromLocale(conn.fromUser.locale);
+      const language = questionLanguage(ctx.locale, conn.fromUser.locale);
 
       const ai = createAIClient();
       const generated = await ai.generateQuestionFromKeywords({
@@ -220,7 +224,7 @@ export const questionRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const conn = await getOwnedConnection(ctx.db, input.connectionId, ctx.userId);
-      const language = languageFromLocale(conn.fromUser.locale);
+      const language = questionLanguage(ctx.locale, conn.fromUser.locale);
       return deliverQuestion(ctx.db, input.connectionId, {
         body: input.body,
         depth: input.depth,
