@@ -10,11 +10,6 @@ export default function InquiryPage() {
     <div className="space-y-5">
       <Link href="/profile" className="text-sm text-gray-400 hover:text-gray-600">← 내 정보</Link>
 
-      <div>
-        <h2 className="text-lg font-bold text-gray-900">서비스 문의</h2>
-        <p className="text-sm text-gray-500 mt-1">불편한 점이나 궁금한 점을 남겨주세요. 입력하신 이메일로 답변드려요.</p>
-      </div>
-
       <InquiryForm />
 
       <p className="text-center text-xs text-gray-400">
