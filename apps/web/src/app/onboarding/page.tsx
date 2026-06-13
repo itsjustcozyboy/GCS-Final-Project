@@ -89,6 +89,7 @@ export default function OnboardingPage() {
     return (
       <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
         <div className="max-w-sm w-full space-y-8">
+          <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
           <div className="text-center space-y-2 break-keep">
             <div className="text-4xl sm:text-5xl">💌</div>
             <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>마음 잇기 시작하기</h1>
