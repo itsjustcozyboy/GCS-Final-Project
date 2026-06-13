@@ -74,8 +74,11 @@ export const authRouter = router({
       const adminPassword = process.env.ADMIN_PASSWORD ?? '';
       const loginId = input.emailOrPhone.trim().toLowerCase();
 
-      // 관리자 비밀번호 로그인: ADMIN_EMAILS에 등록된 이메일 + 공용 관리자 비밀번호
+      // 관리자 비밀번호 로그인: ADMIN_EMAILS에 등록된 이메일 + 공용 관리자 비밀번호(ADMIN_PASSWORD).
       // 계정이 아직 없어도 즉시 생성하여 관리자 권한을 부여한다.
+      // 관리자 권한/이메일은 소스코드에 박지 않고 ADMIN_EMAILS 환경변수로만 관리한다.
+      // ⚠️ ADMIN_PASSWORD는 강하고 무작위한 값이어야 하며('123456' 등 금지) 평문 하드코딩 금지.
+      // TODO(보안 강화): 관리자 로그인 실패 횟수 제한(rate limit/lockout) + 2단계 인증(2FA/TOTP) 도입.
       if (adminPassword && input.password === adminPassword && adminEmails.includes(loginId)) {
         let adminUser = await ctx.db.user.findUnique({ where: { email: loginId } });
         if (!adminUser) {
