@@ -59,6 +59,9 @@ export const authRouter = router({
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
       const session = await ctx.db.session.create({ data: { userId: user.id, expiresAt } });
 
+      // 전환 연결(stitching): 익명 방문자 → 가입 완료
+      await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: user.id, type: 'signup_completed' });
+
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
 
