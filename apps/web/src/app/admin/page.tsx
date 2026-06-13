@@ -842,7 +842,13 @@ export default function AdminPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={tab === 'inquiries' ? '이메일 또는 문의 내용 검색...' : '이름, 이메일 또는 IP 검색...'}
+            placeholder={
+              tab === 'inquiries'
+                ? '이메일 또는 문의 내용 검색...'
+                : tab === 'funnel'
+                  ? '출처(utm_source) 또는 방문자 ID 검색...'
+                  : '이름, 이메일 또는 IP 검색...'
+            }
             className="flex-1 px-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2"
             style={{ '--tw-ring-color': 'var(--color-primary)' } as React.CSSProperties}
           />
