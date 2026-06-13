@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { createAIClient } from '@maeum/ai';
+import { createAIClient, RateLimitError } from '@maeum/ai';
 
 export const answerRouter = router({
   // 답변 제출 — 공개/비공개는 부모(작성자)가 선택
