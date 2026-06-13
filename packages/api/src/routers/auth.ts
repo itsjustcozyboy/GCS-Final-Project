@@ -121,6 +121,8 @@ export const authRouter = router({
           },
         });
 
+        await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: adminUser.id, type: 'first_login' });
+
         return {
           user: { id: adminUser.id, name: adminUser.name, role: adminUser.role },
           sessionToken: session.token,
