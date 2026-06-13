@@ -178,6 +178,9 @@ export const authRouter = router({
         },
       });
 
+      // 전환 연결(stitching): 익명 방문자 → 로그인 도달 (이미 전환된 anon이면 1건만)
+      await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: user.id, type: 'first_login' });
+
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),
 
