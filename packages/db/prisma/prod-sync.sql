@@ -120,3 +120,82 @@ CREATE TABLE IF NOT EXISTS "Inquiry" (
 CREATE INDEX IF NOT EXISTS "Inquiry_status_idx" ON "Inquiry"("status");
 CREATE INDEX IF NOT EXISTS "Inquiry_createdAt_idx" ON "Inquiry"("createdAt");
 CREATE INDEX IF NOT EXISTS "Inquiry_userId_idx" ON "Inquiry"("userId");
+
+-- 방문자 전환율(퍼널) 추적 (2026-06-13)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'ConversionType') THEN
+    CREATE TYPE "ConversionType" AS ENUM ('signup_started', 'signup_completed', 'first_login', 'onboarding_completed');
+  END IF;
+END $$;
+
+CREATE TABLE IF NOT EXISTS "Visitor" (
+    "anonymousId"     TEXT NOT NULL,
+    "firstSeen"       TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastSeen"        TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "visitCount"      INTEGER NOT NULL DEFAULT 0,
+    "ftSource"        TEXT,
+    "ftMedium"        TEXT,
+    "ftCampaign"      TEXT,
+    "ftContent"       TEXT,
+    "ftTerm"          TEXT,
+    "ltSource"        TEXT,
+    "ltMedium"        TEXT,
+    "ltCampaign"      TEXT,
+    "ltContent"       TEXT,
+    "ltTerm"          TEXT,
+    "convertedUserId" TEXT,
+    "convertedAt"     TIMESTAMP(3),
+    "createdAt"       TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Visitor_pkey" PRIMARY KEY ("anonymousId")
+);
+CREATE INDEX IF NOT EXISTS "Visitor_convertedUserId_idx" ON "Visitor"("convertedUserId");
+CREATE INDEX IF NOT EXISTS "Visitor_ftSource_idx" ON "Visitor"("ftSource");
+CREATE INDEX IF NOT EXISTS "Visitor_firstSeen_idx" ON "Visitor"("firstSeen");
+
+CREATE TABLE IF NOT EXISTS "VisitorEvent" (
+    "id"          TEXT NOT NULL,
+    "anonymousId" TEXT NOT NULL,
+    "path"        TEXT,
+    "referrer"    TEXT,
+    "utmSource"   TEXT,
+    "utmMedium"   TEXT,
+    "utmCampaign" TEXT,
+    "utmContent"  TEXT,
+    "utmTerm"     TEXT,
+    "fbclid"      TEXT,
+    "gclid"       TEXT,
+    "deviceType"  TEXT,
+    "ipHash"      TEXT,
+    "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "VisitorEvent_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX IF NOT EXISTS "VisitorEvent_anonymousId_idx" ON "VisitorEvent"("anonymousId");
+CREATE INDEX IF NOT EXISTS "VisitorEvent_createdAt_idx" ON "VisitorEvent"("createdAt");
+CREATE INDEX IF NOT EXISTS "VisitorEvent_utmSource_idx" ON "VisitorEvent"("utmSource");
+
+CREATE TABLE IF NOT EXISTS "ConversionEvent" (
+    "id"          TEXT NOT NULL,
+    "anonymousId" TEXT,
+    "userId"      TEXT,
+    "type"        "ConversionType" NOT NULL,
+    "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "ConversionEvent_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX IF NOT EXISTS "ConversionEvent_anonymousId_idx" ON "ConversionEvent"("anonymousId");
+CREATE INDEX IF NOT EXISTS "ConversionEvent_userId_idx" ON "ConversionEvent"("userId");
+CREATE INDEX IF NOT EXISTS "ConversionEvent_type_idx" ON "ConversionEvent"("type");
+CREATE INDEX IF NOT EXISTS "ConversionEvent_createdAt_idx" ON "ConversionEvent"("createdAt");
+
+-- FK (있으면 건너뜀)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'VisitorEvent_anonymousId_fkey') THEN
+    ALTER TABLE "VisitorEvent" ADD CONSTRAINT "VisitorEvent_anonymousId_fkey"
+      FOREIGN KEY ("anonymousId") REFERENCES "Visitor"("anonymousId") ON DELETE CASCADE ON UPDATE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ConversionEvent_anonymousId_fkey') THEN
+    ALTER TABLE "ConversionEvent" ADD CONSTRAINT "ConversionEvent_anonymousId_fkey"
+      FOREIGN KEY ("anonymousId") REFERENCES "Visitor"("anonymousId") ON DELETE SET NULL ON UPDATE CASCADE;
+  END IF;
+END $$;
