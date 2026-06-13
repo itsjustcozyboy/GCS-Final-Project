@@ -31,6 +31,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center px-4 py-8 sm:px-6" style={{ background: 'var(--color-background)' }}>
       <div className="max-w-sm w-full space-y-6">
+        <button onClick={() => router.push('/')} className="min-h-11 text-gray-400 text-sm">← 뒤로</button>
         <div className="text-center space-y-1 break-keep">
           <Link href="/" className="text-3xl">💌</Link>
           <h1 className="text-2xl font-bold leading-snug" style={{ color: 'var(--color-primary-dark)' }}>로그인</h1>
