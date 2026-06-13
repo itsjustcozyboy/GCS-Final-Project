@@ -148,8 +148,8 @@ export const authRouter = router({
 
       await ctx.db.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
 
-      // ADMIN_EMAILS에 등록된 이메일이면 Admin 테이블에 자동 추가 (부트스트랩)
-      if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+      // 어느 관리자 세트(ADMIN_EMAILS*)든 화이트리스트에 있으면 Admin 테이블에 자동 추가 (부트스트랩)
+      if (user.email && allAdminEmails.has(user.email.toLowerCase())) {
         await ctx.db.admin.upsert({
           where: { userId: user.id },
           create: { userId: user.id },
