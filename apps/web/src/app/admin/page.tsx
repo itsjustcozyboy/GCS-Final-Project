@@ -820,6 +820,7 @@ export default function AdminPage() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex rounded-xl border border-gray-200 bg-white p-1 text-sm font-medium">
             {[
+              { value: 'funnel', label: '📈 방문자 분석' },
               { value: 'visitors', label: '👥 방문자별' },
               { value: 'logs', label: '📋 전체 기록' },
               { value: 'inquiries', label: '💬 문의 관리' },
