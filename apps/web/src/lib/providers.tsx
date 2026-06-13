@@ -32,6 +32,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <VisitTracker />
+        <MarketingPixels />
         {children}
       </QueryClientProvider>
     </trpc.Provider>
