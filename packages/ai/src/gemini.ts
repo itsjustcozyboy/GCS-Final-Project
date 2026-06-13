@@ -62,6 +62,10 @@ export class GeminiAIClient implements AIClient {
         generationConfig: {
           temperature: 0.8,
           maxOutputTokens,
+          // 2.5 Flash는 기본적으로 '생각(thinking)'에 토큰을 써서 maxOutputTokens를 잠식 →
+          // 짧은 구조화 출력이 잘려 JSON 파싱이 실패할 수 있다. 이 작업들은 추론이 아닌
+          // 지시 기반 생성이므로 thinking을 끈다(빠르고 저렴, 출력 예산 보존).
+          thinkingConfig: { thinkingBudget: 0 },
           ...(asJson ? { responseMimeType: 'application/json' } : {}),
         },
       }),
