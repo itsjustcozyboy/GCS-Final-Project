@@ -113,7 +113,7 @@
     "cardVisitors": "Total visitors",
     "cardVisitorsHint": "Unique anonymous visitors",
     "cardConversions": "Conversions",
-    "cardConversionsHint": "Reached sign-up / login",
+    "cardConversionsHint": "Completed sign-up (admins excluded)",
     "cardRate": "Conversion rate",
     "cardRateHint": "Conversions / visitors",
     "channelTitle": "Conversions by channel (first-touch)",

@@ -122,8 +122,6 @@ export const authRouter = router({
           },
         });
 
-        await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: adminUser.id, type: 'first_login' });
-
         return {
           user: { id: adminUser.id, name: adminUser.name, role: adminUser.role },
           sessionToken: session.token,
@@ -156,7 +154,8 @@ export const authRouter = router({
       await ctx.db.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
 
       // 어느 관리자 세트(ADMIN_EMAILS*)든 화이트리스트에 있으면 Admin 테이블에 자동 추가 (부트스트랩)
-      if (user.email && allAdminEmails.has(user.email.toLowerCase())) {
+      const isAdminUser = !!user.email && allAdminEmails.has(user.email.toLowerCase());
+      if (isAdminUser) {
         await ctx.db.admin.upsert({
           where: { userId: user.id },
           create: { userId: user.id },
@@ -180,7 +179,10 @@ export const authRouter = router({
       });
 
       // 전환 연결(stitching): 익명 방문자 → 로그인 도달 (이미 전환된 anon이면 1건만)
-      await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: user.id, type: 'first_login' });
+      // 관리자 계정은 방문자 전환 데이터에서 제외한다.
+      if (!isAdminUser) {
+        await recordConversion(ctx.db, { anonymousId: ctx.anonymousId, userId: user.id, type: 'first_login' });
+      }
 
       return { user: { id: user.id, name: user.name, role: user.role }, sessionToken: session.token };
     }),

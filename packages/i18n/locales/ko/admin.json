@@ -113,7 +113,7 @@
     "cardVisitors": "총 방문자",
     "cardVisitorsHint": "고유 익명 방문자",
     "cardConversions": "전환 수",
-    "cardConversionsHint": "가입/로그인 도달",
+    "cardConversionsHint": "가입 완료(관리자 제외)",
     "cardRate": "전환율",
     "cardRateHint": "전환 / 방문자",
     "channelTitle": "채널별 전환 (first-touch)",

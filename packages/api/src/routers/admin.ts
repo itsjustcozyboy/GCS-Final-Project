@@ -2,9 +2,58 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { hashIp } from '../services/funnel';
+import type { prisma as PrismaType } from '@maeum/db';
+
+type DB = typeof PrismaType;
 
 function sourceFromFirstTouch(source?: string | null) {
   return source ?? 'direct';
+}
+
+async function getRegisteredConversions(db: DB, cutoff: Date) {
+  const users = await db.user.findMany({
+    where: { createdAt: { gte: cutoff }, admin: null },
+    orderBy: { createdAt: 'desc' },
+    select: { id: true, name: true, email: true, createdAt: true },
+  });
+  const userIds = users.map((u) => u.id);
+  const events = userIds.length
+    ? await db.conversionEvent.findMany({
+        where: { userId: { in: userIds } },
+        orderBy: { createdAt: 'asc' },
+        select: {
+          id: true,
+          anonymousId: true,
+          userId: true,
+          type: true,
+          createdAt: true,
+          visitor: { select: { ftSource: true } },
+        },
+      })
+    : [];
+
+  const eventByUser = new Map<string, (typeof events)[number]>();
+  for (const event of events) {
+    if (!event.userId) continue;
+    const current = eventByUser.get(event.userId);
+    if (!current || (current.type !== 'signup_completed' && event.type === 'signup_completed')) {
+      eventByUser.set(event.userId, event);
+    }
+  }
+
+  return users.map((user) => {
+    const event = eventByUser.get(user.id);
+    return {
+      id: event?.id ?? `user:${user.id}`,
+      anonymousId: event?.anonymousId ?? null,
+      userId: user.id,
+      type: event?.type ?? 'signup_completed',
+      name: user.name,
+      email: user.email,
+      convertedAt: user.createdAt,
+      source: sourceFromFirstTouch(event?.visitor?.ftSource),
+    };
+  });
 }
 
 // 관리자 전용 procedure (로그인 검증 + admins 테이블 검증)
@@ -286,7 +335,8 @@ export const adminRouter = router({
     }),
 
   // ── 방문자 전환율(퍼널) 분석 ──────────────────────────────────
-  // 방문자 수 = 기간 내 첫 방문(firstSeen)한 고유 anonymousId. 전환 = 그중 계정으로 연결된 수.
+  // 방문자 수 = 기간 내 첫 방문(firstSeen)한 고유 anonymousId.
+  // 전환 = 기간 내 가입한 비관리자 사용자 수. 과거 누락된 ConversionEvent가 있어도 User 기준으로 보정한다.
   // 채널 귀속은 first-touch(ftSource) 기준.
   funnelSummary: adminProcedure
     .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
@@ -294,7 +344,7 @@ export const adminRouter = router({
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
       const [totalVisitors, conversions] = await Promise.all([
         ctx.db.visitor.count({ where: { firstSeen: { gte: cutoff } } }),
-        ctx.db.conversionEvent.count({ where: { createdAt: { gte: cutoff }, userId: { not: null } } }),
+        ctx.db.user.count({ where: { createdAt: { gte: cutoff }, admin: null } }),
       ]);
       return {
         totalVisitors,
@@ -308,22 +358,17 @@ export const adminRouter = router({
     .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
     .query(async ({ ctx, input }) => {
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
-      const [visits, conversionEvents] = await Promise.all([
+      const [visits, conversions] = await Promise.all([
         ctx.db.visitor.groupBy({ by: ['ftSource'], where: { firstSeen: { gte: cutoff } }, _count: { _all: true } }),
-        ctx.db.conversionEvent.findMany({
-          where: { createdAt: { gte: cutoff }, userId: { not: null } },
-          select: {
-            visitor: { select: { ftSource: true } },
-          },
-        }),
+        getRegisteredConversions(ctx.db, cutoff),
       ]);
       const agg = new Map<string, { visits: number; conversions: number }>();
       for (const v of visits) {
         const s = sourceFromFirstTouch(v.ftSource);
         agg.set(s, { visits: (agg.get(s)?.visits ?? 0) + v._count._all, conversions: agg.get(s)?.conversions ?? 0 });
       }
-      for (const c of conversionEvents) {
-        const s = sourceFromFirstTouch(c.visitor?.ftSource);
+      for (const c of conversions) {
+        const s = c.source;
         const cur = agg.get(s) ?? { visits: 0, conversions: 0 };
         cur.conversions += 1;
         agg.set(s, cur);
@@ -388,49 +433,10 @@ export const adminRouter = router({
     }))
     .query(async ({ ctx, input }) => {
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
-      const sourceWhere = input.source
-        ? input.source === 'direct'
-          ? {
-              OR: [
-                { anonymousId: null },
-                { visitor: { is: null } },
-                { visitor: { is: { ftSource: null } } },
-              ],
-            }
-          : { visitor: { is: { ftSource: input.source } } }
-        : {};
-      const conversions = await ctx.db.conversionEvent.findMany({
-        where: {
-          userId: { not: null },
-          createdAt: { gte: cutoff },
-          ...sourceWhere,
-        },
-        orderBy: { createdAt: 'desc' },
-        take: input.limit,
-        select: {
-          id: true,
-          anonymousId: true,
-          userId: true,
-          type: true,
-          createdAt: true,
-          visitor: { select: { ftSource: true } },
-        },
-      });
-      const userIds = [...new Set(conversions.map((v) => v.userId!).filter(Boolean))];
-      const users = userIds.length
-        ? await ctx.db.user.findMany({ where: { id: { in: userIds } }, select: { id: true, name: true, email: true } })
-        : [];
-      const um = new Map(users.map((u) => [u.id, u]));
-      return conversions.map((v) => ({
-        id: v.id,
-        anonymousId: v.anonymousId,
-        userId: v.userId,
-        type: v.type,
-        name: um.get(v.userId!)?.name ?? null,
-        email: um.get(v.userId!)?.email ?? null,
-        convertedAt: v.createdAt,
-        source: sourceFromFirstTouch(v.visitor?.ftSource),
-      }));
+      const conversions = await getRegisteredConversions(ctx.db, cutoff);
+      return conversions
+        .filter((v) => !input.source || v.source === input.source)
+        .slice(0, input.limit);
     }),
 
   // 일자별 방문/전환 추이 — 한국 시간(KST, UTC+9) 기준으로 날짜 버킷을 나눈다.
@@ -444,8 +450,8 @@ export const adminRouter = router({
           where: { firstSeen: { gte: cutoff } },
           select: { firstSeen: true },
         }),
-        ctx.db.conversionEvent.findMany({
-          where: { createdAt: { gte: cutoff }, userId: { not: null } },
+        ctx.db.user.findMany({
+          where: { createdAt: { gte: cutoff }, admin: null },
           select: { createdAt: true },
         }),
       ]);
