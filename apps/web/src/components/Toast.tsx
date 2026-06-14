@@ -43,8 +43,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const success = useCallback((m: string) => show(m, 'success'), [show]);
   const error = useCallback((m: string) => show(m, 'error'), [show]);
 
+  const Provider = ToastContext.Provider as unknown as React.FC<{
+    value: ToastContextValue;
+    children?: ReactNode;
+  }>;
+
   return (
-    <ToastContext.Provider value={{ show, success, error }}>
+    <Provider value={{ show, success, error }}>
       {children as never}
       <div
         className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4"
