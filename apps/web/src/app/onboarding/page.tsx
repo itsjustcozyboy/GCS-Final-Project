@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '@/lib/trpc';
 import { trackCompleteRegistration } from '@/components/MarketingPixels';
+import { CopyButton } from '@/components/CopyButton';
 
 type Step = 'role' | 'info' | 'connect' | 'done';
 type ConsentKey = 'privacy' | 'terms' | 'age14' | 'analytics' | 'marketing';
