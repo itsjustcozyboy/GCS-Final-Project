@@ -407,7 +407,8 @@ export const adminRouter = router({
           visitorEvents: visitorEvents.count,
           conversionEvents: conversionEvents.count,
         };
-      });
+        // 최대 100명 × 연결/답변/반응/책 + 퍼널·접속 기록까지 14단계 순차 삭제 — 기본 5초로는 부족하다.
+      }, { maxWait: 10_000, timeout: 30_000 });
 
       return { deletedCount: result.users, ...result };
     }),
