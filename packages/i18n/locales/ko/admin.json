@@ -24,7 +24,14 @@
     "irreversible": "이 작업은 되돌릴 수 없습니다.",
     "selectDelete": "선택 삭제",
     "notLoggedIn": "비로그인",
-    "none": "-"
+    "none": "-",
+    "refresh": "새로고침",
+    "refreshing": "새로고침 중...",
+    "autoRefresh": "10초마다 자동 갱신",
+    "deleted": "{{n}}건을 삭제했어요",
+    "deleteFailed": "삭제에 실패했어요. 다시 시도해 주세요.",
+    "statusUpdated": "상태를 변경했어요",
+    "actionFailed": "처리에 실패했어요. 다시 시도해 주세요."
   },
   "visitors": {
     "summaryPre": "방문자",
