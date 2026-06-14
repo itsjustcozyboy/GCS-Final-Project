@@ -1,6 +1,12 @@
-# 마음 잇기 (maeum-itgi)
+# 토닥 (To-dak)
 
 매일 질문 하나로 부모님의 이야기를 모아 한 권의 책으로 남기는 서비스. Turborepo 모노레포(`apps/web`, `packages/*`).
+
+> 서비스명 표기: 한국어 **토닥**, 영어 **To-dak**. 내부 식별자(코드 스코프 `@maeum/*`, 쿠키 `maeum_aid`, 배포 슬러그 `maeum-itgi`)는 기능 안정성을 위해 그대로 둔다 — 도메인/슬러그 변경은 별도 작업.
+
+## 랜딩 스크린샷 교체
+
+랜딩 "이렇게 이어져요" 섹션의 단계별 화면은 `apps/web/public/landing/step1~3.png` 회색 placeholder다. 실제 앱 화면을 같은 파일명(권장 9:19.5 세로, 540×1170 이상)으로 덮어쓰면 반영된다. 자세한 안내: [`apps/web/public/landing/README.md`](apps/web/public/landing/README.md).
 
 ## 개발 시작
 
