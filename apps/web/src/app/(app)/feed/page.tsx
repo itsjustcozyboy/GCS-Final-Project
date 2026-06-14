@@ -33,6 +33,8 @@ function AnswerMedia({ answer }: { answer: { format: string; mediaUrl: string | 
 
 function ReactionBar({ answerId, connectionId }: { answerId: string; connectionId: string }) {
   const { t } = useTranslation('feed');
+  const { t: tc } = useTranslation('common');
+  const toast = useToast();
   const [comment, setComment] = useState('');
   // 'comment' = 일반 댓글, 'followup' = 되묻기 (후속 질문으로 부모에게 전달)
   const [inputMode, setInputMode] = useState<'comment' | 'followup' | null>(null);
@@ -43,7 +45,9 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
       setComment('');
       setInputMode(null);
       utils.question.list.invalidate({ connectionId });
+      toast.success(tc('feedback.reactionSent'));
     },
+    onError: () => toast.error(tc('feedback.error')),
   });
 
   const EMOJIS = ['❤️', '😊', '😢', '👍', '🙏'];
