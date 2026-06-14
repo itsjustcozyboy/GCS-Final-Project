@@ -56,7 +56,8 @@ export function Reveal({
       className={`reveal ${DIR_CLASS[direction]} ${visible ? 'is-visible' : ''} ${className}`.trim()}
       style={delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
     >
-      {children}
+      {/* react-i18next의 JSX children 타입 보강과 React 19 ReactNode 충돌 회피 */}
+      {children as never}
     </div>
   );
 }
