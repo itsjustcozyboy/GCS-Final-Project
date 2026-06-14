@@ -26,6 +26,16 @@
   },
   "loading": "불러오는 중...",
   "comingSoon": "준비 중",
+  "feedback": {
+    "copied": "복사되었습니다",
+    "copiedLabel": "복사됨 ✓",
+    "copyFailed": "자동 복사에 실패했어요. 코드를 길게 눌러 직접 복사해 주세요.",
+    "sent": "전송했어요",
+    "saved": "저장했어요",
+    "reactionSent": "마음을 전했어요",
+    "error": "문제가 생겼어요. 잠시 후 다시 시도해 주세요.",
+    "closeAria": "알림 닫기"
+  },
   "meta": {
     "title": "마음 잇기",
     "description": "부모와 자식이 매일 질문 하나로 이어지는 공간"
