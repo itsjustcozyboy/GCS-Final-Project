@@ -870,7 +870,19 @@ export default function AdminPage() {
           <button onClick={() => router.push('/feed')} className="text-gray-400 hover:text-gray-600 text-sm">{t('header.back')}</button>
           <h1 className="text-xl font-bold" style={{ color: 'var(--color-primary-dark)' }}>{t('header.title')}</h1>
         </div>
-        <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">ADMIN</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="hidden sm:inline text-xs text-gray-400">{t('common.autoRefresh')}</span>
+          <button
+            onClick={manualRefresh}
+            disabled={refreshing}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+            aria-label={t('common.refresh')}
+          >
+            <span className={refreshing ? 'inline-block animate-spin' : 'inline-block'} aria-hidden>↻</span>
+            <span className="hidden sm:inline">{refreshing ? t('common.refreshing') : t('common.refresh')}</span>
+          </button>
+          <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">ADMIN</span>
+        </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-4">
