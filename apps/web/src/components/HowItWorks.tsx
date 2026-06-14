@@ -43,20 +43,15 @@ export function HowItWorks() {
                 direction={odd ? 'right' : 'left'}
                 className="flex w-full justify-center md:w-1/2"
               >
-                <div className="relative w-44 sm:w-52">
-                  <Image
-                    src={step.src}
-                    alt={t(`landing.how.${step.n}.alt`)}
-                    width={540}
-                    height={1170}
-                    sizes="(max-width: 640px) 11rem, 13rem"
-                    className="h-auto w-full rounded-[2rem] border border-gray-200 bg-white shadow-md"
-                    priority={i === 0}
-                  />
-                  <span className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white">
-                    {t('landing.how.placeholderBadge')}
-                  </span>
-                </div>
+                <Image
+                  src={step.src}
+                  alt={t(`landing.how.${step.n}.alt`)}
+                  width={step.w}
+                  height={step.h}
+                  sizes="(max-width: 768px) 90vw, 24rem"
+                  className="h-auto max-h-[320px] w-auto max-w-full rounded-3xl border border-gray-200 bg-white object-contain shadow-md sm:max-h-[380px]"
+                  priority={i === 0}
+                />
               </Reveal>
 
               {/* 설명 */}
