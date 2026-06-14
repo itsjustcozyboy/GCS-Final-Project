@@ -5,7 +5,7 @@ import { LegalDoc, type LegalContent } from '@/components/LegalDoc';
 
 // 본 약관 초안은 법률 자문(변호사 검토)을 대체하지 않습니다.
 // TODO: legal review for non-KR jurisdictions — 운영 주체 확정 후 전 조항 검토
-export const metadata: Metadata = { title: '이용약관 — 마음 잇기 / Terms — Maeum Itgi' };
+export const metadata: Metadata = { title: '이용약관 — 토닥 / Terms — To-dak' };
 
 export default async function TermsPage() {
   const locale = await getLocale();
