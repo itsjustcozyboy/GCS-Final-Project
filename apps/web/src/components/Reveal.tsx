@@ -51,12 +51,12 @@ export function Reveal({
   }, []);
 
   return (
-    <Tag
-      ref={ref as never}
+    <div
+      ref={ref}
       className={`reveal ${DIR_CLASS[direction]} ${visible ? 'is-visible' : ''} ${className}`.trim()}
       style={delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
     >
       {children}
-    </Tag>
+    </div>
   );
 }
