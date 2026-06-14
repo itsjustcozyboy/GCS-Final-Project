@@ -71,19 +71,20 @@ export default async function Home() {
         </section>
 
         {/* 4. 현재 응답 방식 안내 + 로드맵 */}
-        <Reveal as="section"
-          className="max-w-2xl mx-auto rounded-2xl p-5 space-y-2 border break-keep block"
-        >
-          <div style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }} className="-m-5 rounded-2xl border p-5 space-y-2">
-          <p className="text-base font-semibold" style={{ color: 'var(--color-primary-dark)' }}>
-            {t('landing.channel.heading')}
-          </p>
-          <p className="text-[15px] text-gray-600 leading-relaxed">
-            {t('landing.channel.body')}
-          </p>
-          <p className="text-[15px] text-gray-500 leading-relaxed">
-            {t('landing.channel.comingSoon')} <span className="text-gray-400">{t('landing.channel.comingSoonBadge')}</span>
-          </p>
+        <Reveal className="max-w-2xl mx-auto block">
+          <div
+            className="rounded-2xl p-5 space-y-2 border break-keep"
+            style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }}
+          >
+            <p className="text-base font-semibold" style={{ color: 'var(--color-primary-dark)' }}>
+              {t('landing.channel.heading')}
+            </p>
+            <p className="text-[15px] text-gray-600 leading-relaxed">
+              {t('landing.channel.body')}
+            </p>
+            <p className="text-[15px] text-gray-500 leading-relaxed">
+              {t('landing.channel.comingSoon')} <span className="text-gray-400">{t('landing.channel.comingSoonBadge')}</span>
+            </p>
           </div>
         </Reveal>
 
