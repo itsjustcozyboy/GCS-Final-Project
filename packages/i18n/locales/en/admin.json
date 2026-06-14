@@ -139,6 +139,10 @@
     "convThSource": "Source",
     "convThAt": "Converted at",
     "convEmpty": "No converted users.",
+    "convSelectAllAria": "Select all",
+    "convSelectedSuffix": "{{n}} selected",
+    "convDeleteDescPre": "The selected ",
+    "convDeleteDescPost": " user account(s) and all linked data (answers, reactions, books, funnel, access logs) will be permanently deleted. This action cannot be undone.",
     "privacyNote": "Anonymous visitors are counted by random ID only, with no personally identifying information. Raw IPs are never stored (hash only)."
   }
 }
