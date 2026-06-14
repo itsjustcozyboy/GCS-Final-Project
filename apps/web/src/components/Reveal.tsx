@@ -18,16 +18,13 @@ export function Reveal({
   direction = 'up',
   delayMs = 0,
   className = '',
-  as = 'div',
 }: {
   children: ReactNode;
   direction?: Direction;
   delayMs?: number;
   className?: string;
-  as?: 'div' | 'li' | 'section';
 }) {
-  const Tag = as as ElementType;
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
