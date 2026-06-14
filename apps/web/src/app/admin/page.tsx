@@ -236,6 +236,7 @@ function VisitorsView({ search }: { search: string }) {
 // ─── 전체 기록 뷰 ─────────────────────────────────────────────
 function LogsView({ search }: { search: string }) {
   const { t } = useTranslation('admin');
+  const toast = useToast();
   const [orderBy, setOrderBy] = useState<'createdAt_desc' | 'createdAt_asc'>('createdAt_desc');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -250,9 +251,10 @@ function LogsView({ search }: { search: string }) {
   });
 
   const deleteMutation = trpc.admin.deleteLogs.useMutation({
-    onSuccess: () => {
+    onSuccess: (result) => {
       setSelected(new Set());
       setShowDeleteModal(false);
+      toast.success(t('common.deleted', { n: result.deletedCount }));
       void Promise.all([
         refetch(),
         utils.admin.getVisitors.invalidate(),
