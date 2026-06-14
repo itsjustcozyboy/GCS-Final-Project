@@ -26,6 +26,16 @@
   },
   "loading": "Loading...",
   "comingSoon": "Coming soon",
+  "feedback": {
+    "copied": "Copied",
+    "copiedLabel": "Copied ✓",
+    "copyFailed": "Couldn't copy automatically. Please press and hold the code to copy it.",
+    "sent": "Sent",
+    "saved": "Saved",
+    "reactionSent": "Your reaction was sent",
+    "error": "Something went wrong. Please try again shortly.",
+    "closeAria": "Dismiss notification"
+  },
   "meta": {
     "title": "Maeum Itgi — letters between generations",
     "description": "One question a day brings parents and children closer, gathered into a book."
