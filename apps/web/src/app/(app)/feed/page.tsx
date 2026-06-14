@@ -261,6 +261,7 @@ type ListInput = { connectionId: string; limit: number };
 
 function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string; isPrivate: boolean; listInput: ListInput }) {
   const { t } = useTranslation('feed');
+  const toast = useToast();
   const utils = trpc.useUtils();
   const toggle = trpc.answer.setVisibility.useMutation({
     onMutate: async ({ isPrivate: next }) => {
