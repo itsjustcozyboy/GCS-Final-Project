@@ -82,6 +82,6 @@ pnpm dev                              # http://localhost:3000
 
 ## 배포 (Vercel)
 
-- git 커밋 푸시 시 자동 배포된다(프로덕션 도메인: https://maeum-itgi.vercel.app).
+- git 커밋 푸시 시 자동 배포된다(현재 프로덕션 도메인: https://maeum-itgi.vercel.app — 리브랜딩(토닥/To-dak) 후 도메인 변경은 별도 작업).
 - 스키마는 빌드 단계의 `packages/db/prisma/prod-sync.sql`(멱등 DDL)로 운영 DB에 반영된다. `schema.prisma` 변경 시 이 파일에 멱등 DDL을 추가한다.
 - AI 키 우선순위: `GOOGLE_AI_API_KEY`/`GEMINI_API_KEY`(Gemini 2.5 Flash) → `ANTHROPIC_API_KEY` → 없으면 Mock 폴백. 키는 **서버 전용**.
