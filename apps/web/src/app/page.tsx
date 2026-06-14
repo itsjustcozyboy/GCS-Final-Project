@@ -47,51 +47,34 @@ export default async function Home() {
           <AdminLink />
         </section>
 
-        {/* 2. 작동 방식 (3단계) */}
-        <section className="space-y-6 break-keep">
-          <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.how.heading')}</h2>
-          <ol className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {how.map((s, i) => (
-              <li key={i} className="flex items-start gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
-                <span
-                  className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                  aria-hidden
-                >
-                  {i + 1}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-base font-semibold text-gray-900">
-                    <span className="mr-1.5" aria-hidden>{s.icon}</span>{s.title}
-                  </p>
-                  <p className="text-[15px] text-gray-500 mt-0.5 leading-relaxed">{s.desc}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+        {/* 2. 작동 방식 (스크롤 시퀀스 + 스크린샷) */}
+        <HowItWorks />
 
         {/* 3. 핵심 가치 */}
         <section className="space-y-6 break-keep">
-          <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.values.heading')}</h2>
+          <Reveal as="section">
+            <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.values.heading')}</h2>
+          </Reveal>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {values.map((v, i) => (
-              <div key={i} className="flex gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
-                <span className="shrink-0 text-2xl mt-0.5" aria-hidden>{v.icon}</span>
-                <div className="min-w-0">
-                  <p className="text-base font-semibold text-gray-900">{v.title}</p>
-                  <p className="text-[15px] text-gray-500 mt-0.5 leading-relaxed">{v.desc}</p>
+              <Reveal key={i} delayMs={i * 100} className="h-full">
+                <div className="flex h-full gap-3 sm:gap-4 p-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+                  <span className="shrink-0 text-2xl mt-0.5" aria-hidden>{v.icon}</span>
+                  <div className="min-w-0">
+                    <p className="text-base font-semibold text-gray-900">{v.title}</p>
+                    <p className="text-[15px] text-gray-500 mt-0.5 leading-relaxed">{v.desc}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
 
         {/* 4. 현재 응답 방식 안내 + 로드맵 */}
-        <section
-          className="max-w-2xl mx-auto rounded-2xl p-5 space-y-2 border break-keep"
-          style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }}
+        <Reveal as="section"
+          className="max-w-2xl mx-auto rounded-2xl p-5 space-y-2 border break-keep block"
         >
+          <div style={{ backgroundColor: '#FBF7EF', borderColor: 'var(--color-secondary)' }} className="-m-5 rounded-2xl border p-5 space-y-2">
           <p className="text-base font-semibold" style={{ color: 'var(--color-primary-dark)' }}>
             {t('landing.channel.heading')}
           </p>
@@ -101,7 +84,8 @@ export default async function Home() {
           <p className="text-[15px] text-gray-500 leading-relaxed">
             {t('landing.channel.comingSoon')} <span className="text-gray-400">{t('landing.channel.comingSoonBadge')}</span>
           </p>
-        </section>
+          </div>
+        </Reveal>
 
         {/* 5. 푸터 */}
         <footer className="pt-8 border-t border-gray-100 space-y-4 text-center">
