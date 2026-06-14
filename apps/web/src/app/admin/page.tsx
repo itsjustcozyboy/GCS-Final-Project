@@ -44,6 +44,7 @@ function shortUA(ua: string | null) {
 // ─── 방문자 통합 뷰 ───────────────────────────────────────────
 function VisitorsView({ search }: { search: string }) {
   const { t } = useTranslation('admin');
+  const toast = useToast();
   const [orderBy, setOrderBy] = useState<'lastVisit_desc' | 'visitCount_desc'>('lastVisit_desc');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -57,9 +58,10 @@ function VisitorsView({ search }: { search: string }) {
   });
 
   const deleteMutation = trpc.admin.deleteVisitors.useMutation({
-    onSuccess: () => {
+    onSuccess: (result) => {
       setSelected(new Set());
       setShowDeleteModal(false);
+      toast.success(t('common.deleted', { n: result.deletedCount }));
       void Promise.all([
         refetch(),
         utils.admin.funnelSummary.invalidate(),
@@ -69,6 +71,7 @@ function VisitorsView({ search }: { search: string }) {
         utils.admin.visitorTrend.invalidate(),
       ]);
     },
+    onError: () => toast.error(t('common.deleteFailed')),
   });
 
   const visitors: Visitor[] = (data?.visitors ?? []) as Visitor[];
