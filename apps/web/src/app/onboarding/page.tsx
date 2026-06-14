@@ -241,14 +241,21 @@ export default function OnboardingPage() {
                 >
                   {t('connect.regenerate')}
                 </button>
-                <button
-                  onClick={() => inviteCode && navigator.clipboard?.writeText(inviteCode)}
-                  disabled={!inviteCode}
-                  className="flex-1 min-h-11 px-3 py-2 rounded-xl text-white text-sm font-semibold disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                >
-                  {tc('actions.copy')}
-                </button>
+                {inviteCode ? (
+                  <CopyButton
+                    value={inviteCode}
+                    className="flex-1 min-h-11 px-3 py-2 rounded-xl text-white text-sm font-semibold"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                  />
+                ) : (
+                  <button
+                    disabled
+                    className="flex-1 min-h-11 px-3 py-2 rounded-xl text-white text-sm font-semibold opacity-50"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                  >
+                    {tc('actions.copy')}
+                  </button>
+                )}
               </div>
             </div>
           ) : (
