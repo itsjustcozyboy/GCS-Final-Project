@@ -25,6 +25,8 @@ export function AnswerComposer({
   // 가이드가 1순위 동선 — 미디어(사진·영상·목소리)는 가이드에서만 다룬다.
   // (타이핑이 어려운 세대를 위해 가이드 안에서 '목소리로'가 가장 먼저 보이게 둔다.)
   const { t } = useTranslation('today');
+  const { t: tc } = useTranslation('common');
+  const toast = useToast();
   const [method, setMethod] = useState<Method>('guide');
   const [keywords, setKeywords] = useState<string[]>([]);
   const [text, setText] = useState('');
