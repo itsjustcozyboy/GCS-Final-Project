@@ -101,10 +101,17 @@ export function QuestionComposer({
   });
 
   const send = trpc.question.sendCustom.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // 차단된 경우(sent=false)에는 닫지 않고 안내만 노출
+      if (data?.sent === false) {
+        toast.error(t('question.blocked'));
+        return;
+      }
+      toast.success(tc('feedback.sent'));
       onSent();
       onClose();
     },
+    onError: () => toast.error(tc('feedback.error')),
   });
 
   function sendDraft(d: { body: string; depth: number; chapterTag?: string; source: 'ai' | 'curated' | 'custom' }) {
