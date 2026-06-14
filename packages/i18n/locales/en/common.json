@@ -45,18 +45,23 @@
     },
     "how": {
       "heading": "How it works",
+      "stepLabel": "Step {{n}}",
       "1": {
-        "title": "Send a question",
-        "desc": "Send today's question — or let your parent share a thought with you first."
+        "title": "Receive a question",
+        "desc": "Today's question, sent by you, arrives for your parent.",
+        "alt": "Example app screen showing today's question arriving"
       },
       "2": {
         "title": "Answer with ease",
-        "desc": "Your parent can reply however feels easiest: in writing, photos, video, or voice."
+        "desc": "Reply however feels easiest: in writing, photos, video, or voice.",
+        "alt": "Example app screen for answering with text, photo, video, or voice"
       },
       "3": {
         "title": "It becomes a book",
-        "desc": "Every story you share is gathered, page by page, into one book."
-      }
+        "desc": "Every story you share is gathered, page by page, into one book.",
+        "alt": "Example screen of collected answers gathered into a book"
+      },
+      "placeholderBadge": "Sample screen"
     },
     "values": {
       "heading": "Why Maeum Itgi",
