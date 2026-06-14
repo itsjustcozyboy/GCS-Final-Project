@@ -37,9 +37,11 @@ export function Providers({ children, initialLocale = defaultLocale }: { childre
     <I18nextProvider i18n={i18nInstance}>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <VisitTracker />
-        <MarketingPixels />
-        {children}
+        <ToastProvider>
+          <VisitTracker />
+          <MarketingPixels />
+          {children}
+        </ToastProvider>
       </QueryClientProvider>
     </trpc.Provider>
     </I18nextProvider>
