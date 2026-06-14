@@ -620,6 +620,8 @@ function pct(n: number) {
 
 function FunnelView({ search }: { search: string }) {
   const { t } = useTranslation('admin');
+  const toast = useToast();
+  const utils = trpc.useUtils();
   const PERIODS = [
     { value: 1, label: t('funnel.today') },
     { value: 7, label: t('funnel.d7') },
@@ -627,6 +629,8 @@ function FunnelView({ search }: { search: string }) {
   ];
   const [days, setDays] = useState<number>(7);
   const [seg, setSeg] = useState<'anon' | 'converted'>('anon');
+  const [convSelected, setConvSelected] = useState<Set<string>>(new Set());
+  const [showConvDelete, setShowConvDelete] = useState(false);
 
   const liveQuery = { refetchInterval: 10_000 };
   const summary = trpc.admin.funnelSummary.useQuery({ days }, liveQuery);
@@ -635,8 +639,37 @@ function FunnelView({ search }: { search: string }) {
   const converted = trpc.admin.convertedVisitors.useQuery({ days, limit: 100 }, liveQuery);
   const trend = trpc.admin.visitorTrend.useQuery({ days: Math.min(days, 30) }, liveQuery);
 
+  const deleteConverted = trpc.admin.deleteConvertedUsers.useMutation({
+    onSuccess: (r) => {
+      setConvSelected(new Set());
+      setShowConvDelete(false);
+      toast.success(t('common.deleted', { n: r.deletedCount }));
+      void Promise.all([
+        converted.refetch(),
+        utils.admin.funnelSummary.invalidate(),
+        utils.admin.channelStats.invalidate(),
+        utils.admin.visitorTrend.invalidate(),
+        utils.admin.getVisitors.invalidate(),
+      ]);
+    },
+    onError: () => toast.error(t('common.deleteFailed')),
+  });
+
   const s = summary.data;
   const maxTrend = Math.max(1, ...(trend.data ?? []).map((d) => d.visitors));
+
+  const convRows = converted.data ?? [];
+  const convUserIds = convRows.map((v) => v.userId).filter((id): id is string => !!id);
+  const convAllSelected = convUserIds.length > 0 && convUserIds.every((id) => convSelected.has(id));
+  function toggleConvAll() {
+    setConvSelected(convAllSelected ? new Set() : new Set(convUserIds));
+  }
+  function toggleConv(id: string) {
+    const next = new Set(convSelected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setConvSelected(next);
+  }
 
   return (
     <div className="space-y-4">
