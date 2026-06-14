@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { InquiryForm } from '@/components/InquiryForm';
 import { getServerT } from '@/lib/i18n-server';
 
-export const metadata: Metadata = { title: '서비스 문의 — 마음 잇기 / Contact — Maeum Itgi' };
+export const metadata: Metadata = { title: '서비스 문의 — 토닥 / Contact — To-dak' };
 
 // 서비스 문의 독립 페이지. 폼·DB 저장·관리자 알림 로직은 InquiryForm을 그대로 재사용한다.
 export default async function InquiryPage() {
