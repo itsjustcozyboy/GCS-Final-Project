@@ -12,7 +12,7 @@ function App() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>💌 마음 잇기</Text>
+        <Text style={styles.headerTitle}>💌 토닥</Text>
       </View>
       <TodayScreen connectionId={DEMO_CONNECTION_ID} />
     </View>
