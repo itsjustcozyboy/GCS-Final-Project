@@ -808,9 +808,21 @@ function FunnelView({ search }: { search: string }) {
 export default function AdminPage() {
   const { t } = useTranslation('admin');
   const router = useRouter();
+  const utils = trpc.useUtils();
   const [tab, setTab] = useState<'funnel' | 'visitors' | 'logs' | 'inquiries'>('funnel');
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+
+  // 수동 새로고침 — 모든 관리자/문의 쿼리를 즉시 다시 가져온다(자동 10초 폴링과 별개).
+  async function manualRefresh() {
+    setRefreshing(true);
+    try {
+      await Promise.all([utils.admin.invalidate(), utils.inquiry.invalidate()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
