@@ -83,6 +83,8 @@ export function QuestionComposer({
   onSent: () => void;
 }) {
   const { t } = useTranslation('today');
+  const { t: tc } = useTranslation('common');
+  const toast = useToast();
   const [method, setMethod] = useState<Method>('suggest');
   const [keywords, setKeywords] = useState<string[]>([]);
   // 확정 전 미리보기/수정 단계의 질문
