@@ -52,7 +52,7 @@ export default async function Home() {
 
         {/* 3. 핵심 가치 */}
         <section className="space-y-6 break-keep">
-          <Reveal as="section">
+          <Reveal>
             <h2 className="text-center text-xl font-bold text-gray-900">{t('landing.values.heading')}</h2>
           </Reveal>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
