@@ -4,6 +4,8 @@ import { trpc } from '@/lib/trpc';
 import { QuestionComposer } from '@/components/QuestionComposer';
 import { AnswerComposer } from '@/components/AnswerComposer';
 import { ParentMessageComposer } from '@/components/ParentMessageComposer';
+import { CopyButton } from '@/components/CopyButton';
+import { useToast } from '@/components/Toast';
 import { useTranslation } from 'react-i18next';
 
 // 답변/메시지의 미디어(사진·영상·음성) 표시
