@@ -800,32 +800,90 @@ function FunnelView({ search }: { search: string }) {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-100">
-                <tr>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThName')}</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThEmail')}</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThSource')}</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThAt')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {converted.isLoading ? (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('common.loading')}</td></tr>
-                ) : (converted.data ?? []).length === 0 ? (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('funnel.convEmpty')}</td></tr>
-                ) : (converted.data ?? []).map((v) => (
-                  <tr key={v.id} className="border-b border-gray-50">
-                    <td className="px-4 py-2 text-gray-800">{v.name ?? <span className="text-gray-300">-</span>}</td>
-                    <td className="px-4 py-2 text-gray-600">{v.email ?? <span className="text-gray-300">-</span>}</td>
-                    <td className="px-4 py-2 text-gray-700">{v.source}</td>
-                    <td className="px-4 py-2 text-gray-400 text-xs whitespace-nowrap">{v.convertedAt ? formatDate(v.convertedAt) : '-'}</td>
+        <div className="space-y-2">
+          {convSelected.size > 0 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-500">{t('funnel.convSelectedSuffix', { n: convSelected.size })}</p>
+              <button
+                onClick={() => setShowConvDelete(true)}
+                className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-xl hover:bg-red-600 transition-colors"
+              >
+                {t('common.selectDelete')} ({convSelected.size})
+              </button>
+            </div>
+          )}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left">
+                      <input
+                        type="checkbox"
+                        checked={convAllSelected}
+                        onChange={toggleConvAll}
+                        className="w-4 h-4"
+                        aria-label={t('funnel.convSelectAllAria')}
+                      />
+                    </th>
+                    <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThName')}</th>
+                    <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThEmail')}</th>
+                    <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThSource')}</th>
+                    <th className="px-4 py-2 text-left font-medium text-gray-600">{t('funnel.convThAt')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {converted.isLoading ? (
+                    <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">{t('common.loading')}</td></tr>
+                  ) : convRows.length === 0 ? (
+                    <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">{t('funnel.convEmpty')}</td></tr>
+                  ) : convRows.map((v) => (
+                    <tr key={v.id} className={`border-b border-gray-50 ${v.userId && convSelected.has(v.userId) ? 'bg-red-50' : ''}`}>
+                      <td className="px-4 py-2">
+                        <input
+                          type="checkbox"
+                          checked={!!v.userId && convSelected.has(v.userId)}
+                          onChange={() => v.userId && toggleConv(v.userId)}
+                          disabled={!v.userId}
+                          className="w-4 h-4"
+                        />
+                      </td>
+                      <td className="px-4 py-2 text-gray-800">{v.name ?? <span className="text-gray-300">-</span>}</td>
+                      <td className="px-4 py-2 text-gray-600">{v.email ?? <span className="text-gray-300">-</span>}</td>
+                      <td className="px-4 py-2 text-gray-700">{v.source}</td>
+                      <td className="px-4 py-2 text-gray-400 text-xs whitespace-nowrap">{v.convertedAt ? formatDate(v.convertedAt) : '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showConvDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl">
+            <h2 className="text-lg font-bold text-gray-900">{t('common.confirmTitle')}</h2>
+            <p className="text-sm text-gray-500">
+              {t('funnel.convDeleteDescPre')}<strong>{convSelected.size}</strong>{t('funnel.convDeleteDescPost')}
+            </p>
+            {deleteConverted.isError && <p className="text-sm text-red-500">{deleteConverted.error.message}</p>}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConvDelete(false)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                onClick={() => deleteConverted.mutate({ userIds: Array.from(convSelected) })}
+                disabled={deleteConverted.isPending}
+                className="flex-1 py-3 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
+              >
+                {deleteConverted.isPending ? t('common.deleting') : t('common.delete')}
+              </button>
+            </div>
           </div>
         </div>
       )}
