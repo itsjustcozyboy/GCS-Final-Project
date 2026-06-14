@@ -50,7 +50,11 @@ export function HowItWorks() {
                   width={step.w}
                   height={step.h}
                   sizes="(max-width: 768px) 90vw, 24rem"
-                  className="h-auto max-h-[320px] w-auto max-w-full rounded-3xl border border-gray-200 bg-white object-contain shadow-md sm:max-h-[380px]"
+                  className={`h-auto w-auto max-w-full rounded-3xl border border-gray-200 bg-white object-contain shadow-md ${
+                    landscape
+                      ? 'max-h-[420px] sm:max-h-[520px]'
+                      : 'max-h-[320px] sm:max-h-[380px]'
+                  }`}
                   priority={i === 0}
                 />
               </Reveal>
