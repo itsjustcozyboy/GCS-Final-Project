@@ -316,6 +316,102 @@ export const adminRouter = router({
       };
     }),
 
+  // 전환 사용자(가입 계정) 완전 삭제 — 계정 + 연결/답변/반응/책 + 퍼널·접속 기록을 모두 제거한다.
+  // 전환 수치(funnelSummary/convertedVisitors)는 User 기준 집계라, 목록·카운트에서 실제로 없애려면
+  // 계정 자체를 지워야 한다. 관리자 계정은 절대 삭제하지 않는다(admin: { is: null } 가드).
+  deleteConvertedUsers: adminProcedure
+    .input(z.object({ userIds: z.array(z.string()).min(1).max(100) }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db.$transaction(async (tx) => {
+        // 관리자 계정은 대상에서 제외
+        const targets = await tx.user.findMany({
+          where: { id: { in: input.userIds }, admin: { is: null } },
+          select: { id: true },
+        });
+        const userIds = targets.map((u) => u.id);
+        if (userIds.length === 0) {
+          return { users: 0, connections: 0, accessLogs: 0, visitors: 0, visitorEvents: 0, conversionEvents: 0 };
+        }
+
+        // 1) 앱 데이터 그래프 — FK 제약(Connection/Reaction 등은 cascade 없음)상 자식부터 삭제
+        const connections = await tx.connection.findMany({
+          where: { OR: [{ fromUserId: { in: userIds } }, { toUserId: { in: userIds } }] },
+          select: { id: true },
+        });
+        const connectionIds = connections.map((c) => c.id);
+
+        const questions = connectionIds.length
+          ? await tx.question.findMany({ where: { connectionId: { in: connectionIds } }, select: { id: true } })
+          : [];
+        const questionIds = questions.map((q) => q.id);
+
+        const answers = questionIds.length
+          ? await tx.answer.findMany({ where: { questionId: { in: questionIds } }, select: { id: true } })
+          : [];
+        const answerIds = answers.map((a) => a.id);
+
+        // 반응: 삭제 대상 답변에 달린 것 + 이 사용자들이 남긴 것 모두 (둘 다 Restrict)
+        await tx.reaction.deleteMany({
+          where: {
+            OR: [
+              ...(answerIds.length ? [{ answerId: { in: answerIds } }] : []),
+              { userId: { in: userIds } },
+            ],
+          },
+        });
+        if (questionIds.length) await tx.answer.deleteMany({ where: { questionId: { in: questionIds } } });
+        if (connectionIds.length) {
+          await tx.question.deleteMany({ where: { connectionId: { in: connectionIds } } });
+          await tx.bookEdition.deleteMany({ where: { connectionId: { in: connectionIds } } });
+          // ConnectionInvite.connectionId 는 onDelete: SetNull — 커넥션 삭제만으로 정리됨
+          await tx.connection.deleteMany({ where: { id: { in: connectionIds } } });
+        }
+
+        // 2) 퍼널 / 접속 기록
+        const convertedVisitors = await tx.visitor.findMany({
+          where: { convertedUserId: { in: userIds } },
+          select: { anonymousId: true },
+        });
+        const anonymousIds = [...new Set(convertedVisitors.map((v) => v.anonymousId))];
+
+        const conversionEvents = await tx.conversionEvent.deleteMany({
+          where: {
+            OR: [
+              { userId: { in: userIds } },
+              ...(anonymousIds.length ? [{ anonymousId: { in: anonymousIds } }] : []),
+            ],
+          },
+        });
+        const visitorEvents = anonymousIds.length
+          ? await tx.visitorEvent.deleteMany({ where: { anonymousId: { in: anonymousIds } } })
+          : { count: 0 };
+        const visitors = await tx.visitor.deleteMany({ where: { convertedUserId: { in: userIds } } });
+        const accessLogs = await tx.accessLog.deleteMany({ where: { userId: { in: userIds } } });
+
+        // 3) 계정 — cascade: consents/sessions/childInvites/admin, setNull: acceptedInvites
+        const users = await tx.user.deleteMany({ where: { id: { in: userIds } } });
+
+        await tx.adminAudit.create({
+          data: {
+            adminId: ctx.userId,
+            action: 'delete_converted_users',
+            targetIds: userIds.map((id) => `user:${id}`),
+          },
+        });
+
+        return {
+          users: users.count,
+          connections: connectionIds.length,
+          accessLogs: accessLogs.count,
+          visitors: visitors.count,
+          visitorEvents: visitorEvents.count,
+          conversionEvents: conversionEvents.count,
+        };
+      });
+
+      return { deletedCount: result.users, ...result };
+    }),
+
   deleteLogs: adminProcedure
     .input(z.object({ ids: z.array(z.string()).min(1).max(200) }))
     .mutation(async ({ ctx, input }) => {
