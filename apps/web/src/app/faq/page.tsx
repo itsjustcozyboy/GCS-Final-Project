@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { getLocale } from '@/lib/i18n-server';
 import { resources } from '@maeum/i18n';
 
-export const metadata: Metadata = { title: '자주 묻는 질문 — 마음 잇기 / FAQ — Maeum Itgi' };
+export const metadata: Metadata = { title: '자주 묻는 질문 — 토닥 / FAQ — To-dak' };
 
 export default async function FaqPage() {
   const locale = await getLocale();
