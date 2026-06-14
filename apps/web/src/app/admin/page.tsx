@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '@/components/Toast';
 
 type Log = {
   id: string;
