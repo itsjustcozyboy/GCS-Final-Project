@@ -416,6 +416,7 @@ const INQUIRY_STATUS_COLOR: Record<string, { bg: string; fg: string }> = {
 
 function InquiriesView({ search }: { search: string }) {
   const { t } = useTranslation('admin');
+  const toast = useToast();
   const INQUIRY_CATEGORY_LABEL: Record<string, string> = {
     bug: t('inquiries.category.bug'), feature: t('inquiries.category.feature'), payment: t('inquiries.category.payment'), privacy: t('inquiries.category.privacy'), etc: t('inquiries.category.etc'),
   };
