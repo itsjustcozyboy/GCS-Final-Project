@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { useTranslation } from 'react-i18next';
+import { useToast } from './Toast';
 
 type Method = 'suggest' | 'keywords' | 'direct';
 
