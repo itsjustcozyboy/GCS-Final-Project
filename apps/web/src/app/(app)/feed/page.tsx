@@ -282,7 +282,7 @@ function VisibilityToggle({ answerId, isPrivate, listInput }: { answerId: string
     },
     onError: (_err, _vars, context) => {
       if (context?.prev) utils.question.list.setData(listInput, context.prev);
-      alert(t('visChangeError'));
+      toast.error(t('visChangeError'));
     },
     onSettled: () => void utils.question.list.invalidate(listInput),
   });
