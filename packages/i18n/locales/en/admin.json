@@ -24,7 +24,14 @@
     "irreversible": "This action cannot be undone.",
     "selectDelete": "Delete selected",
     "notLoggedIn": "Not signed in",
-    "none": "-"
+    "none": "-",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "autoRefresh": "Auto-refreshes every 10s",
+    "deleted": "Deleted {{n}} item(s)",
+    "deleteFailed": "Delete failed. Please try again.",
+    "statusUpdated": "Status updated",
+    "actionFailed": "Action failed. Please try again."
   },
   "visitors": {
     "summaryPre": "Visitors:",
