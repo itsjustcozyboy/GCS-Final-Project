@@ -47,7 +47,13 @@ export function AnswerComposer({
     },
   });
 
-  const submit = trpc.answer.submit.useMutation({ onSuccess: onDone });
+  const submit = trpc.answer.submit.useMutation({
+    onSuccess: () => {
+      toast.success(isPrivate ? tc('feedback.saved') : tc('feedback.sent'));
+      onDone();
+    },
+    onError: () => toast.error(tc('feedback.error')),
+  });
   const skip = trpc.answer.skip.useMutation({ onSuccess: onDone });
 
   // 미디어가 첨부되면 그 형식으로, 아니면 글로 제출
