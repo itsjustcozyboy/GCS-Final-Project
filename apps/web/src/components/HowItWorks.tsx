@@ -31,6 +31,7 @@ export function HowItWorks() {
       <ol className="space-y-12 sm:space-y-20">
         {STEPS.map((step, i) => {
           const odd = i % 2 === 1;
+          const landscape = step.w > step.h;
           return (
             <li
               key={step.n}
