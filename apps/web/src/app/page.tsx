@@ -1,19 +1,14 @@
 import { LanguageToggle } from '@/components/LanguageToggle';
 import Link from 'next/link';
 import { AdminLink } from '@/components/AdminLink';
+import { HowItWorks } from '@/components/HowItWorks';
+import { Reveal } from '@/components/Reveal';
 import { getServerT } from '@/lib/i18n-server';
 
-// TODO: 회사/서비스명 확정 시 푸터 카피 갱신 (현재 서비스명: 마음 잇기)
-const HOW_ICONS = ['✉️', '🗣️', '📖'];
 const VALUE_ICONS = ['🌱', '💬', '📚'];
 
 export default async function Home() {
   const t = await getServerT('common');
-  const how = ['1', '2', '3'].map((n, i) => ({
-    icon: HOW_ICONS[i],
-    title: t(`landing.how.${n}.title`),
-    desc: t(`landing.how.${n}.desc`),
-  }));
   const values = ['1', '2', '3'].map((n, i) => ({
     icon: VALUE_ICONS[i],
     title: t(`landing.values.${n}.title`),
