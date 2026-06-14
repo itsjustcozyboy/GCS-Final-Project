@@ -438,13 +438,21 @@ function InquiriesView({ search }: { search: string }) {
     refetchInterval: 10_000,
   });
 
-  const setStatusMutation = trpc.inquiry.setStatus.useMutation({ onSuccess: () => void refetch() });
-  const deleteMutation = trpc.inquiry.deleteMany.useMutation({
+  const setStatusMutation = trpc.inquiry.setStatus.useMutation({
     onSuccess: () => {
-      setSelected(new Set());
-      setShowDeleteModal(false);
+      toast.success(t('common.statusUpdated'));
       void refetch();
     },
+    onError: () => toast.error(t('common.actionFailed')),
+  });
+  const deleteMutation = trpc.inquiry.deleteMany.useMutation({
+    onSuccess: (result) => {
+      setSelected(new Set());
+      setShowDeleteModal(false);
+      toast.success(t('common.deleted', { n: result.deletedCount }));
+      void refetch();
+    },
+    onError: () => toast.error(t('common.deleteFailed')),
   });
 
   const inquiries: Inquiry[] = (data?.inquiries ?? []) as Inquiry[];
