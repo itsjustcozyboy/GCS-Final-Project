@@ -151,13 +151,12 @@ function StartConnectionModal({ role, onClose }: { role: 'child' | 'parent' | 'b
             <div className="text-3xl font-bold tracking-[0.25em] text-gray-900 font-mono">
               {createInvite.data.code}
             </div>
-            <button
-              onClick={() => navigator.clipboard?.writeText(createInvite.data.code)}
+            <CopyButton
+              value={createInvite.data.code}
+              label={t('modal.copyCode')}
               className="w-full py-3 rounded-xl text-white text-sm font-semibold"
               style={{ backgroundColor: 'var(--color-primary)' }}
-            >
-              {t('modal.copyCode')}
-            </button>
+            />
           </div>
         ) : null}
 
