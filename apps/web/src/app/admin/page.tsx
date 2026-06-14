@@ -265,6 +265,7 @@ function LogsView({ search }: { search: string }) {
         utils.admin.visitorTrend.invalidate(),
       ]);
     },
+    onError: () => toast.error(t('common.deleteFailed')),
   });
 
   const logs: Log[] = (data?.logs ?? []) as Log[];
