@@ -25,7 +25,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 function buildMail(input: InquiryMailInput) {
   const categoryLabel = input.category ? (CATEGORY_LABEL[input.category] ?? input.category) : '미분류';
   const receivedAt = input.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-  const subject = `[마음 잇기 문의] ${categoryLabel} - ${receivedAt}`;
+  const subject = `[토닥 문의] ${categoryLabel} - ${receivedAt}`;
   const lines = [
     `문의 유형: ${categoryLabel}`,
     `문의자 이메일(회신용): ${input.fromEmail}`,
