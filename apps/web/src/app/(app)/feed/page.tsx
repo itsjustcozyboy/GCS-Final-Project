@@ -64,7 +64,8 @@ function ReactionBar({ answerId, connectionId }: { answerId: string; connectionI
           <button
             key={emoji}
             onClick={() => addReaction.mutate({ answerId, emoji })}
-            className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors"
+            disabled={addReaction.isPending}
+            className="px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-gray-100 transition-colors disabled:opacity-50"
             aria-label={t('reaction.reactAria', { emoji })}
           >
             {emoji}
