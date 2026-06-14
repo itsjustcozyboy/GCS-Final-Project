@@ -57,7 +57,7 @@ export async function sendInquiryNotification(input: InquiryMailInput): Promise<
     const { Resend } = await import('resend');
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      from: `마음 잇기 <${from}>`,
+      from: `토닥 <${from}>`,
       to,
       replyTo: input.fromEmail, // 관리자가 받은 메일에서 바로 회신하면 문의자에게 간다
       subject,
