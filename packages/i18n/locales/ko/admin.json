@@ -139,6 +139,10 @@
     "convThSource": "유입 출처",
     "convThAt": "전환 시각",
     "convEmpty": "전환된 사용자가 없습니다.",
+    "convSelectAllAria": "전체 선택",
+    "convSelectedSuffix": "{{n}}명 선택됨",
+    "convDeleteDescPre": "선택한",
+    "convDeleteDescPost": "명의 계정과 연결된 모든 데이터(답변·반응·책·퍼널·접속 기록)가 영구 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
     "privacyNote": "익명 방문자는 개인 식별 정보 없이 무작위 ID로만 집계됩니다. IP 원문은 저장하지 않아요(해시만)."
   }
 }
