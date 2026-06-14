@@ -407,7 +407,8 @@ export const adminRouter = router({
       }));
     }),
 
-  // 일자별 방문/전환 추이 (UTC 기준 버킷 — TODO: 표시 타임존 정교화)
+  // 일자별 방문/전환 추이 — 한국 시간(KST, UTC+9) 기준으로 날짜 버킷을 나눈다.
+  // (대시보드 표시 시각이 Asia/Seoul이므로 일자 경계도 KST에 맞춰야 정합.)
   visitorTrend: adminProcedure
     .input(z.object({ days: z.number().int().min(1).max(90).default(14) }))
     .query(async ({ ctx, input }) => {
@@ -416,6 +417,8 @@ export const adminRouter = router({
         where: { firstSeen: { gte: cutoff } },
         select: { firstSeen: true, convertedAt: true },
       });
+      const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+      const kstDay = (d: Date) => new Date(d.getTime() + KST_OFFSET_MS).toISOString().slice(0, 10);
       const byDay = new Map<string, { visitors: number; conversions: number }>();
       const bump = (d: string, key: 'visitors' | 'conversions') => {
         const cur = byDay.get(d) ?? { visitors: 0, conversions: 0 };
@@ -423,8 +426,8 @@ export const adminRouter = router({
         byDay.set(d, cur);
       };
       for (const r of rows) {
-        bump(r.firstSeen.toISOString().slice(0, 10), 'visitors');
-        if (r.convertedAt && r.convertedAt >= cutoff) bump(r.convertedAt.toISOString().slice(0, 10), 'conversions');
+        bump(kstDay(r.firstSeen), 'visitors');
+        if (r.convertedAt && r.convertedAt >= cutoff) bump(kstDay(r.convertedAt), 'conversions');
       }
       return [...byDay.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, v]) => ({ date, ...v }));
     }),
