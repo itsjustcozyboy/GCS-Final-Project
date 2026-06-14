@@ -13,9 +13,9 @@ import { Reveal } from './Reveal';
  *  - 자세한 안내는 apps/web/public/landing/README.md 참고.
  */
 const STEPS = [
-  { n: 1, src: '/landing/step1.png' },
-  { n: 2, src: '/landing/step2.png' },
-  { n: 3, src: '/landing/step3.png' },
+  { n: 1, src: '/landing/step1.png', w: 1892, h: 1362 },
+  { n: 2, src: '/landing/step2.png', w: 1179, h: 2225 },
+  { n: 3, src: '/landing/step3.png', w: 1179, h: 2085 },
 ] as const;
 
 export function HowItWorks() {
