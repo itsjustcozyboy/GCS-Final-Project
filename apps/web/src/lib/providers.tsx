@@ -8,6 +8,7 @@ import { createI18n } from './i18n';
 import { defaultLocale, type Locale } from '@maeum/i18n';
 import { VisitTracker } from '@/components/VisitTracker';
 import { MarketingPixels } from '@/components/MarketingPixels';
+import { ToastProvider } from '@/components/Toast';
 
 export function Providers({ children, initialLocale = defaultLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
   const [i18nInstance] = useState(() => createI18n(initialLocale));
