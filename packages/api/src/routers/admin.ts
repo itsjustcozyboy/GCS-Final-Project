@@ -3,6 +3,10 @@ import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { hashIp } from '../services/funnel';
 
+function sourceFromFirstTouch(source?: string | null) {
+  return source ?? 'direct';
+}
+
 // 관리자 전용 procedure (로그인 검증 + admins 테이블 검증)
 export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const admin = await ctx.db.admin.findUnique({ where: { userId: ctx.userId } });
@@ -290,7 +294,7 @@ export const adminRouter = router({
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
       const [totalVisitors, conversions] = await Promise.all([
         ctx.db.visitor.count({ where: { firstSeen: { gte: cutoff } } }),
-        ctx.db.visitor.count({ where: { firstSeen: { gte: cutoff }, convertedUserId: { not: null } } }),
+        ctx.db.conversionEvent.count({ where: { createdAt: { gte: cutoff }, userId: { not: null } } }),
       ]);
       return {
         totalVisitors,
@@ -304,23 +308,24 @@ export const adminRouter = router({
     .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
     .query(async ({ ctx, input }) => {
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
-      const [visits, conv] = await Promise.all([
+      const [visits, conversionEvents] = await Promise.all([
         ctx.db.visitor.groupBy({ by: ['ftSource'], where: { firstSeen: { gte: cutoff } }, _count: { _all: true } }),
-        ctx.db.visitor.groupBy({
-          by: ['ftSource'],
-          where: { firstSeen: { gte: cutoff }, convertedUserId: { not: null } },
-          _count: { _all: true },
+        ctx.db.conversionEvent.findMany({
+          where: { createdAt: { gte: cutoff }, userId: { not: null } },
+          select: {
+            visitor: { select: { ftSource: true } },
+          },
         }),
       ]);
       const agg = new Map<string, { visits: number; conversions: number }>();
       for (const v of visits) {
-        const s = v.ftSource ?? 'direct';
+        const s = sourceFromFirstTouch(v.ftSource);
         agg.set(s, { visits: (agg.get(s)?.visits ?? 0) + v._count._all, conversions: agg.get(s)?.conversions ?? 0 });
       }
-      for (const c of conv) {
-        const s = c.ftSource ?? 'direct';
+      for (const c of conversionEvents) {
+        const s = sourceFromFirstTouch(c.visitor?.ftSource);
         const cur = agg.get(s) ?? { visits: 0, conversions: 0 };
-        cur.conversions += c._count._all;
+        cur.conversions += 1;
         agg.set(s, cur);
       }
       return [...agg.entries()]
@@ -383,27 +388,48 @@ export const adminRouter = router({
     }))
     .query(async ({ ctx, input }) => {
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
-      const visitors = await ctx.db.visitor.findMany({
+      const sourceWhere = input.source
+        ? input.source === 'direct'
+          ? {
+              OR: [
+                { anonymousId: null },
+                { visitor: { is: null } },
+                { visitor: { is: { ftSource: null } } },
+              ],
+            }
+          : { visitor: { is: { ftSource: input.source } } }
+        : {};
+      const conversions = await ctx.db.conversionEvent.findMany({
         where: {
-          convertedUserId: { not: null },
-          convertedAt: { gte: cutoff },
-          ...(input.source ? { ftSource: input.source === 'direct' ? null : input.source } : {}),
+          userId: { not: null },
+          createdAt: { gte: cutoff },
+          ...sourceWhere,
         },
-        orderBy: { convertedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
         take: input.limit,
+        select: {
+          id: true,
+          anonymousId: true,
+          userId: true,
+          type: true,
+          createdAt: true,
+          visitor: { select: { ftSource: true } },
+        },
       });
-      const userIds = [...new Set(visitors.map((v) => v.convertedUserId!).filter(Boolean))];
+      const userIds = [...new Set(conversions.map((v) => v.userId!).filter(Boolean))];
       const users = userIds.length
         ? await ctx.db.user.findMany({ where: { id: { in: userIds } }, select: { id: true, name: true, email: true } })
         : [];
       const um = new Map(users.map((u) => [u.id, u]));
-      return visitors.map((v) => ({
+      return conversions.map((v) => ({
+        id: v.id,
         anonymousId: v.anonymousId,
-        userId: v.convertedUserId,
-        name: um.get(v.convertedUserId!)?.name ?? null,
-        email: um.get(v.convertedUserId!)?.email ?? null,
-        convertedAt: v.convertedAt,
-        source: v.ftSource ?? 'direct',
+        userId: v.userId,
+        type: v.type,
+        name: um.get(v.userId!)?.name ?? null,
+        email: um.get(v.userId!)?.email ?? null,
+        convertedAt: v.createdAt,
+        source: sourceFromFirstTouch(v.visitor?.ftSource),
       }));
     }),
 
@@ -413,10 +439,16 @@ export const adminRouter = router({
     .input(z.object({ days: z.number().int().min(1).max(90).default(14) }))
     .query(async ({ ctx, input }) => {
       const cutoff = new Date(Date.now() - input.days * 86_400_000);
-      const rows = await ctx.db.visitor.findMany({
-        where: { firstSeen: { gte: cutoff } },
-        select: { firstSeen: true, convertedAt: true },
-      });
+      const [visitors, conversions] = await Promise.all([
+        ctx.db.visitor.findMany({
+          where: { firstSeen: { gte: cutoff } },
+          select: { firstSeen: true },
+        }),
+        ctx.db.conversionEvent.findMany({
+          where: { createdAt: { gte: cutoff }, userId: { not: null } },
+          select: { createdAt: true },
+        }),
+      ]);
       const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
       const kstDay = (d: Date) => new Date(d.getTime() + KST_OFFSET_MS).toISOString().slice(0, 10);
       const byDay = new Map<string, { visitors: number; conversions: number }>();
@@ -425,9 +457,11 @@ export const adminRouter = router({
         cur[key] += 1;
         byDay.set(d, cur);
       };
-      for (const r of rows) {
+      for (const r of visitors) {
         bump(kstDay(r.firstSeen), 'visitors');
-        if (r.convertedAt && r.convertedAt >= cutoff) bump(kstDay(r.convertedAt), 'conversions');
+      }
+      for (const r of conversions) {
+        bump(kstDay(r.createdAt), 'conversions');
       }
       return [...byDay.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, v]) => ({ date, ...v }));
     }),

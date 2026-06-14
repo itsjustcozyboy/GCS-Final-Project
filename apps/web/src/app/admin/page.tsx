@@ -784,7 +784,7 @@ function FunnelView({ search }: { search: string }) {
                 ) : (converted.data ?? []).length === 0 ? (
                   <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">{t('funnel.convEmpty')}</td></tr>
                 ) : (converted.data ?? []).map((v) => (
-                  <tr key={v.anonymousId} className="border-b border-gray-50">
+                  <tr key={v.id} className="border-b border-gray-50">
                     <td className="px-4 py-2 text-gray-800">{v.name ?? <span className="text-gray-300">-</span>}</td>
                     <td className="px-4 py-2 text-gray-600">{v.email ?? <span className="text-gray-300">-</span>}</td>
                     <td className="px-4 py-2 text-gray-700">{v.source}</td>
